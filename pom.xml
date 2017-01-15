@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.pvt</groupId>
+    <artifactId>hotelOrder</artifactId>
+    <version>${com.pvt.hotelOrder.version}</version>
+    <packaging>pom</packaging>
+
+    <name>hotelOrder</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <mysql.version>5.1.39</mysql.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
+        <commons.dbcp2.version>2.1.1</commons.dbcp2.version>
+        <log4j.version>1.2.17</log4j.version>
+        <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
+        <junit.version>4.11</junit.version>
+        <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
+        <org.apache.tomcat.catalina>6.0.26</org.apache.tomcat.catalina>
+        <com.pvt.services.version>1.0</com.pvt.services.version>
+        <com.pvt.dao.version>1.0</com.pvt.dao.version>
+        <com.pvt.entities.version>1.0</com.pvt.entities.version>
+        <com.pvt.web.version>1.0</com.pvt.web.version>
+        <com.pvt.hotelOrder.version>1.0</com.pvt.hotelOrder.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${javax.servlet.jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+            <version>${commons.dbcp2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>cobertura-maven-plugin</artifactId>
+            <version>${cobertura-maven-plugin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>catalina</artifactId>
+            <version>${org.apache.tomcat.catalina}</version>
+        </dependency>
+    </dependencies>
+
+    <modules>
+        <module>entities</module>
+        <module>dao</module>
+        <module>services</module>
+        <module>web</module>
+    </modules>
+
+</project>

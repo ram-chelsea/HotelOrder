@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.pvt</groupId>
+        <artifactId>hotelOrder</artifactId>
+        <version>${com.pvt.hotelOrder.version}</version>
+    </parent>
+
+    <groupId>com.pvt</groupId>
+    <artifactId>web</artifactId>
+    <version>${com.pvt.web.version}</version>
+    <packaging>war</packaging>
+
+    <name>web Maven Webapp</name>
+    <url>http://maven.apache.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${javax.servlet.jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pvt</groupId>
+            <artifactId>services</artifactId>
+            <version>${com.pvt.services.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pvt</groupId>
+            <artifactId>entities</artifactId>
+            <version>${com.pvt.entities.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.pvt</groupId>
+            <artifactId>dao</artifactId>
+            <version>${com.pvt.dao.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>
