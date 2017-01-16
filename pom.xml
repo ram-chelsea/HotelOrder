@@ -85,7 +85,6 @@
     </modules>
 
     <build>
-        <finalName>com.pvt.hotelOrder</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -102,9 +101,9 @@
                 <version>2.2</version>
                 <configuration>
                     <url>http://localhost:8080/manager/text</url>
-                    <username>tomcat</username>
-                    <password>tomcat</password>
-                    <path>${project.build.finalName}</path>
+                    <server>TomcatServer</server>
+                    <username>admin</username>
+                    <password>password</password>
                 </configuration>
                 <executions>
                     <execution>
