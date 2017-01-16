@@ -83,6 +83,7 @@
     </modules>
 
     <build>
+        <finalName>project</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
