@@ -21,15 +21,14 @@
     <c:forEach var="order" items="${confirmedClientOrdersList}">
         <form action="controller" method="POST">
             <input type="hidden" name="orderId" value="<c:out value="${order.orderId}"/>"/>
-            <input type="hidden" name="command" value="gotopaycancel"/>
             <tr>
                 <td><c:out value="${ order.orderId }"/></td>
                 <td><c:out value="${ order.room.roomNumber }"/></td>
                 <td><c:out value="${ order.checkInDate }"/></td>
                 <td><c:out value="${ order.checkOutDate }"/></td>
                 <td><c:out value="${ order.totalPrice}"/></td>
-                <td><input type="submit" name="gotopaycancelbutton" value="gotopay"/></td>
-                <td><input type="submit" name="gotopaycancelbutton" value="cancel"/></td>
+                <td><input type="submit" name="command" value="gotopay"/></td>
+                <td><input type="submit" name="command" value="cancel"/></td>
             </tr>
         </form>
     </c:forEach>

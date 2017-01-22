@@ -10,10 +10,10 @@ public enum CommandType {
     LOGIN, LOGOUT, REGISTRATION, GOTOREGISTRATION, GOTOLOGIN,
 
     //client commands
-    LOOKCARDAMOUNT, CARDAMOUNT, ADDCREDITCARD, GOTOADDCREDITCARD, GOTOMAKEORDER, MAKEORDER, CLIENTORDERS, PAY, GOTOPAY, REQUEST, CANCEL, GOTOPAYCANCEL, GOTOCLIENTSTARTPAGE,
+    LOOKCARDAMOUNT, CARDAMOUNT, ADDCREDITCARD, GOTOADDCREDITCARD, GOTOMAKEORDER, MAKEORDER, CLIENTORDERS, PAY, GOTOPAY, REQUEST, CANCEL, GOTOCLIENTSTARTPAGE,
 
     //admin commands
-    CLIENTS, ADMINORDERS, ROOMS, GOTOCHANGEROOMPRICE, CHANGEROOMPRICE, GOTOADMINSTARTPAGE, CONFIRM, DENY, COMPLETE, CONFIRMDENY, GOTOADDNEWROOM, ADDNEWROOM;
+    CLIENTS, ADMINORDERS, ROOMS, GOTOCHANGEROOMPRICE, CHANGEROOMPRICE, GOTOADMINSTARTPAGE, CONFIRM, DENY, COMPLETE, GOTOADDNEWROOM, ADDNEWROOM;
 
     public Command getCurrentCommand() {
         switch (this) {
@@ -56,9 +56,6 @@ public enum CommandType {
             case GOTOPAY:
                 return new GoToPayCommand();
 
-            case GOTOPAYCANCEL:
-                return new GotopayOrCancelCommand();
-
             case PAY:
                 return new PayCommand();
 
@@ -67,9 +64,6 @@ public enum CommandType {
 
             case REQUEST:
                 return new RequestCommand();
-
-            case CONFIRMDENY:
-                return new ConfirmOrDenyCommand();
 
             case CONFIRM:
                 return new ConfirmCommand();
