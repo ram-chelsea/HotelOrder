@@ -7,6 +7,8 @@
 </head>
 <body>
 <h4>${operationMessage}</h4>
+
+
 <h3>Requested Orders</h3>
 <table border="1">
     <tr bgcolor="#CCCCCC">
@@ -23,7 +25,6 @@
     <c:forEach var="order" items="${requestedOrdersList}">
         <form action="controller" method="POST">
             <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
-            <input type="hidden" name="command" value="confirmdeny"/>
             <tr>
                 <td><c:out value="${ order.orderId }"/></td>
                 <td><c:out value="${ order.room.roomNumber }"/></td>
@@ -32,8 +33,8 @@
                 <td><c:out value="${ order.checkInDate }"/></td>
                 <td><c:out value="${ order.checkOutDate }"/></td>
                 <td><c:out value="${order.totalPrice}"/></td>
-                <td><input type="submit" name="confirmdenybutton" value="confirm"/></td>
-                <td><input type="submit" name="confirmdenybutton" value="deny"/></td>
+                <td><input type="submit" name="command" value="confirm"/></td>
+                <td><input type="submit" name="command" value="deny"/></td>
             </tr>
         </form>
     </c:forEach>
