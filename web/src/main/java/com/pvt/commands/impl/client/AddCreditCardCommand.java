@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 public class AddCreditCardCommand implements Command {
-    CreditCard card;
+    private CreditCard card;
 
     @Override
     public String execute(HttpServletRequest request) {

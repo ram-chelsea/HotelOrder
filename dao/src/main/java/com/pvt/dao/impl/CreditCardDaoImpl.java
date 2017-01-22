@@ -7,7 +7,7 @@ import com.pvt.entities.CreditCard;
 import com.pvt.exceptions.DaoException;
 import com.pvt.managers.PoolManager;
 import com.pvt.util.EntityBuilder;
-import com.pvt.utils.ProjectLogger;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +18,8 @@ import java.util.List;
  * of CRUD operations with <tt>CreditCard</tt> object
  */
 public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
-    /**
+    private static Logger logger = Logger.getLogger(CreditCardDaoImpl.class);
+        /**
      * String property being used for describing the error in case of SQL Exception for <i>Log4j</i>
      */
     private static String message;
@@ -74,7 +75,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to add the room ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -95,7 +96,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to delete the card ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -121,7 +122,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
             }
         } catch (SQLException e) {
             message = "Unable to return the card ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return card;
@@ -148,7 +149,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
             }
         } catch (SQLException e) {
             message = "Unable to return the card ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return card;
@@ -171,7 +172,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to return the take money from the card ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -198,7 +199,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
             }
         } catch (SQLException e) {
             message = "Unable to check the card ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return isNew;

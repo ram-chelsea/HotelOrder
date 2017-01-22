@@ -7,12 +7,13 @@ import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.PoolManager;
 import com.pvt.services.GeneralService;
-import com.pvt.utils.ProjectLogger;
+import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class CreditCardServiceImpl extends GeneralService<CreditCard> {
+    private static Logger logger = Logger.getLogger(CreditCardServiceImpl.class);
     /**
      * Singleton object of <tt>CreditCardServiceImpl</tt> class
      */
@@ -52,10 +53,10 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -85,10 +86,10 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -109,10 +110,10 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return card;
     }
@@ -136,10 +137,10 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return isNew;
     }

@@ -7,7 +7,7 @@ import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.PoolManager;
 import com.pvt.services.GeneralService;
-import com.pvt.utils.ProjectLogger;
+import org.apache.log4j.Logger;
 
 import java.sql.Date;
 import java.sql.SQLException;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoomServiceImpl extends GeneralService<Room> {
+    private static Logger logger = Logger.getLogger(RoomServiceImpl.class);
     /**
      * Singleton object of <tt>RoomServiceImpl</tt> class
      */
@@ -53,10 +54,10 @@ public class RoomServiceImpl extends GeneralService<Room> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
     }
     /**
@@ -76,10 +77,10 @@ public class RoomServiceImpl extends GeneralService<Room> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return rooms;
     }
@@ -99,12 +100,12 @@ public class RoomServiceImpl extends GeneralService<Room> {
             connection.setAutoCommit(false);
             room = RoomDaoImpl.getInstance().getById(roomId);
             connection.commit();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction succeeded");
+            logger.error(transactionFailedMessage);
         } catch (SQLException | DaoException e) {
             connection.rollback();
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return room;
     }
@@ -124,10 +125,10 @@ public class RoomServiceImpl extends GeneralService<Room> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -149,10 +150,10 @@ public class RoomServiceImpl extends GeneralService<Room> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return suitedRoomsList;
     }
@@ -172,10 +173,10 @@ public class RoomServiceImpl extends GeneralService<Room> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return roominessList;
     }
@@ -198,10 +199,10 @@ public class RoomServiceImpl extends GeneralService<Room> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return isNew;
     }

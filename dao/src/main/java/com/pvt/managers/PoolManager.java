@@ -1,8 +1,8 @@
 package com.pvt.managers;
 
 import com.pvt.exceptions.DaoException;
-import com.pvt.utils.ProjectLogger;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
  * Class being used for organizing multithread connection to database
  */
 public class PoolManager {
+    private static Logger logger = Logger.getLogger(PoolManager.class);
     /**
      * Singleton object variable of <tt>PoolManager</tt> class
      */
@@ -79,13 +80,13 @@ public class PoolManager {
      * Closes <tt>Connection</tt> object <i>connection</i>
      * @param connection needs to be closed
      */
-    public void releaseConnection(Connection connection) {
+    public static void releaseConnection(Connection connection) {
         if (connection != null) {
             try {
                 connection.close();
                 threadConnection.remove();
             } catch (SQLException e) {
-                ProjectLogger.getInstance().logError(getClass(), e.getMessage());
+                logger.error(e.getMessage());
             }
         }
     }

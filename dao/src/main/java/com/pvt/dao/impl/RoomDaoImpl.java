@@ -9,7 +9,7 @@ import com.pvt.entities.Room;
 import com.pvt.exceptions.DaoException;
 import com.pvt.managers.PoolManager;
 import com.pvt.util.EntityBuilder;
-import com.pvt.utils.ProjectLogger;
+import org.apache.log4j.Logger;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -22,6 +22,7 @@ import java.util.List;
  * of CRUD operations with <tt>Room</tt> object
  */
 public class RoomDaoImpl extends GeneralDao<Room> {
+    private static Logger logger = Logger.getLogger(RoomDaoImpl.class);
     /**
      * String property being used for describing the error in case of SQL Exception for <i>Log4j</i>
      */
@@ -69,7 +70,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             }
         } catch (SQLException e) {
             message = "Unable to return list of rooms ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return roomList;
@@ -94,7 +95,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to add the room ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -120,7 +121,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             }
         } catch (SQLException e) {
             message = "Unable to return the room ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return room;
@@ -146,7 +147,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             }
         } catch (SQLException e) {
             message = "Unable to return the room ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return room;
@@ -168,7 +169,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to delete the room ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -195,7 +196,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             }
         } catch (SQLException e) {
             message = "Unable to check the card ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return isNew;
@@ -219,7 +220,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to update the room price ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -252,7 +253,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             }
         } catch (SQLException e) {
             message = "Unable to get suited rooms list ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return suitedRoomsList;
@@ -277,7 +278,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
             }
         } catch (SQLException e) {
             message = "Unable to return list of roominesses ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return roominessList;

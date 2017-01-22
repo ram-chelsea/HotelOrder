@@ -7,7 +7,7 @@
 </head>
 <body>
 <h4>${operationMessage}</h4>
-
+<select name="OrdersListStatuses"></select>
 
 <h3>Requested Orders</h3>
 <table border="1">

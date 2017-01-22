@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 public class AddNewRoomCommand implements Command {
-    Room room;
+    private Room room;
 
     @Override
     public String execute(HttpServletRequest request) {

@@ -21,9 +21,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class MakeOrderCommand implements Command {
-    Room orderedRoomFormat;
-    Date checkIn;
-    Date checkOut;
+    private Room orderedRoomFormat;
+    private Date checkIn;
+    private Date checkOut;
 
     @Override
     public String execute(HttpServletRequest request) {

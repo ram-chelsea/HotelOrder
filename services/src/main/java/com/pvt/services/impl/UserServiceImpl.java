@@ -7,12 +7,13 @@ import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.PoolManager;
 import com.pvt.services.GeneralService;
-import com.pvt.utils.ProjectLogger;
+import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl extends GeneralService<User> {
+    private static Logger logger = Logger.getLogger(UserServiceImpl.class);
     /**
      * Singleton object of <tt>UserServiceImpl</tt> class
      */
@@ -52,10 +53,10 @@ public class UserServiceImpl extends GeneralService<User> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -77,10 +78,10 @@ public class UserServiceImpl extends GeneralService<User> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return userList;
     }
@@ -108,10 +109,10 @@ public class UserServiceImpl extends GeneralService<User> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return isAuthenticated;
     }
@@ -133,10 +134,10 @@ public class UserServiceImpl extends GeneralService<User> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return user;
     }
@@ -160,10 +161,10 @@ public class UserServiceImpl extends GeneralService<User> {
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
-            ProjectLogger.getInstance().logError(getClass(), "Transaction failed");
+            logger.error(transactionFailedMessage);
             throw new ServiceException(e.getMessage());
         } finally {
-            PoolManager.getInstance().releaseConnection(connection);
+            PoolManager.releaseConnection(connection);
         }
         return isNew;
     }

@@ -19,4 +19,5 @@ public abstract class GeneralDao<T extends Entity> implements Dao<T> {
     protected Connection connection;
     protected PreparedStatement statement;
     protected ResultSet result;
+
 }

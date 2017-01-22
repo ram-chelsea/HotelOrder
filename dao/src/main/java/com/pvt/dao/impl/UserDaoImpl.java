@@ -8,7 +8,7 @@ import com.pvt.entities.User;
 import com.pvt.exceptions.DaoException;
 import com.pvt.managers.PoolManager;
 import com.pvt.util.EntityBuilder;
-import com.pvt.utils.ProjectLogger;
+import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,6 +20,7 @@ import java.util.List;
  * of CRUD operations with <tt>User</tt> object
  */
 public class UserDaoImpl extends GeneralDao<User> {
+    private static Logger logger = Logger.getLogger(UserDaoImpl.class);
     /**
      * String property being used for describing the error in case of SQL Exception for <i>Log4j</i>
      */
@@ -67,7 +68,7 @@ public class UserDaoImpl extends GeneralDao<User> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to add the user account ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -92,7 +93,7 @@ public class UserDaoImpl extends GeneralDao<User> {
             }
         } catch (SQLException e) {
             message = "Unable to return list of users ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return userList;
@@ -119,7 +120,7 @@ public class UserDaoImpl extends GeneralDao<User> {
             }
         } catch (SQLException e) {
             message = "Unable to return the user ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return user;
@@ -145,7 +146,7 @@ public class UserDaoImpl extends GeneralDao<User> {
             }
         } catch (SQLException e) {
             message = "Unable to return the user ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return user;
@@ -167,7 +168,7 @@ public class UserDaoImpl extends GeneralDao<User> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to delete the user ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -194,7 +195,7 @@ public class UserDaoImpl extends GeneralDao<User> {
             }
         } catch (SQLException e) {
             message = "Unable to check the user ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return isNew;
@@ -223,7 +224,7 @@ public class UserDaoImpl extends GeneralDao<User> {
             }
         } catch (SQLException e) {
             message = "Unable to check the user ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return isSiqnedUp;

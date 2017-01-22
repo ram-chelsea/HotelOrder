@@ -10,7 +10,7 @@ import com.pvt.entities.User;
 import com.pvt.exceptions.DaoException;
 import com.pvt.managers.PoolManager;
 import com.pvt.util.EntityBuilder;
-import com.pvt.utils.ProjectLogger;
+import org.apache.log4j.Logger;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -23,6 +23,7 @@ import java.util.List;
  * of CRUD operations with <tt>Order</tt> object
  */
 public class OrderDaoImpl extends GeneralDao<Order> {
+    private static Logger logger = Logger.getLogger(OrderDaoImpl.class);
     /**
      * String property being used for describing the error in case of SQL Exception for <i>Log4j</i>
      */
@@ -73,7 +74,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to add the order ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -98,7 +99,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
             }
         } catch (SQLException e) {
             message = "Unable to return list of orders ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return orderList;
@@ -125,7 +126,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
             }
         } catch (SQLException e) {
             message = "Unable to return the order ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return order;
@@ -147,7 +148,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to delete the order ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
@@ -173,7 +174,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
             }
         } catch (SQLException e) {
             message = "Unable to return list of orders with this status ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return orderList;
@@ -202,7 +203,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
             }
         } catch (SQLException e) {
             message = "Unable to return this user's list of orders with this status ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return orderList;
@@ -220,7 +221,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
             }
         } catch (SQLException e) {
             message = "Unable to return this user's list of orders ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
         return orderList;
@@ -244,7 +245,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
             statement.executeUpdate();
         } catch (SQLException e) {
             message = "Unable to update status of this order ";
-            ProjectLogger.getInstance().logError(getClass(), message);
+            logger.error(message);
             throw new DaoException(message, e);
         }
     }
