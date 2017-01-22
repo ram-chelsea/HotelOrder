@@ -38,6 +38,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         }
         return instance;
     }
+
     /**
      * Calls RoomDaoImpl add() method
      *
@@ -60,6 +61,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
             PoolManager.releaseConnection(connection);
         }
     }
+
     /**
      * Calls RoomDaoImpl getAll() method
      *
@@ -84,6 +86,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         }
         return rooms;
     }
+
     /**
      * Calls RoomDaoImpl getById() method
      *
@@ -109,10 +112,11 @@ public class RoomServiceImpl extends GeneralService<Room> {
         }
         return room;
     }
+
     /**
      * Calls RoomDaoImpl updateRoomPrice() method
      *
-     * @param roomId     - roomId determinate the <tt>Room</tt> object to update <tt>price</tt>
+     * @param roomId   - roomId determinate the <tt>Room</tt> object to update <tt>price</tt>
      * @param newPrice -  value to update <tt>Room</tt> object <tt>price</tt> property
      * @throws SQLException
      * @throws ServiceException
@@ -134,9 +138,10 @@ public class RoomServiceImpl extends GeneralService<Room> {
 
     /**
      * Calls RoomDaoImpl getSuitedRooms() method
+     *
      * @param orderedRoomFormat <tt>Room</tt> to determine properties requested rooms should fit
-     * @param checkInDate order starting date
-     * @param checkOutDate order ending date
+     * @param checkInDate       order starting date
+     * @param checkOutDate      order ending date
      * @return <tt>List</tt> of suiting the<i>orderedRoomFormat</i> <tt>Room</tt> objects
      * @throws SQLException
      * @throws ServiceException
@@ -160,6 +165,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
 
     /**
      * Calls RoomDaoImpl getRoominesses() method
+     *
      * @return <tt>List</tt> of roominesses values
      * @throws SQLException
      * @throws ServiceException
@@ -180,6 +186,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         }
         return roominessList;
     }
+
     /**
      * Calls RoomDaoImpl isNewRoom() method
      *

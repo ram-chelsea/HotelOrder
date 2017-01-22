@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 public class ChangeRoomPriceCommand implements Command {
+    private MessageManager messageManagerInst = MessageManager.getInstance();
+
     @Override
     public String execute(HttpServletRequest request) {
         String page;
@@ -33,23 +35,23 @@ public class ChangeRoomPriceCommand implements Command {
                         RoomServiceImpl.getInstance().updateRoomPrice(roomId, newPrice);
                         page = CommandType.ROOMS.getCurrentCommand().execute(request);
                     } else {
-                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_PRICE));
+                        request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_PRICE));
                         page = CommandType.GOTOCHANGEROOMPRICE.getCurrentCommand().execute(request);
                     }
                 } else {
-                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                     page = CommandType.GOTOCHANGEROOMPRICE.getCurrentCommand().execute(request);
                 }
 
             } catch (ServiceException | SQLException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
-                request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+                request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             } catch (NumberFormatException e) {
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NONSTRING_FORMAT));
+                request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_NONSTRING_FORMAT));
                 page = CommandType.GOTOCHANGEROOMPRICE.getCurrentCommand().execute(request);
             }
         } else {
-            request.setAttribute(Parameters.ERROR_USER_ROLE, MessageManager.getInstance().getProperty(MessageConstants.AUTHORIZATION_ERROR));
+            request.setAttribute(Parameters.ERROR_USER_ROLE, messageManagerInst.getProperty(MessageConstants.AUTHORIZATION_ERROR));
             page = CommandType.LOGOUT.getCurrentCommand().execute(request);
         }
         return page;

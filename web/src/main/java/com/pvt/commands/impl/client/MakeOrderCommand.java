@@ -21,6 +21,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class MakeOrderCommand implements Command {
+    private MessageManager messageManagerInst = MessageManager.getInstance();
+    private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
     private Room orderedRoomFormat;
     private Date checkIn;
     private Date checkOut;
@@ -42,28 +44,28 @@ public class MakeOrderCommand implements Command {
                             request.setAttribute(Parameters.SUITED_ROOMS_LIST, suitedRoomsList);
                             session.setAttribute(Parameters.CHECK_IN_DATE, checkIn);
                             session.setAttribute(Parameters.CHECK_OUT_DATE, checkOut);
-                            page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ORDER_REQUEST_ROOM_PAGE);
+                            page = pagesConfigManagerInst.getProperty(PagesPaths.ORDER_REQUEST_ROOM_PAGE);
                         } else {
-                            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_DATES_ORDER));
+                            request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_DATES_ORDER));
                             page = CommandType.GOTOMAKEORDER.getCurrentCommand().execute(request);
                         }
                     } else {
-                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_ROOM_NUMERIC_FIELD_VALUE));
+                        request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_ROOM_NUMERIC_FIELD_VALUE));
                         page = CommandType.GOTOMAKEORDER.getCurrentCommand().execute(request);
                     }
                 } else {
-                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                     page = CommandType.GOTOMAKEORDER.getCurrentCommand().execute(request);
                 }
             } catch (ServiceException | SQLException e) {
-                page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
-                request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+                page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
+                request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             } catch (IllegalArgumentException e) {
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NONSTRING_FORMAT));
+                request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_NONSTRING_FORMAT));
                 page = CommandType.GOTOMAKEORDER.getCurrentCommand().execute(request);
             }
         } else {
-            request.setAttribute(Parameters.ERROR_USER_ROLE, MessageManager.getInstance().getProperty(MessageConstants.AUTHORIZATION_ERROR));
+            request.setAttribute(Parameters.ERROR_USER_ROLE, messageManagerInst.getProperty(MessageConstants.AUTHORIZATION_ERROR));
             page = CommandType.LOGOUT.getCurrentCommand().execute(request);
         }
 

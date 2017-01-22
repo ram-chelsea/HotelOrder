@@ -37,6 +37,7 @@ public class PoolManager {
         dataSource.setUsername(bundle.getString("database.user"));
         dataSource.setPassword(bundle.getString("database.password"));
     }
+
     /**
      * Describes synchronized method of getting <tt>PoolManager</tt> singleton object
      *
@@ -50,7 +51,24 @@ public class PoolManager {
     }
 
     /**
-     *  Connects to database with dataSource attributes settings
+     * Closes <tt>Connection</tt> object <i>connection</i>
+     *
+     * @param connection needs to be closed
+     */
+    public static void releaseConnection(Connection connection) {
+        if (connection != null) {
+            try {
+                connection.close();
+                threadConnection.remove();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * Connects to database with dataSource attributes settings
+     *
      * @return object of <tt>Connection</tt> to database
      * @throws SQLException
      */
@@ -60,6 +78,7 @@ public class PoolManager {
 
     /**
      * Returns <tt>Connection</tt> object property of current connection thread or set it if it didn't exist
+     *
      * @return <tt>Connection</tt> object property of current connection thread or set it if it didn't exist
      * @throws DaoException
      */
@@ -74,21 +93,6 @@ public class PoolManager {
             throw new DaoException(message, e);
         }
         return threadConnection.get();
-    }
-
-    /**
-     * Closes <tt>Connection</tt> object <i>connection</i>
-     * @param connection needs to be closed
-     */
-    public static void releaseConnection(Connection connection) {
-        if (connection != null) {
-            try {
-                connection.close();
-                threadConnection.remove();
-            } catch (SQLException e) {
-                logger.error(e.getMessage());
-            }
-        }
     }
 
     public BasicDataSource getDataSource() {

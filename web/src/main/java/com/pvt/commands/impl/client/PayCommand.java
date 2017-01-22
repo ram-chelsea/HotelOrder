@@ -9,8 +9,8 @@ import com.pvt.entities.Order;
 import com.pvt.entities.User;
 import com.pvt.exceptions.RequestNumericAttributeTransferException;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.managers.MessageManager;
+import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.services.impl.CreditCardServiceImpl;
 import com.pvt.services.impl.OrderServiceImpl;
 import com.pvt.utils.RequestParameterParser;
@@ -20,6 +20,10 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 public class PayCommand implements Command {
+    private MessageManager messageManagerInst = MessageManager.getInstance();
+    private OrderServiceImpl orderServiceInst = OrderServiceImpl.getInstance();
+    private CreditCardServiceImpl cardServiceInst = CreditCardServiceImpl.getInstance();
+
     @Override
     public String execute(HttpServletRequest request) {
         String page;
@@ -28,30 +32,30 @@ public class PayCommand implements Command {
         if (UserRole.CLIENT.equals(user.getUserRole())) {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
-                Order order = OrderServiceImpl.getInstance().getById(orderId);
+                Order order = orderServiceInst.getById(orderId);
                 String cardNumber = RequestParameterParser.getCardNumber(request);
-                CreditCard card = CreditCardServiceImpl.getInstance().getByCardNumber(cardNumber);
+                CreditCard card = cardServiceInst.getByCardNumber(cardNumber);
                 if (!card.getCardNumber().isEmpty()) {
                     if (isEnoughMoneyToPayOrder(card, order)) {
-                        OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.ORDERED);
-                        CreditCardServiceImpl.getInstance().takeMoneyForOrder(card, order.getTotalPrice());
-                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
+                        orderServiceInst.updateOrderStatus(orderId, OrderStatus.ORDERED);
+                        cardServiceInst.takeMoneyForOrder(card, order.getTotalPrice());
+                        request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                         page = CommandType.CLIENTORDERS.getCurrentCommand().execute(request);
                     } else {
-                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.NOT_ENOUGH_MONEY));
+                        request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.NOT_ENOUGH_MONEY));
                         page = CommandType.GOTOPAY.getCurrentCommand().execute(request);
                     }
                 } else {
-                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                     page = CommandType.GOTOPAY.getCurrentCommand().execute(request);
                 }
 
             } catch (ServiceException | SQLException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
-                request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+                request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }
         } else {
-            request.setAttribute(Parameters.ERROR_USER_ROLE, MessageManager.getInstance().getProperty(MessageConstants.AUTHORIZATION_ERROR));
+            request.setAttribute(Parameters.ERROR_USER_ROLE, messageManagerInst.getProperty(MessageConstants.AUTHORIZATION_ERROR));
             page = CommandType.LOGOUT.getCurrentCommand().execute(request);
         }
         return page;

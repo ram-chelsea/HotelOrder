@@ -7,8 +7,8 @@ import com.pvt.constants.PagesPaths;
 import com.pvt.constants.Parameters;
 import com.pvt.constants.UserRole;
 import com.pvt.entities.User;
-import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.managers.MessageManager;
+import com.pvt.managers.PagesConfigurationManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

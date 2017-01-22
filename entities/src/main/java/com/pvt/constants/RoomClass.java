@@ -12,6 +12,7 @@ public enum RoomClass {
 
     /**
      * Return <tt>ArrayList</tt> of RoomClass values
+     *
      * @return <tt>ArrayList</tt> of RoomClass values
      */
     public static ArrayList enumToList() {

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 public class DenyCommand implements Command {
+    private MessageManager messageManagerInst = MessageManager.getInstance();
+
     @Override
     public String execute(HttpServletRequest request) {
         String page;
@@ -25,14 +27,14 @@ public class DenyCommand implements Command {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
                 OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.DENIED);
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
+                request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                 page = CommandType.ADMINORDERS.getCurrentCommand().execute(request);
             } catch (ServiceException | SQLException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
-                request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+                request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }
         } else {
-            request.setAttribute(Parameters.ERROR_USER_ROLE, MessageManager.getInstance().getProperty(MessageConstants.AUTHORIZATION_ERROR));
+            request.setAttribute(Parameters.ERROR_USER_ROLE, messageManagerInst.getProperty(MessageConstants.AUTHORIZATION_ERROR));
             page = CommandType.LOGOUT.getCurrentCommand().execute(request);
         }
         return page;

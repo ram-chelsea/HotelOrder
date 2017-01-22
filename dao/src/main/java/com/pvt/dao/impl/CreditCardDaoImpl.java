@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
     private static Logger logger = Logger.getLogger(CreditCardDaoImpl.class);
-        /**
+    /**
      * String property being used for describing the error in case of SQL Exception for <i>Log4j</i>
      */
     private static String message;

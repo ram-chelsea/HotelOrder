@@ -144,7 +144,7 @@ public class RequestParameterParser {
         return commandType;
     }
 
-    public static Date getCheckInDate(HttpServletRequest request)  throws  IllegalArgumentException{
+    public static Date getCheckInDate(HttpServletRequest request) throws IllegalArgumentException {
         Date checkIn = Date.valueOf(request.getParameter(Parameters.CHECK_IN_DATE));
         return checkIn;
     }

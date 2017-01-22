@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class SecurityFilter implements Filter {
+    private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
+
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
@@ -38,7 +40,7 @@ public class SecurityFilter implements Filter {
                 } else if (commandType == CommandType.GOTOREGISTRATION) {
                     chain.doFilter(request, response);
                 } else {
-                    String page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.INDEX_PAGE_PATH);
+                    String page = pagesConfigManagerInst.getProperty(PagesPaths.INDEX_PAGE_PATH);
                     RequestDispatcher dispatcher = request.getRequestDispatcher(page);
                     dispatcher.forward(httpRequest, httpResponse);
                     session.invalidate();
@@ -46,16 +48,15 @@ public class SecurityFilter implements Filter {
             } else {
                 if (UserServiceImpl.getInstance().checkUserAuthentication(user.getLogin(), user.getPassword())) {
                     chain.doFilter(request, response);
-                }
-                else{
-                    String page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.INDEX_PAGE_PATH);
+                } else {
+                    String page = pagesConfigManagerInst.getProperty(PagesPaths.INDEX_PAGE_PATH);
                     RequestDispatcher dispatcher = request.getRequestDispatcher(page);
                     dispatcher.forward(httpRequest, httpResponse);
                     session.invalidate();
                 }
             }
-        } catch (IllegalArgumentException | SQLException |ServiceException e) {
-            String page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.INDEX_PAGE_PATH);
+        } catch (IllegalArgumentException | SQLException | ServiceException e) {
+            String page = pagesConfigManagerInst.getProperty(PagesPaths.INDEX_PAGE_PATH);
             RequestDispatcher dispatcher = request.getRequestDispatcher(page);
             dispatcher.forward(httpRequest, httpResponse);
         }

@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 public class AddNewRoomCommand implements Command {
+    private RoomServiceImpl roomServiceInst = RoomServiceImpl.getInstance();
+    private MessageManager messageManagerInst = MessageManager.getInstance();
     private Room room;
 
     @Override
@@ -32,29 +34,29 @@ public class AddNewRoomCommand implements Command {
                 room = RequestParameterParser.getNewRoom(request);
                 if (areFieldsFullyStocked()) {
                     if (areNumericFieldsCorrect()) {
-                        if (RoomServiceImpl.getInstance().isNewRoom(room)) {
-                            RoomServiceImpl.getInstance().add(room);
-                            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
+                        if (roomServiceInst.isNewRoom(room)) {
+                            roomServiceInst.add(room);
+                            request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                         } else {
-                            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.ROOM_EXISTS));
+                            request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.ROOM_EXISTS));
                         }
                     } else {
-                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_ROOM_NUMERIC_FIELD_VALUE));
+                        request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_ROOM_NUMERIC_FIELD_VALUE));
                     }
                 } else {
-                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                 }
                 page = CommandType.GOTOADDNEWROOM.getCurrentCommand().execute(request);
 
             } catch (ServiceException | SQLException e) {
-                request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+                request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
             } catch (IllegalArgumentException e) {
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NONSTRING_FORMAT));
+                request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_NONSTRING_FORMAT));
                 page = CommandType.GOTOADDNEWROOM.getCurrentCommand().execute(request);
             }
         } else {
-            request.setAttribute(Parameters.ERROR_USER_ROLE, MessageManager.getInstance().getProperty(MessageConstants.AUTHORIZATION_ERROR));
+            request.setAttribute(Parameters.ERROR_USER_ROLE, messageManagerInst.getProperty(MessageConstants.AUTHORIZATION_ERROR));
             page = CommandType.LOGOUT.getCurrentCommand().execute(request);
         }
 

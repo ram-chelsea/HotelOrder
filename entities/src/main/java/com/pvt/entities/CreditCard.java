@@ -50,7 +50,6 @@ public class CreditCard extends Entity {
     }
 
     /**
-     *
      * @return the <tt>CreditCard</tt> id
      */
     public int getCardId() {
@@ -58,7 +57,6 @@ public class CreditCard extends Entity {
     }
 
     /**
-     *
      * @param cardId id to set
      */
 
@@ -67,7 +65,6 @@ public class CreditCard extends Entity {
     }
 
     /**
-     *
      * @return the <tt>CreditCard</tt> card number
      */
 
@@ -76,7 +73,6 @@ public class CreditCard extends Entity {
     }
 
     /**
-     *
      * @param cardNumber card number to set
      */
 
@@ -85,7 +81,6 @@ public class CreditCard extends Entity {
     }
 
     /**
-     *
      * @return true if the <tt>CreditCard</tt> is valid
      */
 
@@ -94,7 +89,6 @@ public class CreditCard extends Entity {
     }
 
     /**
-     *
      * @param valid validity to set
      */
 
@@ -103,7 +97,6 @@ public class CreditCard extends Entity {
     }
 
     /**
-     *
      * @return the <tt>CreditCard</tt> amount
      */
 
@@ -112,7 +105,6 @@ public class CreditCard extends Entity {
     }
 
     /**
-     *
      * @param amount amount to set
      */
 

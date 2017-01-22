@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 
 public class AddCreditCardCommand implements Command {
+    private MessageManager messageManagerInst = MessageManager.getInstance();
+    private CreditCardServiceImpl cardServiceInst = CreditCardServiceImpl.getInstance();
     private CreditCard card;
 
     @Override
@@ -32,28 +34,28 @@ public class AddCreditCardCommand implements Command {
                 card = RequestParameterParser.getNewCreditCard(request);
                 if (areFieldsFullStocked()) {
                     if (areValuesCorrect()) {
-                        if (CreditCardServiceImpl.getInstance().isNewCreditCard(card)) {
-                            CreditCardServiceImpl.getInstance().add(card);
-                            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
+                        if (cardServiceInst.isNewCreditCard(card)) {
+                            cardServiceInst.add(card);
+                            request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                         } else {
-                            request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.CARD_EXISTS));
+                            request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.CARD_EXISTS));
                         }
                     } else {
-                        request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_CARD_VALUES));
+                        request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_CARD_VALUES));
                     }
                 } else {
-                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                 }
                 page = CommandType.GOTOADDCREDITCARD.getCurrentCommand().execute(request);
             } catch (ServiceException | SQLException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
-                request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+                request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             } catch (NumberFormatException e) {
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.INVALID_NONSTRING_FORMAT));
+                request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_NONSTRING_FORMAT));
                 page = CommandType.GOTOADDCREDITCARD.getCurrentCommand().execute(request);
             }
         } else {
-            request.setAttribute(Parameters.ERROR_USER_ROLE, MessageManager.getInstance().getProperty(MessageConstants.AUTHORIZATION_ERROR));
+            request.setAttribute(Parameters.ERROR_USER_ROLE, messageManagerInst.getProperty(MessageConstants.AUTHORIZATION_ERROR));
             page = CommandType.LOGOUT.getCurrentCommand().execute(request);
         }
         return page;

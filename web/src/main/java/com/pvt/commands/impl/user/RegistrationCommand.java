@@ -7,8 +7,8 @@ import com.pvt.constants.Parameters;
 import com.pvt.constants.UserRole;
 import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.managers.MessageManager;
+import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.services.impl.UserServiceImpl;
 import com.pvt.utils.RequestParameterParser;
 
@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 
 public class RegistrationCommand implements Command {
+    private MessageManager messageManagerInst = MessageManager.getInstance();
+    private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
+    private UserServiceImpl userServiceInst = UserServiceImpl.getInstance();
     private User user;
 
     @Override
@@ -25,23 +28,23 @@ public class RegistrationCommand implements Command {
             user = RequestParameterParser.getUser(request);
             user.setUserRole(UserRole.CLIENT);
             if (areFieldsFullStocked()) {
-                if (UserServiceImpl.getInstance().checkIsNewUser(user)) {
-                    UserServiceImpl.getInstance().add(user);
-                    page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
-                    request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.SUCCESS_OPERATION));
+                if (userServiceInst.checkIsNewUser(user)) {
+                    userServiceInst.add(user);
+                    page = pagesConfigManagerInst.getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                 } else {
-                    page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
-                    request.setAttribute(Parameters.ERROR_USER_EXISTS, MessageManager.getInstance().getProperty(MessageConstants.USER_EXISTS));
+                    page = pagesConfigManagerInst.getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
+                    request.setAttribute(Parameters.ERROR_USER_EXISTS, messageManagerInst.getProperty(MessageConstants.USER_EXISTS));
                 }
             } else {
-                request.setAttribute(Parameters.OPERATION_MESSAGE, MessageManager.getInstance().getProperty(MessageConstants.EMPTY_FIELDS));
-                page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
+                request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
+                page = pagesConfigManagerInst.getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
             }
         } catch (ServiceException | SQLException e) {
-            page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
-            request.setAttribute(Parameters.ERROR_DATABASE, MessageManager.getInstance().getProperty(MessageConstants.ERROR_DATABASE));
+            page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
+            request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
         } catch (IllegalArgumentException e) {
-            page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.INDEX_PAGE_PATH);
+            page = pagesConfigManagerInst.getProperty(PagesPaths.INDEX_PAGE_PATH);
         }
         return page;
     }
