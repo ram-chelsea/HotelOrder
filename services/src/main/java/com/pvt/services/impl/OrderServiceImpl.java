@@ -19,6 +19,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
      * Singleton object of <tt>OrderServiceImpl</tt> class
      */
     private static OrderServiceImpl instance;
+    private static OrderDaoImpl orderDaoInst = OrderDaoImpl.getInstance();
 
     /**
      * Creates a OrderServiceImpl variable
@@ -50,7 +51,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            OrderDaoImpl.getInstance().add(order);
+            orderDaoInst.add(order);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -74,7 +75,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            ordersList = OrderDaoImpl.getInstance().getAll();
+            ordersList = orderDaoInst.getAll();
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -100,7 +101,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            order = OrderDaoImpl.getInstance().getById(orderId);
+            order = orderDaoInst.getById(orderId);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -125,7 +126,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            ordersList = OrderDaoImpl.getInstance().getOrdersListByStatus(status);
+            ordersList = orderDaoInst.getOrdersListByStatus(status);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -151,7 +152,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            ordersList = OrderDaoImpl.getInstance().getClientOrdersListByStatus(status, userId);
+            ordersList = orderDaoInst.getClientOrdersListByStatus(status, userId);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -175,7 +176,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            OrderDaoImpl.getInstance().updateOrderStatus(orderId, orderStatus);
+            orderDaoInst.updateOrderStatus(orderId, orderStatus);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();

@@ -18,6 +18,7 @@ public class UserServiceImpl extends GeneralService<User> {
      * Singleton object of <tt>UserServiceImpl</tt> class
      */
     private static UserServiceImpl instance;
+    private static UserDaoImpl userDaoInst = UserDaoImpl.getInstance();
 
     /**
      * Creates a UserServiceImpl variable
@@ -49,7 +50,7 @@ public class UserServiceImpl extends GeneralService<User> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            UserDaoImpl.getInstance().add(user);
+            userDaoInst.add(user);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -74,7 +75,7 @@ public class UserServiceImpl extends GeneralService<User> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            userList = UserDaoImpl.getInstance().getAll();
+            userList = userDaoInst.getAll();
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -105,7 +106,7 @@ public class UserServiceImpl extends GeneralService<User> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            isAuthenticated = UserDaoImpl.getInstance().checkUserAuthentication(login, password);
+            isAuthenticated = userDaoInst.checkUserAuthentication(login, password);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -130,7 +131,7 @@ public class UserServiceImpl extends GeneralService<User> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            user = UserDaoImpl.getInstance().getByLogin(login);
+            user = userDaoInst.getByLogin(login);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -155,7 +156,7 @@ public class UserServiceImpl extends GeneralService<User> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            if ((UserDaoImpl.getInstance().getById(user.getUserId()) == null) & (UserDaoImpl.getInstance().isNewUser(user.getLogin()))) {
+            if ((userDaoInst.getById(user.getUserId()) == null) & (userDaoInst.isNewUser(user.getLogin()))) {
                 isNew = true;
             }
             connection.commit();

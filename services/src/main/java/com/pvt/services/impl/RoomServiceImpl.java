@@ -20,6 +20,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
      * Singleton object of <tt>RoomServiceImpl</tt> class
      */
     private static RoomServiceImpl instance;
+    private static RoomDaoImpl roomDaoInst = RoomDaoImpl.getInstance();
 
     /**
      * Creates a RoomServiceImpl variable
@@ -51,7 +52,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            RoomDaoImpl.getInstance().add(room);
+            roomDaoInst.add(room);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -75,7 +76,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            rooms = RoomDaoImpl.getInstance().getAll();
+            rooms = roomDaoInst.getAll();
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -101,7 +102,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            room = RoomDaoImpl.getInstance().getById(roomId);
+            room = roomDaoInst.getById(roomId);
             connection.commit();
             logger.error(transactionFailedMessage);
         } catch (SQLException | DaoException e) {
@@ -125,7 +126,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            RoomDaoImpl.getInstance().updateRoomPrice(roomId, newPrice);
+            roomDaoInst.updateRoomPrice(roomId, newPrice);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -151,7 +152,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            suitedRoomsList = RoomDaoImpl.getInstance().getSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate);
+            suitedRoomsList = roomDaoInst.getSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -175,7 +176,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            roominessList = RoomDaoImpl.getInstance().getRoominesses();
+            roominessList = roomDaoInst.getRoominesses();
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -200,7 +201,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            if ((RoomDaoImpl.getInstance().getById(room.getRoomId()) == null) & (RoomDaoImpl.getInstance().isNewRoom(room.getRoomNumber()))) {
+            if ((roomDaoInst.getById(room.getRoomId()) == null) & (roomDaoInst.isNewRoom(room.getRoomNumber()))) {
                 isNew = true;
             }
             connection.commit();

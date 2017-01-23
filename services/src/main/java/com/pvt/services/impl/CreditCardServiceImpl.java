@@ -18,6 +18,7 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      * Singleton object of <tt>CreditCardServiceImpl</tt> class
      */
     private static CreditCardServiceImpl instance;
+    private static CreditCardDaoImpl cardDaoInst = CreditCardDaoImpl.getInstance();
 
     /**
      * Creates a CreditCardServiceImpl variable
@@ -49,7 +50,7 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            CreditCardDaoImpl.getInstance().add(card);
+            cardDaoInst.add(card);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -82,7 +83,7 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            CreditCardDaoImpl.getInstance().takeMoneyForOrder(card, amount);
+            cardDaoInst.takeMoneyForOrder(card, amount);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -106,7 +107,7 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            card = CreditCardDaoImpl.getInstance().getByCardNumber(cardNumber);
+            card = cardDaoInst.getByCardNumber(cardNumber);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
@@ -131,7 +132,7 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            if ((CreditCardDaoImpl.getInstance().getById(card.getCardId()) == null) & (CreditCardDaoImpl.getInstance().isNewCreditCard(card.getCardNumber()))) {
+            if ((cardDaoInst.getById(card.getCardId()) == null) & (cardDaoInst.isNewCreditCard(card.getCardNumber()))) {
                 isNew = true;
             }
             connection.commit();
