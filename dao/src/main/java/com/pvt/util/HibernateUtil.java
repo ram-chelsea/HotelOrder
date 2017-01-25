@@ -20,13 +20,13 @@ import org.hibernate.service.ServiceRegistry;
 public class HibernateUtil {
     private static HibernateUtil util = null;
     private static Logger logger = Logger.getLogger(HibernateUtil.class);
-    private SessionFactory sessionFactory = null;
+    private SessionFactory sessionFactory;
     private final ThreadLocal<Session> sessions = new ThreadLocal();
 
     private HibernateUtil() {
         try {
-            Configuration configuration = new Configuration().configure();
-            /*.configure(HibernateUtil.class.getResource("/hibernate.cfg.xml"));*/
+            Configuration configuration = new Configuration().configure()
+                    .configure(HibernateUtil.class.getResource("/hibernate.cfg.xml"));
             StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
             serviceRegistryBuilder.applySettings(configuration.getProperties());
             ServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
@@ -53,5 +53,7 @@ public class HibernateUtil {
         return session;
     }
 
-
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 }

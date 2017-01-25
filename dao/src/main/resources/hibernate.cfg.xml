@@ -13,5 +13,9 @@
         <property name="show_sql">false</property>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
+        <mapping class="com.pvt.entities.User"/>
+        <mapping class="com.pvt.entities.Room"/>
+        <mapping class="com.pvt.entities.CreditCard"/>
+        <mapping class="com.pvt.entities.Order"/>
     </session-factory>
 </hibernate-configuration>
