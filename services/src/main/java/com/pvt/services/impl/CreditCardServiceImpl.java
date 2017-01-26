@@ -50,7 +50,7 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            cardDaoInst.add(card);
+            cardDaoInst.save(card);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();

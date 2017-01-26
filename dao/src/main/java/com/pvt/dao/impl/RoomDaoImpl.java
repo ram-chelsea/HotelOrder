@@ -1,20 +1,14 @@
 package com.pvt.dao.impl;
 
 
-import com.pvt.constants.ColumnName;
-import com.pvt.constants.RoomClass;
-import com.pvt.constants.SqlRequest;
+import com.pvt.constants.HqlRequest;
 import com.pvt.dao.GeneralDao;
 import com.pvt.entities.Room;
-import com.pvt.exceptions.DaoException;
-import com.pvt.managers.PoolManager;
-import com.pvt.util.EntityBuilder;
-import org.apache.log4j.Logger;
+import com.pvt.util.HibernateUtil;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,15 +16,9 @@ import java.util.List;
  * of CRUD operations with <tt>Room</tt> object
  */
 public class RoomDaoImpl extends GeneralDao<Room> {
-    private static Logger logger = Logger.getLogger(RoomDaoImpl.class);
-    /**
-     * String property being used for describing the error in case of SQL Exception for <i>Log4j</i>
-     */
-    private static String message;
-    /**
-     * Singleton object of <tt>RoomDaoImpl</tt> class
-     */
+
     private static RoomDaoImpl instance;
+    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a RoomDaoImpl variable
@@ -54,25 +42,12 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      * Get all <tt>Room</tt> objects being contained in the database
      *
      * @return <tt>List</tt> of all  <tt>Room</tt> objects being contained in the database
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    @Override
-    public List<Room> getAll() throws DaoException {
-        List<Room> roomList = new ArrayList<>();
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.GET_ALL_ROOMS);
-            result = statement.executeQuery();
-            while (result.next()) {
-                Room room = buildRoom(result);
-                roomList.add(room);
-            }
-        } catch (SQLException e) {
-            message = "Unable to return list of rooms ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
+
+    public List<Room> getAll() {
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.GET_ALL_ROOMS);
+        List<Room> roomList = query.list();
         return roomList;
     }
 
@@ -80,24 +55,11 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      * Adds the <tt>Room</tt> object properties values into database
      *
      * @param room <tt>Room</tt> element, which properties will be pushed into the database
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    @Override
-    public void add(Room room) throws DaoException {
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.ADD_ROOM);
-            statement.setString(1, room.getRoomNumber());
-            statement.setInt(2, room.getRoominess());
-            statement.setString(3, room.getRoomClass().toString());
-            statement.setInt(4, room.getPrice());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            message = "Unable to add the room ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
+
+    public void save(Room room) {
+        Session session = util.getSession();
+        session.save(room);
     }
 
     /**
@@ -105,25 +67,11 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      *
      * @param roomId value of <tt>Room</tt> property being used to get the object from the database
      * @return <tt>Room</tt> object, having corresponding <i>roomId</i> value
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    @Override
-    public Room getById(int roomId) throws DaoException {
-        Room room = null;
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.GET_ROOM_BY_ID);
-            statement.setInt(1, roomId);
-            result = statement.executeQuery();
-            while (result.next()) {
-                room = buildRoom(result);
-            }
-        } catch (SQLException e) {
-            message = "Unable to return the room ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
+
+    public Room getById(int roomId) {
+        Session session = util.getSession();
+        Room room = (Room) session.get(Room.class, roomId);
         return room;
     }
 
@@ -132,24 +80,12 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      *
      * @param roomNumber value of <tt>Room</tt> property being used to get the object from the database
      * @return <tt>Room</tt> object, having corresponding <i>roomNumber</i> value
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    public Room getByRoomNumber(String roomNumber) throws DaoException {
-        Room room = null;
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.GET_ROOM_BY_NUMBER);
-            statement.setString(1, roomNumber);
-            result = statement.executeQuery();
-            while (result.next()) {
-                room = buildRoom(result);
-            }
-        } catch (SQLException e) {
-            message = "Unable to return the room ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
+    public Room getByRoomNumber(String roomNumber) {
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.GET_ROOM_BY_NUMBER);
+        query.setParameter(0, roomNumber);
+        Room room = (Room) query.uniqueResult();
         return room;
     }
 
@@ -157,21 +93,11 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      * Delete the Object of <tt>Room</tt> class from the database by <i>roomId</i> value
      *
      * @param roomId value of <tt>Room</tt> property being used to delete the corresponding object from the database
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    @Override
-    public void delete(int roomId) throws DaoException {
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.DELETE_ROOM_BY_ID);
-            statement.setInt(1, roomId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            message = "Unable to delete the room ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
+    public void delete(int roomId) {
+        Session session = util.getSession();
+        Room room = (Room) session.get(Room.class, roomId);
+        session.delete(room);
     }
 
     /**
@@ -181,25 +107,14 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      * @param roomNumber being used for checking if the <tt>Room</tt> object
      *                   with the corresponding <tt>roomNumber</tt> property value doesn't exist in the database
      * @return true if <tt>Room</tt> with <i>roomNumber</i> doesn't exist in the database
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    public boolean isNewRoom(String roomNumber) throws DaoException {
-        boolean isNew = true;
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.GET_ROOM_BY_NUMBER);
-            statement.setString(1, roomNumber);
-            result = statement.executeQuery();
-            if (result.next()) {
-                isNew = false;
-            }
-        } catch (SQLException e) {
-            message = "Unable to check the card ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
-        return isNew;
+    public boolean isNewRoom(String roomNumber){
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.CHECK_IS_NEW_ROOM);
+        query.setParameter(0, roomNumber);
+        int count = (int) query.uniqueResult();
+        boolean isNewRoom = (count == 0);
+        return isNewRoom;
     }
 
     /**
@@ -208,21 +123,12 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      *
      * @param roomId   determinates <tt>Room</tt> object, whose <i>price</i> value is updated
      * @param newPrice determines value of <tt>price</tt> property to what <tt>Room</tt> object <tt>price</tt> property value is changed
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    public void updateRoomPrice(int roomId, int newPrice) throws DaoException {
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.UPDATE_ROOM_PRICE);
-            statement.setInt(1, newPrice);
-            statement.setInt(2, roomId);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            message = "Unable to update the room price ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
+    public void updateRoomPrice(int roomId, int newPrice){
+        Session session = util.getSession();
+        Room room = (Room) session.get(Room.class, roomId);
+        room.setPrice(newPrice);
+        session.update(room);
     }
 
     /**
@@ -234,28 +140,15 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      * @param checkOut          determinate date for <tt>Order</tt> ending date
      * @return <tt>List</tt> of <tt>Room</tt> objects with properties determined by <i>orderedRoomFormat</i> which are free to be booked for the period determined by <i>checkIn</i>
      * and <i>checkOut</i> dates
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    public List<Room> getSuitedRooms(Room orderedRoomFormat, Date checkIn, Date checkOut) throws DaoException {
-        List<Room> suitedRoomsList = new ArrayList<>();
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.GET_ALL_FREE_ROOMS_FOR_PERIOD_WITH_CATEGORIES);
-            statement.setInt(1, orderedRoomFormat.getRoominess());
-            statement.setString(2, orderedRoomFormat.getRoomClass().toString());
-            statement.setDate(3, checkIn);
-            statement.setDate(4, checkOut);
-            result = statement.executeQuery();
-            while (result.next()) {
-                Room room = buildRoom(result);
-                suitedRoomsList.add(room);
-            }
-        } catch (SQLException e) {
-            message = "Unable to get suited rooms list ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
+    public List<Room> getSuitedRooms(Room orderedRoomFormat, Date checkIn, Date checkOut) {
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.GET_ALL_FREE_ROOMS_FOR_PERIOD_WITH_CATEGORIES);
+        query.setParameter(0, orderedRoomFormat.getRoominess());
+        query.setParameter(1, orderedRoomFormat.getRoomClass().toString());
+        query.setParameter(2, checkIn);
+        query.setParameter(3, checkOut);
+        List<Room> suitedRoomsList = query.list();
         return suitedRoomsList;
     }
 
@@ -263,44 +156,12 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      * Return <tt>List</tt> of all <tt>roominess</tt> values in the database
      *
      * @return <tt>List</tt> of all <tt>roominess</tt> values in the database
-     * @throws DaoException if a database access error occurs
-     *                      or this method is called on a closed connection
      */
-    public List<Integer> getRoominesses() throws DaoException {
-        List<Integer> roominessList = new ArrayList<>();
-        try {
-            connection = PoolManager.getInstance().getConnection();
-            statement = connection.prepareStatement(SqlRequest.GET_ALL_ROOMINESSES);
-            result = statement.executeQuery();
-            while (result.next()) {
-                Integer roominess = result.getInt(ColumnName.ROOMINESS);
-                roominessList.add(roominess);
-            }
-        } catch (SQLException e) {
-            message = "Unable to return list of roominesses ";
-            logger.error(message);
-            throw new DaoException(message, e);
-        }
+    public List<Integer> getRoominesses() {
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.GET_ALL_ROOMINESSES);
+        List<Integer> roominessList = query.list();
         return roominessList;
     }
 
-    /**
-     * Build <tt>Room</tt> object with the properties values corresponding
-     * to ResultSet being got after SQL Request executing
-     *
-     * @param result <tt>ResultSet</tt> being got after SQL Request executing
-     * @return <tt>Room</tt> object with the properties values corresponding
-     * to ResultSet being got after SQL Request executing
-     * @throws SQLException if the columnLabel is not valid;
-     *                      if a database access error occurs or this method is
-     *                      called on a closed result set
-     */
-    private Room buildRoom(ResultSet result) throws SQLException {
-        int roomId = result.getInt(ColumnName.ROOM_ID);
-        String roomNumber = result.getString(ColumnName.ROOM_NUMBER);
-        int roominess = result.getInt(ColumnName.ROOMINESS);
-        RoomClass roomClass = RoomClass.valueOf(result.getString(ColumnName.ROOM_CLASS));
-        int price = result.getInt(ColumnName.ROOM_PRICE);
-        return EntityBuilder.buildRoom(roomId, roomNumber, roominess, roomClass, price);
-    }
 }

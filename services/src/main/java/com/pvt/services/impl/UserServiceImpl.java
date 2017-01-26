@@ -7,7 +7,11 @@ import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.PoolManager;
 import com.pvt.services.GeneralService;
+import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,6 +23,8 @@ public class UserServiceImpl extends GeneralService<User> {
      */
     private static UserServiceImpl instance;
     private static UserDaoImpl userDaoInst = UserDaoImpl.getInstance();
+    private Transaction transaction;
+    public static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a UserServiceImpl variable
@@ -38,26 +44,40 @@ public class UserServiceImpl extends GeneralService<User> {
         return instance;
     }
 
-    /**
-     * Calls UserDaoImpl add() method
-     *
-     * @param user - <tt>User</tt> object to add
-     * @throws SQLException
-     * @throws ServiceException
-     */
+//    /**
+//     * Calls UserDaoImpl add() method
+//     *
+//     * @param user - <tt>User</tt> object to add
+//     * @throws SQLException
+//     * @throws ServiceException
+//     */
+//    @Override
+//    public void add(User user) throws SQLException, ServiceException {
+//        try {
+//            connection = PoolManager.getInstance().getConnection();
+//            connection.setAutoCommit(false);
+//            userDaoInst.add(user);
+//            connection.commit();
+//        } catch (SQLException | DaoException e) {
+//            connection.rollback();
+//            logger.error(transactionFailedMessage);
+//            throw new ServiceException(e.getMessage());
+//        } finally {
+//            PoolManager.releaseConnection(connection);
+//        }
+//    }
     @Override
-    public void add(User user) throws SQLException, ServiceException {
+    public void add(User user) throws ServiceException{
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
-            userDaoInst.add(user);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
+            userDaoInst.save(user);
+            transaction.commit();
+            logger.info("Save(user):" + user);
+        } catch (HibernateException e) {
+            logger.error("Error save in Dao" + e);
+            transaction.rollback();
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
     }
 

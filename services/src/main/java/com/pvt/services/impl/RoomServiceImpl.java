@@ -52,7 +52,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            roomDaoInst.add(room);
+            roomDaoInst.save(room);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();

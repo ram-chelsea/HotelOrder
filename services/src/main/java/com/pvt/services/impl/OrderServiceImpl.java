@@ -51,7 +51,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
         try {
             connection = PoolManager.getInstance().getConnection();
             connection.setAutoCommit(false);
-            orderDaoInst.add(order);
+            orderDaoInst.save(order);
             connection.commit();
         } catch (SQLException | DaoException e) {
             connection.rollback();
