@@ -7,6 +7,7 @@ import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.services.impl.UserServiceImpl;
+import com.pvt.util.HibernateUtil;
 import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.*;
@@ -17,6 +18,7 @@ import java.io.IOException;
 
 public class SecurityFilter implements Filter {
     private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
+    private HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -45,6 +47,7 @@ public class SecurityFilter implements Filter {
                     session.invalidate();
                 }
             } else {
+                util.openSession();
                 if (UserServiceImpl.getInstance().checkUserAuthentication(user.getLogin(), user.getPassword())) {
                     chain.doFilter(request, response);
                 } else {
@@ -53,8 +56,9 @@ public class SecurityFilter implements Filter {
                     dispatcher.forward(httpRequest, httpResponse);
                     session.invalidate();
                 }
+                util.getSession().close();
             }
-        } catch (IllegalArgumentException |ServiceException e) {
+        } catch (IllegalArgumentException | ServiceException e) {
             String page = pagesConfigManagerInst.getProperty(PagesPaths.INDEX_PAGE_PATH);
             RequestDispatcher dispatcher = request.getRequestDispatcher(page);
             dispatcher.forward(httpRequest, httpResponse);

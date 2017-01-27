@@ -31,6 +31,7 @@ public class PayCommand implements Command {
         if (UserRole.CLIENT.equals(user.getUserRole())) {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
+                util.openSession();
                 Order order = orderServiceInst.getById(orderId);
                 String cardNumber = RequestParameterParser.getCardNumber(request);
                 CreditCard card = cardServiceInst.getByCardNumber(cardNumber);
@@ -38,16 +39,20 @@ public class PayCommand implements Command {
                     if (isEnoughMoneyToPayOrder(card, order)) {
                         orderServiceInst.updateOrderStatus(orderId, OrderStatus.ORDERED);
                         cardServiceInst.takeMoneyForOrder(card, order.getTotalPrice());
+                        util.getSession().close();
                         request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                         page = CommandType.CLIENTORDERS.getCurrentCommand().execute(request);
                     } else {
+                        util.getSession().close();
                         request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.NOT_ENOUGH_MONEY));
                         page = CommandType.GOTOPAY.getCurrentCommand().execute(request);
                     }
                 } else {
+                    util.getSession().close();
                     request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                     page = CommandType.GOTOPAY.getCurrentCommand().execute(request);
                 }
+
 
             } catch (ServiceException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);

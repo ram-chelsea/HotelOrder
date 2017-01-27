@@ -120,7 +120,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.CHECK_IS_NEW_CREDIT_CARD);
         query.setParameter(0, cardNumber);
-        int count = (int) query.uniqueResult();
+        int count = ((Long) query.uniqueResult()).intValue();
         boolean isNewCard = (count == 0);
         return isNewCard;
     }

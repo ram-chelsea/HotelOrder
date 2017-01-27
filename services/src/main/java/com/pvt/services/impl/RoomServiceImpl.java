@@ -8,10 +8,9 @@ import com.pvt.services.GeneralService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoomServiceImpl extends GeneralService<Room> {
@@ -21,7 +20,6 @@ public class RoomServiceImpl extends GeneralService<Room> {
      */
     private static RoomServiceImpl instance;
     private static RoomDaoImpl roomDaoInst = RoomDaoImpl.getInstance();
-    private Transaction transaction;
     public static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
@@ -51,13 +49,12 @@ public class RoomServiceImpl extends GeneralService<Room> {
     @Override
     public void add(Room room) throws ServiceException {
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             roomDaoInst.save(room);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("Save(room):" + room);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -71,15 +68,14 @@ public class RoomServiceImpl extends GeneralService<Room> {
      */
     @Override
     public List<Room> getAll() throws ServiceException {
-        List<Room> rooms;
+        List<Room> rooms = new ArrayList<>();
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             rooms = roomDaoInst.getAll();
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("Get All Rooms");
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -97,13 +93,12 @@ public class RoomServiceImpl extends GeneralService<Room> {
     public Room getById(int roomId) throws ServiceException {
         Room room;
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             room = roomDaoInst.getById(roomId);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("GetById(roomId): " + roomId);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -119,13 +114,12 @@ public class RoomServiceImpl extends GeneralService<Room> {
      */
     public void updateRoomPrice(int roomId, int newPrice) throws ServiceException {
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             roomDaoInst.updateRoomPrice(roomId, newPrice);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("UpdateRoomPrice(roomId, newPrice): " + roomId + ", " + newPrice);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -141,15 +135,14 @@ public class RoomServiceImpl extends GeneralService<Room> {
      * @throws ServiceException
      */
     public List<Room> getSuitedRooms(Room orderedRoomFormat, Date checkInDate, Date checkOutDate) throws ServiceException {
-        List<Room> suitedRoomsList;
+        List<Room> suitedRoomsList = new ArrayList<>();
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             suitedRoomsList = roomDaoInst.getSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("GetSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate): " + orderedRoomFormat + ", " + checkInDate + ", " + checkOutDate);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -163,15 +156,14 @@ public class RoomServiceImpl extends GeneralService<Room> {
      * @throws ServiceException
      */
     public List<Integer> getRoominesses() throws ServiceException {
-        List<Integer> roominessList;
+        List<Integer> roominessList = new ArrayList<>();
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             roominessList = roomDaoInst.getRoominesses();
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("GetRoominesses ");
         }catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -188,15 +180,14 @@ public class RoomServiceImpl extends GeneralService<Room> {
     public boolean isNewRoom(Room room) throws ServiceException {
         boolean isNew = false;
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             if ((roomDaoInst.getById(room.getRoomId()) == null) & (roomDaoInst.isNewRoom(room.getRoomNumber()))) {
                 isNew = true;
             }
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("checkIsNewRoom(room): " + room);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }

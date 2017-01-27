@@ -113,7 +113,7 @@ public class UserDaoImpl extends GeneralDao<User> {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.CHECK_LOGIN);
         query.setParameter(0, login);
-        int count = (int) query.uniqueResult();
+        int count = ((Long) query.uniqueResult()).intValue();
         boolean isNewUser = (count == 0);
         return isNewUser;
     }
@@ -131,7 +131,7 @@ public class UserDaoImpl extends GeneralDao<User> {
         Query query = session.createQuery(HqlRequest.CHECK_AUTHENTICATION);
         query.setParameter(0, login);
         query.setParameter(1, password);
-        int count = (int) query.uniqueResult();
+        int count = ((Long) query.uniqueResult()).intValue();
         boolean isSiqnedUp = (count != 0);
 
         return isSiqnedUp;

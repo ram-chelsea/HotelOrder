@@ -27,6 +27,7 @@ public class RegistrationCommand implements Command {
             user = RequestParameterParser.getUser(request);
             user.setUserRole(UserRole.CLIENT);
             if (areFieldsFullStocked()) {
+                util.openSession();
                 if (userServiceInst.checkIsNewUser(user)) {
                     userServiceInst.add(user);
                     page = pagesConfigManagerInst.getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
@@ -35,6 +36,7 @@ public class RegistrationCommand implements Command {
                     page = pagesConfigManagerInst.getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
                     request.setAttribute(Parameters.ERROR_USER_EXISTS, messageManagerInst.getProperty(MessageConstants.USER_EXISTS));
                 }
+                util.getSession().close();
             } else {
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                 page = pagesConfigManagerInst.getProperty(PagesPaths.REGISTRATION_PAGE_PATH);

@@ -28,8 +28,10 @@ public class RequestCommand implements Command {
         User user = (User) session.getAttribute(Parameters.USER);
         if ((UserRole.CLIENT).equals(user.getUserRole())) {
             try {
+                util.openSession();
                 Order order = RequestParameterParser.getNewOrder(request);
                 OrderServiceImpl.getInstance().add(order);
+                util.getSession().close();
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                 page = CommandType.CLIENTORDERS.getCurrentCommand().execute(request);
             } catch (ServiceException | RequestNumericAttributeTransferException e) {

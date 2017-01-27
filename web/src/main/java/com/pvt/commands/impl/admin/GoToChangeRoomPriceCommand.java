@@ -29,7 +29,9 @@ public class GoToChangeRoomPriceCommand implements Command {
         if ((UserRole.ADMIN).equals(user.getUserRole())) {
             try {
                 int roomId = RequestParameterParser.getRoomId(request);
+                util.openSession();
                 Room room = RoomServiceImpl.getInstance().getById(roomId);
+                util.getSession().close();
                 request.setAttribute(Parameters.ROOM, room);
                 request.setAttribute(Parameters.ROOM_NEW_PRICE_INPUT_PLACEHOLDER, validationManagerInst.getProperty(ValidationConstants.ROOM_NEW_PRICE_INPUT_PLACEHOLDER));
                 try {

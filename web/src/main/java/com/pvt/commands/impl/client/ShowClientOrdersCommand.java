@@ -27,11 +27,13 @@ public class ShowClientOrdersCommand implements Command {
         if ((UserRole.CLIENT).equals(user.getUserRole())) {
             try {
                 int userId = user.getUserId();
+                util.openSession();
                 List<Order> confirmedClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.CONFIRMED, userId);
                 List<Order> requestedClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.REQUESTED, userId);
                 List<Order> deniedClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.DENIED, userId);
                 List<Order> paidClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.ORDERED, userId);
                 List<Order> completedClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.COMPLETED, userId);
+                util.getSession().close();
                 request.setAttribute(Parameters.CLIENT_CONFIRMED_ORDERS_LIST, confirmedClientOrdersList);
                 request.setAttribute(Parameters.CLIENT_REQUESTED_ORDERS_LIST, requestedClientOrdersList);
                 request.setAttribute(Parameters.CLIENT_DENIED_ORDERS_LIST, deniedClientOrdersList);

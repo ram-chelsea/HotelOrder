@@ -8,9 +8,8 @@ import com.pvt.services.GeneralService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserServiceImpl extends GeneralService<User> {
@@ -20,7 +19,6 @@ public class UserServiceImpl extends GeneralService<User> {
      */
     private static UserServiceImpl instance;
     private static UserDaoImpl userDaoInst = UserDaoImpl.getInstance();
-    private Transaction transaction;
     public static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
@@ -50,13 +48,12 @@ public class UserServiceImpl extends GeneralService<User> {
     @Override
     public void add(User user) throws ServiceException {
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             userDaoInst.save(user);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("Save(user):" + user);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -71,15 +68,14 @@ public class UserServiceImpl extends GeneralService<User> {
      */
     @Override
     public List<User> getAll() throws ServiceException {
-        List<User> userList;
+        List<User> userList = new ArrayList<>();
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             userList = userDaoInst.getAll();
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("Get All Clients");
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().commit();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -87,7 +83,7 @@ public class UserServiceImpl extends GeneralService<User> {
     }
 
     @Override
-    public User getById(int id){
+    public User getById(int id) {
         throw new UnsupportedOperationException();
     }
 
@@ -102,13 +98,12 @@ public class UserServiceImpl extends GeneralService<User> {
     public boolean checkUserAuthentication(String login, String password) throws ServiceException {
         boolean isAuthenticated;
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             isAuthenticated = userDaoInst.checkUserAuthentication(login, password);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("checkUserAuthentication(login, password): " + login);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -125,13 +120,12 @@ public class UserServiceImpl extends GeneralService<User> {
     public User getUserByLogin(String login) throws ServiceException {
         User user;
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             user = userDaoInst.getByLogin(login);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("getUserByLogin(login): " + login);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -148,15 +142,14 @@ public class UserServiceImpl extends GeneralService<User> {
     public boolean checkIsNewUser(User user) throws ServiceException {
         boolean isNew = false;
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             if ((userDaoInst.getById(user.getUserId()) == null) & (userDaoInst.isNewUser(user.getLogin()))) {
                 isNew = true;
             }
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("checkIsNewUser(user): " + user);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }

@@ -39,7 +39,9 @@ public class MakeOrderCommand implements Command {
                 if (areFieldsFullStocked()) {
                     if (isRoominessCorrect()) {
                         if (isCheckInOutDatesOrderCorrect(checkIn, checkOut)) {
+                            util.openSession();
                             List<Room> suitedRoomsList = RoomServiceImpl.getInstance().getSuitedRooms(orderedRoomFormat, checkIn, checkOut);
+                            util.getSession().close();
                             request.setAttribute(Parameters.SUITED_ROOMS_LIST, suitedRoomsList);
                             session.setAttribute(Parameters.CHECK_IN_DATE, checkIn);
                             session.setAttribute(Parameters.CHECK_OUT_DATE, checkOut);
@@ -67,7 +69,6 @@ public class MakeOrderCommand implements Command {
             request.setAttribute(Parameters.ERROR_USER_ROLE, messageManagerInst.getProperty(MessageConstants.AUTHORIZATION_ERROR));
             page = CommandType.LOGOUT.getCurrentCommand().execute(request);
         }
-
         return page;
     }
 

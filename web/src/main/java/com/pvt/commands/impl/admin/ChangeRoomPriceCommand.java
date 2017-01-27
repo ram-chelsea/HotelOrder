@@ -31,7 +31,9 @@ public class ChangeRoomPriceCommand implements Command {
                 int newPrice = RequestParameterParser.getNewRoomPrice(request);
                 if (!Integer.valueOf(newPrice).toString().isEmpty()) {
                     if (isNewPriceCorrect(newPrice)) {
+                        util.openSession();
                         RoomServiceImpl.getInstance().updateRoomPrice(roomId, newPrice);
+                        util.getSession().close();
                         page = CommandType.ROOMS.getCurrentCommand().execute(request);
                     } else {
                         request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_PRICE));

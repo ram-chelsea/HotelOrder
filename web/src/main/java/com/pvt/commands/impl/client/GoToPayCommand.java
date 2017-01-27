@@ -28,7 +28,9 @@ public class GoToPayCommand implements Command {
         if ((UserRole.CLIENT).equals(user.getUserRole())) {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
+                util.openSession();
                 Order order = OrderServiceImpl.getInstance().getById(orderId);
+                util.getSession().close();
                 request.setAttribute(Parameters.ORDER, order);
                 request.setAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManagerInst.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
                 request.setAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManagerInst.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));

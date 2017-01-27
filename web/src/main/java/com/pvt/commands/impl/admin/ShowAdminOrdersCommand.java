@@ -26,11 +26,13 @@ public class ShowAdminOrdersCommand implements Command {
         User user = (User) session.getAttribute(Parameters.USER);
         if (UserRole.ADMIN.equals(user.getUserRole())) {
             try {
+                util.openSession();
                 List<Order> requestedOrdersList = orderServiceInst.getOrdersListByStatus(OrderStatus.REQUESTED);
                 List<Order> cancelledOrdersList = orderServiceInst.getOrdersListByStatus(OrderStatus.CANCELLED);
                 List<Order> allPaidOrdersList = orderServiceInst.getOrdersListByStatus(OrderStatus.ORDERED);
                 List<Order> confirmedOrdersList = orderServiceInst.getOrdersListByStatus(OrderStatus.CONFIRMED);
                 List<Order> completedOrdersList = orderServiceInst.getOrdersListByStatus(OrderStatus.COMPLETED);
+                util.getSession().close();
                 request.setAttribute(Parameters.REQUESTED_ORDERS_LIST, requestedOrdersList);
                 request.setAttribute(Parameters.CANCELLED_ORDERS_LIST, cancelledOrdersList);
                 request.setAttribute(Parameters.ALL_PAID_ORDERS_LIST, allPaidOrdersList);

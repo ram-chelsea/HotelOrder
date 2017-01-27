@@ -6,10 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Describes <tt>Room</tt> entity
@@ -21,6 +18,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(exclude = "roomId", callSuper = false)
 public class Room extends Entity {
     @Id
+    @Column(name = "ID")
     @GeneratedValue
     private int roomId;
 
@@ -31,6 +29,7 @@ public class Room extends Entity {
     private int roominess;
 
     @Column(name = "ROOM_CLASS")
+    @Enumerated(EnumType.STRING)
     private RoomClass roomClass;
 
     @Column(name = "PRICE")

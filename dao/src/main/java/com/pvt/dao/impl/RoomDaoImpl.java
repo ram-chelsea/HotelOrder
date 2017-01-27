@@ -112,7 +112,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.CHECK_IS_NEW_ROOM);
         query.setParameter(0, roomNumber);
-        int count = (int) query.uniqueResult();
+        int count = ((Long) query.uniqueResult()).intValue();
         boolean isNewRoom = (count == 0);
         return isNewRoom;
     }
@@ -145,7 +145,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_ALL_FREE_ROOMS_FOR_PERIOD_WITH_CATEGORIES);
         query.setParameter(0, orderedRoomFormat.getRoominess());
-        query.setParameter(1, orderedRoomFormat.getRoomClass().toString());
+        query.setParameter(1, orderedRoomFormat.getRoomClass());
         query.setParameter(2, checkIn);
         query.setParameter(3, checkOut);
         List<Room> suitedRoomsList = query.list();

@@ -30,7 +30,9 @@ public class CardAmountCommand implements Command {
         String cardNumber = RequestParameterParser.getCardNumber(request);
         if ((UserRole.CLIENT).equals(user.getUserRole())) {
             try {
+                util.openSession();
                 CreditCard card = CreditCardServiceImpl.getInstance().getByCardNumber(cardNumber);
+                util.getSession().close();
                 request.setAttribute(Parameters.CARD, card);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.CARD_AMOUNT_PAGE);
             } catch (ServiceException e) {

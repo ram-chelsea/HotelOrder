@@ -21,13 +21,13 @@ public class LoginUserCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
     private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
     private UserServiceImpl userServiceInst = UserServiceImpl.getInstance();
-
     @Override
     public String execute(HttpServletRequest request) {
         String page;
         HttpSession session = request.getSession();
         try {
             User user = RequestParameterParser.getUser(request);
+            util.openSession();
             if (userServiceInst.checkUserAuthentication(user.getLogin(), user.getPassword())) {
                 user = userServiceInst.getUserByLogin(user.getLogin());
                 session.setAttribute(Parameters.USER, user);
@@ -43,6 +43,7 @@ public class LoginUserCommand implements Command {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.INDEX_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_LOGIN_OR_PASSWORD, messageManagerInst.getProperty(MessageConstants.WRONG_LOGIN_OR_PASSWORD));
             }
+            util.getSession().close();
         } catch (ServiceException e) {
             page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
             request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));

@@ -25,7 +25,9 @@ public class DenyCommand implements Command {
         if ((UserRole.ADMIN).equals(user.getUserRole())) {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
+                util.openSession();
                 OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.DENIED);
+                util.getSession().close();
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                 page = CommandType.ADMINORDERS.getCurrentCommand().execute(request);
             } catch (ServiceException | RequestNumericAttributeTransferException e) {

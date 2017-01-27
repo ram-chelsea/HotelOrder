@@ -5,7 +5,7 @@ package com.pvt.constants;
  */
 public class HqlRequest {
     public static final String GET_ALL_CLIENTS =
-            "SELECT U FROM User U WHERE U.userRole = \"CLIENT\" ";
+            "SELECT U FROM User U WHERE U.userRole = 'CLIENT' ";
     public static final String GET_USER_BY_LOGIN =
             "SELECT U FROM User U WHERE U.login = ?";
     public static final String CHECK_LOGIN =
@@ -21,8 +21,8 @@ public class HqlRequest {
             "SELECT count(R) FROM Room R WHERE R.roomNumber = ?";
     public static final String GET_ALL_FREE_ROOMS_FOR_PERIOD_WITH_CATEGORIES
             = "SELECT R FROM Room R WHERE R.roominess = ? AND R.roomClass = ? " +
-                    "AND R.roomId  NOT IN (SELECT DISTINCT roomId FROM Order O " +
-                        "WHERE O.orderStatus IN (\"REQUESTED\", \"CONFIRMED\", \"ORDERED\") AND (O.checkOutDate >= ? AND O.checkInDate <= ?))";
+                    "AND R NOT IN (SELECT DISTINCT O.room FROM Order O " +
+                        "WHERE O.orderStatus IN ('REQUESTED', 'CONFIRMED', 'ORDERED') AND (O.checkOutDate >= ? AND O.checkInDate <= ?))";
     public static final String GET_ALL_ROOMINESSES =
             "SELECT DISTINCT R.roominess FROM Room R ORDER BY R.roominess";
 

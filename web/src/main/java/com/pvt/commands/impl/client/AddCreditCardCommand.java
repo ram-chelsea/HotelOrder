@@ -33,12 +33,14 @@ public class AddCreditCardCommand implements Command {
                 card = RequestParameterParser.getNewCreditCard(request);
                 if (areFieldsFullStocked()) {
                     if (areValuesCorrect()) {
+                        util.openSession();
                         if (cardServiceInst.isNewCreditCard(card)) {
                             cardServiceInst.add(card);
                             request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                         } else {
                             request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.CARD_EXISTS));
                         }
+                        util.getSession().close();
                     } else {
                         request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_CARD_VALUES));
                     }

@@ -26,7 +26,9 @@ public class ConfirmCommand implements Command {
         if ((UserRole.ADMIN).equals(user.getUserRole())) {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
+                util.openSession();
                 OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.CONFIRMED);
+                util.getSession().close();
                 page = CommandType.ADMINORDERS.getCurrentCommand().execute(request);
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
             } catch (ServiceException | RequestNumericAttributeTransferException e) {

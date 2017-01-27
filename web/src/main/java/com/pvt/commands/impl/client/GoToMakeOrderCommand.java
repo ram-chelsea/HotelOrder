@@ -22,10 +22,13 @@ public class GoToMakeOrderCommand implements Command {
     public String execute(HttpServletRequest request) {
         String page;
         HttpSession session = request.getSession();
+        util.openSession();
         User user = (User) session.getAttribute(Parameters.USER);
         if ((UserRole.CLIENT).equals(user.getUserRole())) {
             try {
+                util.openSession();
                 List roominessesList = RoomServiceImpl.getInstance().getRoominesses();
+                util.getSession().close();
                 ArrayList roomsClassesList = RoomClass.enumToList();
                 request.setAttribute(Parameters.ROOMS_CLASSES_LIST, roomsClassesList);
                 request.setAttribute(Parameters.ROOMINESSES_LIST, roominessesList);

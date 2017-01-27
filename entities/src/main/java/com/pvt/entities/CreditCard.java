@@ -19,6 +19,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(exclude = "cardId", callSuper = false)
 public class CreditCard extends Entity {
     @Id
+    @Column(name = "ID")
     @GeneratedValue
     private int cardId;
 

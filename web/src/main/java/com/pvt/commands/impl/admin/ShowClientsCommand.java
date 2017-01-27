@@ -27,7 +27,9 @@ public class ShowClientsCommand implements Command {
         User user = (User) session.getAttribute(Parameters.USER);
         if (UserRole.ADMIN.equals(user.getUserRole())) {
             try {
+                util.openSession();
                 List<User> userList = UserServiceImpl.getInstance().getAll();
+                util.getSession().close();
                 request.setAttribute(Parameters.USER_LIST, userList);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ADMIN_SHOW_CLIENTS_PAGE);
             } catch (ServiceException e) {

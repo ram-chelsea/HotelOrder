@@ -28,7 +28,9 @@ public class ShowRoomsCommand implements Command {
         User user = (User) session.getAttribute(Parameters.USER);
         if ((UserRole.ADMIN).equals(user.getUserRole())) {
             try {
+                util.openSession();
                 List<Room> roomsList = RoomServiceImpl.getInstance().getAll();
+                util.getSession().close();
                 request.setAttribute(Parameters.ROOMS_LIST, roomsList);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.SHOW_ROOMS_PAGE);
             } catch (ServiceException e) {

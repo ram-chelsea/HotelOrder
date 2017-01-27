@@ -33,12 +33,14 @@ public class AddNewRoomCommand implements Command {
                 room = RequestParameterParser.getNewRoom(request);
                 if (areFieldsFullyStocked()) {
                     if (areNumericFieldsCorrect()) {
+                        util.openSession();
                         if (roomServiceInst.isNewRoom(room)) {
                             roomServiceInst.add(room);
                             request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                         } else {
                             request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.ROOM_EXISTS));
                         }
+                        util.getSession().close();
                     } else {
                         request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.INVALID_ROOM_NUMERIC_FIELD_VALUE));
                     }

@@ -8,8 +8,6 @@ import com.pvt.services.GeneralService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.util.List;
 
@@ -20,7 +18,6 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      */
     private static CreditCardServiceImpl instance;
     private static CreditCardDaoImpl cardDaoInst = CreditCardDaoImpl.getInstance();
-    private Transaction transaction;
     public static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
@@ -50,13 +47,12 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
     @Override
     public void add(CreditCard card) throws ServiceException {
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             cardDaoInst.save(card);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("Save(card):" + card);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -81,13 +77,12 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      */
     public void takeMoneyForOrder(CreditCard card, int amount) throws ServiceException {
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             cardDaoInst.takeMoneyForOrder(card, amount);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("takeMoneyForOrder(card, amount):" + card + ", " + amount);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -103,13 +98,12 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
     public CreditCard getByCardNumber(String cardNumber) throws ServiceException {
         CreditCard card;
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             card = cardDaoInst.getByCardNumber(cardNumber);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("getByCardNumber(cardNumber): " + cardNumber);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -126,15 +120,14 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
     public boolean isNewCreditCard(CreditCard card) throws ServiceException {
         boolean isNew = false;
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             if ((cardDaoInst.getById(card.getCardId()) == null) & (cardDaoInst.isNewCreditCard(card.getCardNumber()))) {
                 isNew = true;
             }
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("CheckIsNewCreditCard(card): " + card);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }

@@ -19,6 +19,7 @@ import java.sql.Date;
 @EqualsAndHashCode(callSuper = false)
 public class Order extends Entity {
     @Id
+    @Column(name = "ID")
     @GeneratedValue
     private int orderId;
 
@@ -31,14 +32,13 @@ public class Order extends Entity {
     private Room room;
 
     @Column(name = "CHECK_IN_DATE")
-    @Temporal(TemporalType.DATE)
     private Date checkInDate;
 
     @Column(name = "CHECK_OUT_DATE")
-    @Temporal(TemporalType.DATE)
     private Date checkOutDate;
 
     @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
     @Column(name = "TOTAL_PRICE")

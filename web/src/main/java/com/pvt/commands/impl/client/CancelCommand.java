@@ -25,7 +25,9 @@ public class CancelCommand implements Command {
         if ((UserRole.CLIENT).equals(user.getUserRole())) {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
+                util.openSession();
                 OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.CANCELLED);
+                util.getSession().close();
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                 page = CommandType.CLIENTORDERS.getCurrentCommand().execute(request);
             } catch (ServiceException | RequestNumericAttributeTransferException e) {

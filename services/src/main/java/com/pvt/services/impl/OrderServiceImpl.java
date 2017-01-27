@@ -9,9 +9,8 @@ import com.pvt.services.GeneralService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderServiceImpl extends GeneralService<Order> {
@@ -21,7 +20,6 @@ public class OrderServiceImpl extends GeneralService<Order> {
      */
     private static OrderServiceImpl instance;
     private static OrderDaoImpl orderDaoInst = OrderDaoImpl.getInstance();
-    private Transaction transaction;
     public static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
@@ -51,13 +49,12 @@ public class OrderServiceImpl extends GeneralService<Order> {
     @Override
     public void add(Order order) throws ServiceException {
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             orderDaoInst.save(order);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("Save(order):" + order);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -71,15 +68,14 @@ public class OrderServiceImpl extends GeneralService<Order> {
      */
     @Override
     public List<Order> getAll() throws ServiceException {
-        List<Order> ordersList;
+        List<Order> ordersList = new ArrayList<>();
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             ordersList = orderDaoInst.getAll();
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("Get All Orders ");
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -97,13 +93,12 @@ public class OrderServiceImpl extends GeneralService<Order> {
     public Order getById(int orderId) throws ServiceException {
         Order order;
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             order = orderDaoInst.getById(orderId);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("GetById(orderId): " + orderId);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -118,15 +113,14 @@ public class OrderServiceImpl extends GeneralService<Order> {
      * @throws ServiceException
      */
     public List<Order> getOrdersListByStatus(OrderStatus status) throws ServiceException {
-        List<Order> ordersList;
+        List<Order> ordersList = new ArrayList<>();
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             ordersList = orderDaoInst.getOrdersListByStatus(status);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("getOrdersListByStatus(status): " + status);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -142,15 +136,14 @@ public class OrderServiceImpl extends GeneralService<Order> {
      * @throws ServiceException
      */
     public List<Order> getClientOrdersListByStatus(OrderStatus status, int userId) throws ServiceException {
-        List<Order> ordersList;
+        List<Order> ordersList = new ArrayList<>();
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             ordersList = orderDaoInst.getClientOrdersListByStatus(status, userId);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("getClientOrdersListByStatus(status, userId):" + status + ", " + userId);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -166,13 +159,12 @@ public class OrderServiceImpl extends GeneralService<Order> {
      */
     public void updateOrderStatus(int orderId, OrderStatus orderStatus) throws ServiceException {
         try {
-            Session session = util.getSession();
-            transaction = session.beginTransaction();
+            util.getSession().beginTransaction();
             orderDaoInst.updateOrderStatus(orderId, orderStatus);
-            transaction.commit();
+            util.getSession().getTransaction().commit();
             logger.info("updateOrderStatus( orderId, orderStatus): " + orderId + ", " + orderStatus);
         } catch (HibernateException e) {
-            transaction.rollback();
+            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }

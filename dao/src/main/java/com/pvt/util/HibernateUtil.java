@@ -25,15 +25,15 @@ public class HibernateUtil {
 
     private HibernateUtil() {
         try {
-            Configuration configuration = new Configuration().configure()
+            Configuration configuration = new Configuration()
                     .configure(HibernateUtil.class.getResource("/hibernate.cfg.xml"));
             StandardServiceRegistryBuilder serviceRegistryBuilder = new StandardServiceRegistryBuilder();
             serviceRegistryBuilder.applySettings(configuration.getProperties());
             ServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        } catch (Throwable ex) {
-            logger.error("Initial SessionFactory creation failed." + ex);
-            System.exit(0);
+        } catch (Throwable e) {
+            logger.error("Initial SessionFactory creation failed." + e);
+            throw new ExceptionInInitializerError(e);
         }
     }
 
@@ -50,6 +50,12 @@ public class HibernateUtil {
             session = sessionFactory.openSession();
             sessions.set(session);
         }
+        return session;
+    }
+
+    public Session openSession() {
+        Session session = sessionFactory.openSession();
+        sessions.set(session);
         return session;
     }
 

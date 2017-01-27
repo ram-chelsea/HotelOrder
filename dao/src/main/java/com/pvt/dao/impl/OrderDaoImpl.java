@@ -95,7 +95,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
     public List<Order> getOrdersListByStatus(OrderStatus status){
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_ORDERS_BY_STATUS);
-        query.setParameter(0, status.toString());
+        query.setParameter(0, status);
         List<Order> orderList = query.list();
         return orderList;
     }
@@ -110,7 +110,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
     public List<Order> getClientOrdersListByStatus(OrderStatus status, int userId){
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_CLIENTS_ORDERS_BY_STATUS);
-        query.setParameter(0, status.toString());
+        query.setParameter(0, status);
         User user = (User) session.get(User.class, userId);
         query.setParameter(1, user);
         List<Order> orderList = query.list();

@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Describes <tt>User</tt> entity
@@ -22,6 +19,7 @@ import javax.persistence.Table;
 public class User extends Entity {
 
     @Id
+    @Column(name = "ID")
     @GeneratedValue
     private int userId;
 
@@ -38,6 +36,7 @@ public class User extends Entity {
     private String password;
 
     @Column(name = "USER_ROLE")
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
 }
