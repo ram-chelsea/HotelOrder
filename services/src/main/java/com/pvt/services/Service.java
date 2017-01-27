@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface Service<T extends Entity> {
     /**
-     * Calls Dao add() method
+     * Calls Dao save() method
      *
      * @param entity - object of derived class Entity
      * @throws SQLException

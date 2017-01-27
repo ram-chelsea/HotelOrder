@@ -17,7 +17,6 @@ import com.pvt.util.EntityBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
-import java.sql.SQLException;
 
 public class RequestParameterParser {
     private RequestParameterParser() {
@@ -43,15 +42,16 @@ public class RequestParameterParser {
         return user;
     }
 
-    public static Order getNewOrder(HttpServletRequest request) throws IllegalArgumentException, SQLException, ServiceException, RequestNumericAttributeTransferException {
+    public static Order getNewOrder(HttpServletRequest request) throws IllegalArgumentException, ServiceException, RequestNumericAttributeTransferException {
         HttpSession session = request.getSession();
+        RoomServiceImpl roomServiceInst = RoomServiceImpl.getInstance();
         int orderId = 0;
         int roomId = RequestParameterParser.getRoomId(request);
-        Room room = RoomServiceImpl.getInstance().getById(roomId);
+        Room room = roomServiceInst.getById(roomId);
         User user = (User) session.getAttribute(Parameters.USER);
         Date checkIn = (Date) (session.getAttribute(Parameters.CHECK_IN_DATE));
         Date checkOut = (Date) (session.getAttribute(Parameters.CHECK_OUT_DATE));
-        int totalPrice = RoomServiceImpl.getInstance().computeTotalPriceForRoom(room, checkIn, checkOut);
+        int totalPrice = roomServiceInst.computeTotalPriceForRoom(room, checkIn, checkOut);
         Order order = EntityBuilder.buildOrder(orderId, user, room, checkIn, checkOut, OrderStatus.REQUESTED, totalPrice);
         return order;
     }

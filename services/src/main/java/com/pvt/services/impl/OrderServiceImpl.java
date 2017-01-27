@@ -4,13 +4,14 @@ package com.pvt.services.impl;
 import com.pvt.constants.OrderStatus;
 import com.pvt.dao.impl.OrderDaoImpl;
 import com.pvt.entities.Order;
-import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.managers.PoolManager;
 import com.pvt.services.GeneralService;
+import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class OrderServiceImpl extends GeneralService<Order> {
@@ -20,6 +21,8 @@ public class OrderServiceImpl extends GeneralService<Order> {
      */
     private static OrderServiceImpl instance;
     private static OrderDaoImpl orderDaoInst = OrderDaoImpl.getInstance();
+    private Transaction transaction;
+    public static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a OrderServiceImpl variable
@@ -43,22 +46,20 @@ public class OrderServiceImpl extends GeneralService<Order> {
      * Calls OrderDaoImpl add() method
      *
      * @param order - <tt>Order</tt> object to add
-     * @throws SQLException
      * @throws ServiceException
      */
     @Override
-    public void add(Order order) throws ServiceException, SQLException {
+    public void add(Order order) throws ServiceException {
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             orderDaoInst.save(order);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("Save(order):" + order);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -66,23 +67,21 @@ public class OrderServiceImpl extends GeneralService<Order> {
      * Calls OrderDaoImpl getAll() method
      *
      * @return <tt>List</tt> of all <tt>Order</tt> objects
-     * @throws SQLException
      * @throws ServiceException
      */
     @Override
-    public List<Order> getAll() throws SQLException, ServiceException {
+    public List<Order> getAll() throws ServiceException {
         List<Order> ordersList;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             ordersList = orderDaoInst.getAll();
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("Get All Orders ");
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return ordersList;
     }
@@ -92,23 +91,21 @@ public class OrderServiceImpl extends GeneralService<Order> {
      *
      * @param orderId - <tt>Order</tt> object <tt>orderId</tt> property to get the object
      * @return <tt>Order</tt> with <i>orderId</i> id value
-     * @throws SQLException
      * @throws ServiceException
      */
     @Override
-    public Order getById(int orderId) throws SQLException, ServiceException {
+    public Order getById(int orderId) throws ServiceException {
         Order order;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             order = orderDaoInst.getById(orderId);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("GetById(orderId): " + orderId);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return order;
     }
@@ -118,22 +115,20 @@ public class OrderServiceImpl extends GeneralService<Order> {
      *
      * @param status - <tt>Order</tt> object <tt>status</tt> property to get the objects <tt>List</tt>
      * @return <tt>List</tt> of <tt>Order</tt> objects with <i>status</i> value
-     * @throws SQLException
      * @throws ServiceException
      */
-    public List<Order> getOrdersListByStatus(OrderStatus status) throws SQLException, ServiceException {
+    public List<Order> getOrdersListByStatus(OrderStatus status) throws ServiceException {
         List<Order> ordersList;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             ordersList = orderDaoInst.getOrdersListByStatus(status);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("getOrdersListByStatus(status): " + status);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return ordersList;
     }
@@ -144,22 +139,20 @@ public class OrderServiceImpl extends GeneralService<Order> {
      * @param status - <tt>Order</tt> object <tt>status</tt> property to get the objects <tt>List</tt>
      * @param userId - userId determinate the <tt>User</tt> object whose orders are requested
      * @return <tt>List</tt> of <tt>Order</tt> objects of <tt>User</tt> with<i>userId</i> id and <i>status</i> value
-     * @throws SQLException
      * @throws ServiceException
      */
-    public List<Order> getClientOrdersListByStatus(OrderStatus status, int userId) throws SQLException, ServiceException {
+    public List<Order> getClientOrdersListByStatus(OrderStatus status, int userId) throws ServiceException {
         List<Order> ordersList;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             ordersList = orderDaoInst.getClientOrdersListByStatus(status, userId);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("getClientOrdersListByStatus(status, userId):" + status + ", " + userId);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return ordersList;
     }
@@ -169,21 +162,19 @@ public class OrderServiceImpl extends GeneralService<Order> {
      *
      * @param orderId     - orderId determinate the <tt>Order</tt> object to update <tt>status</tt>
      * @param orderStatus -  value to update <tt>Order</tt> object <tt>status</tt> property
-     * @throws SQLException
      * @throws ServiceException
      */
-    public void updateOrderStatus(int orderId, OrderStatus orderStatus) throws SQLException, ServiceException {
+    public void updateOrderStatus(int orderId, OrderStatus orderStatus) throws ServiceException {
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             orderDaoInst.updateOrderStatus(orderId, orderStatus);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("updateOrderStatus( orderId, orderStatus): " + orderId + ", " + orderStatus);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
     }
 

@@ -3,11 +3,13 @@ package com.pvt.services.impl;
 
 import com.pvt.dao.impl.CreditCardDaoImpl;
 import com.pvt.entities.CreditCard;
-import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.managers.PoolManager;
 import com.pvt.services.GeneralService;
+import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -19,6 +21,8 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      */
     private static CreditCardServiceImpl instance;
     private static CreditCardDaoImpl cardDaoInst = CreditCardDaoImpl.getInstance();
+    private Transaction transaction;
+    public static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a CreditCardServiceImpl variable
@@ -42,22 +46,20 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      * Calls CreditCardDaoImpl add() method
      *
      * @param card - <tt>CreditCard</tt> object to add
-     * @throws SQLException
      * @throws ServiceException
      */
     @Override
-    public void add(CreditCard card) throws SQLException, ServiceException {
+    public void add(CreditCard card) throws ServiceException {
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             cardDaoInst.save(card);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("Save(card):" + card);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -76,21 +78,19 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      *
      * @param card   - <tt>CreditCard</tt> object to take money from
      * @param amount money to take from <i>card</i>
-     * @throws SQLException
      * @throws ServiceException
      */
-    public void takeMoneyForOrder(CreditCard card, int amount) throws ServiceException, SQLException {
+    public void takeMoneyForOrder(CreditCard card, int amount) throws ServiceException {
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             cardDaoInst.takeMoneyForOrder(card, amount);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("takeMoneyForOrder(card, amount):" + card + ", " + amount);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -99,22 +99,20 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      *
      * @param cardNumber -  <tt>cardNumber</tt>  being used to get <tt>CreditCard</tt> object
      * @return <tt>cardNumber</tt> with <i>cardNumber</i> value
-     * @throws SQLException
      * @throws ServiceException
      */
-    public CreditCard getByCardNumber(String cardNumber) throws SQLException, ServiceException {
+    public CreditCard getByCardNumber(String cardNumber) throws ServiceException {
         CreditCard card;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             card = cardDaoInst.getByCardNumber(cardNumber);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("getByCardNumber(cardNumber): " + cardNumber);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return card;
     }
@@ -124,24 +122,22 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      *
      * @param card -  <tt>CreditCard</tt>  to check if it is new
      * @return true if the <tt>CreditCard</tt> is new
-     * @throws SQLException
      * @throws ServiceException
      */
-    public boolean isNewCreditCard(CreditCard card) throws SQLException, ServiceException {
+    public boolean isNewCreditCard(CreditCard card) throws ServiceException {
         boolean isNew = false;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             if ((cardDaoInst.getById(card.getCardId()) == null) & (cardDaoInst.isNewCreditCard(card.getCardNumber()))) {
                 isNew = true;
             }
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("CheckIsNewCreditCard(card): " + card);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return isNew;
     }

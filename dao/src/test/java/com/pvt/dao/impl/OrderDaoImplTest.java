@@ -9,7 +9,6 @@ import com.pvt.entities.Order;
 import com.pvt.entities.Room;
 import com.pvt.entities.User;
 import com.pvt.exceptions.DaoException;
-import com.pvt.managers.PoolManager;
 import com.pvt.util.EntityBuilder;
 import org.junit.After;
 import org.junit.Assert;

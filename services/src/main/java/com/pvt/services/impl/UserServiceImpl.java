@@ -3,9 +3,7 @@ package com.pvt.services.impl;
 
 import com.pvt.dao.impl.UserDaoImpl;
 import com.pvt.entities.User;
-import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.managers.PoolManager;
 import com.pvt.services.GeneralService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
@@ -44,30 +42,14 @@ public class UserServiceImpl extends GeneralService<User> {
         return instance;
     }
 
-//    /**
-//     * Calls UserDaoImpl add() method
-//     *
-//     * @param user - <tt>User</tt> object to add
-//     * @throws SQLException
-//     * @throws ServiceException
-//     */
-//    @Override
-//    public void add(User user) throws SQLException, ServiceException {
-//        try {
-//            connection = PoolManager.getInstance().getConnection();
-//            connection.setAutoCommit(false);
-//            userDaoInst.add(user);
-//            connection.commit();
-//        } catch (SQLException | DaoException e) {
-//            connection.rollback();
-//            logger.error(transactionFailedMessage);
-//            throw new ServiceException(e.getMessage());
-//        } finally {
-//            PoolManager.releaseConnection(connection);
-//        }
-//    }
+    /**
+     * Calls UserDaoImpl add() method
+     *
+     * @param user - <tt>User</tt> object to add
+     * @throws ServiceException
+     */
     @Override
-    public void add(User user) throws ServiceException{
+    public void add(User user) throws ServiceException {
         try {
             Session session = util.getSession();
             transaction = session.beginTransaction();
@@ -75,8 +57,8 @@ public class UserServiceImpl extends GeneralService<User> {
             transaction.commit();
             logger.info("Save(user):" + user);
         } catch (HibernateException e) {
-            logger.error("Error save in Dao" + e);
             transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -86,23 +68,21 @@ public class UserServiceImpl extends GeneralService<User> {
      *
      * @return <tt>List</tt> of all <tt>User</tt> objects
      * with CLIENT userRole
-     * @throws SQLException
      * @throws ServiceException
      */
     @Override
-    public List<User> getAll() throws SQLException, ServiceException {
+    public List<User> getAll() throws ServiceException {
         List<User> userList;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             userList = userDaoInst.getAll();
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("Get All Clients");
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return userList;
     }
@@ -118,22 +98,20 @@ public class UserServiceImpl extends GeneralService<User> {
      * @param login    <tt>User</tt> object <tt>login</tt> property to get the object
      * @param password <tt>User</tt> object <tt>password</tt> property to get the object
      * @return true if <tt>User</tt> with <i>login</i> and <i>password</i> is authenticated
-     * @throws SQLException
      * @throws ServiceException
      */
-    public boolean checkUserAuthentication(String login, String password) throws SQLException, ServiceException {
+    public boolean checkUserAuthentication(String login, String password) throws ServiceException {
         boolean isAuthenticated;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             isAuthenticated = userDaoInst.checkUserAuthentication(login, password);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("checkUserAuthentication(login, password): " + login);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return isAuthenticated;
     }
@@ -143,22 +121,20 @@ public class UserServiceImpl extends GeneralService<User> {
      *
      * @param login -  <tt>login</tt>  being used to get <tt>User</tt> object
      * @return <tt>User</tt> with <i>login</i> value
-     * @throws SQLException
      * @throws ServiceException
      */
-    public User getUserByLogin(String login) throws SQLException, ServiceException {
+    public User getUserByLogin(String login) throws ServiceException {
         User user;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             user = userDaoInst.getByLogin(login);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("getUserByLogin(login): " + login);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return user;
     }
@@ -168,24 +144,22 @@ public class UserServiceImpl extends GeneralService<User> {
      *
      * @param user <tt>User</tt> object to check if it is new
      * @return true if <tt>User</tt> <i>user</i> exists in the database
-     * @throws SQLException
      * @throws ServiceException
      */
     public boolean checkIsNewUser(User user) throws SQLException, ServiceException {
         boolean isNew = false;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             if ((userDaoInst.getById(user.getUserId()) == null) & (userDaoInst.isNewUser(user.getLogin()))) {
                 isNew = true;
             }
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("checkIsNewUser(user): " + user);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return isNew;
     }

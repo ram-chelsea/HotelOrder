@@ -4,7 +4,6 @@ import com.pvt.constants.SqlRequest;
 import com.pvt.dao.EntityDaoImplTest;
 import com.pvt.entities.CreditCard;
 import com.pvt.exceptions.DaoException;
-import com.pvt.managers.PoolManager;
 import com.pvt.util.EntityBuilder;
 import org.junit.After;
 import org.junit.Assert;

@@ -1,7 +1,6 @@
 package com.pvt.dao;
 
 
-import com.pvt.managers.PoolManager;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

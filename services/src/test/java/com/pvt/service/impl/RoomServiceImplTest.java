@@ -6,7 +6,6 @@ import com.pvt.dao.impl.RoomDaoImpl;
 import com.pvt.entities.Room;
 import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.managers.PoolManager;
 import com.pvt.service.EntityServiceImplTest;
 import com.pvt.services.impl.RoomServiceImpl;
 import com.pvt.util.EntityBuilder;

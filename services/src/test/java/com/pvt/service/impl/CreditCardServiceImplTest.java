@@ -5,7 +5,6 @@ import com.pvt.dao.impl.CreditCardDaoImpl;
 import com.pvt.entities.CreditCard;
 import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.managers.PoolManager;
 import com.pvt.service.EntityServiceImplTest;
 import com.pvt.services.impl.CreditCardServiceImpl;
 import com.pvt.util.EntityBuilder;

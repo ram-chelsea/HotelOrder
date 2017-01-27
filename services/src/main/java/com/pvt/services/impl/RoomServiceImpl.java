@@ -3,15 +3,15 @@ package com.pvt.services.impl;
 
 import com.pvt.dao.impl.RoomDaoImpl;
 import com.pvt.entities.Room;
-import com.pvt.exceptions.DaoException;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.managers.PoolManager;
 import com.pvt.services.GeneralService;
+import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.sql.Date;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RoomServiceImpl extends GeneralService<Room> {
@@ -21,6 +21,8 @@ public class RoomServiceImpl extends GeneralService<Room> {
      */
     private static RoomServiceImpl instance;
     private static RoomDaoImpl roomDaoInst = RoomDaoImpl.getInstance();
+    private Transaction transaction;
+    public static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a RoomServiceImpl variable
@@ -44,22 +46,20 @@ public class RoomServiceImpl extends GeneralService<Room> {
      * Calls RoomDaoImpl add() method
      *
      * @param room - <tt>Room</tt> object to add
-     * @throws SQLException
      * @throws ServiceException
      */
     @Override
-    public void add(Room room) throws SQLException, ServiceException {
+    public void add(Room room) throws ServiceException {
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             roomDaoInst.save(room);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("Save(room):" + room);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -67,49 +67,45 @@ public class RoomServiceImpl extends GeneralService<Room> {
      * Calls RoomDaoImpl getAll() method
      *
      * @return <tt>List</tt> of all <tt>Room</tt> objects
-     * @throws SQLException
      * @throws ServiceException
      */
     @Override
-    public List<Room> getAll() throws SQLException, ServiceException {
-        List<Room> rooms = new ArrayList<>();
+    public List<Room> getAll() throws ServiceException {
+        List<Room> rooms;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             rooms = roomDaoInst.getAll();
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("Get All Rooms");
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return rooms;
-    }
+    }//TODO разобраться с NPE. List<Room> rooms = new ArrayList<>(); или List<Room> rooms;
 
     /**
      * Calls RoomDaoImpl getById() method
      *
      * @param roomId - <tt>Room</tt> object <tt>roomId</tt> property to get the object
      * @return <tt>Room</tt> with <i>roomId</i> id value
-     * @throws SQLException
      * @throws ServiceException
      */
     @Override
-    public Room getById(int roomId) throws SQLException, ServiceException {
+    public Room getById(int roomId) throws ServiceException {
         Room room;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             room = roomDaoInst.getById(roomId);
-            connection.commit();
-            logger.error(transactionFailedMessage);
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
+            transaction.commit();
+            logger.info("GetById(roomId): " + roomId);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return room;
     }
@@ -119,21 +115,19 @@ public class RoomServiceImpl extends GeneralService<Room> {
      *
      * @param roomId   - roomId determinate the <tt>Room</tt> object to update <tt>price</tt>
      * @param newPrice -  value to update <tt>Room</tt> object <tt>price</tt> property
-     * @throws SQLException
      * @throws ServiceException
      */
-    public void updateRoomPrice(int roomId, int newPrice) throws SQLException, ServiceException {
+    public void updateRoomPrice(int roomId, int newPrice) throws ServiceException {
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             roomDaoInst.updateRoomPrice(roomId, newPrice);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("UpdateRoomPrice(roomId, newPrice): " + roomId + ", " + newPrice);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
     }
 
@@ -144,46 +138,42 @@ public class RoomServiceImpl extends GeneralService<Room> {
      * @param checkInDate       order starting date
      * @param checkOutDate      order ending date
      * @return <tt>List</tt> of suiting the<i>orderedRoomFormat</i> <tt>Room</tt> objects
-     * @throws SQLException
      * @throws ServiceException
      */
-    public List<Room> getSuitedRooms(Room orderedRoomFormat, Date checkInDate, Date checkOutDate) throws SQLException, ServiceException {
-        List<Room> suitedRoomsList = null;
+    public List<Room> getSuitedRooms(Room orderedRoomFormat, Date checkInDate, Date checkOutDate) throws ServiceException {
+        List<Room> suitedRoomsList;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             suitedRoomsList = roomDaoInst.getSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate);
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("GetSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate): " + orderedRoomFormat + ", " + checkInDate + ", " + checkOutDate);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return suitedRoomsList;
-    }
+    }//TODO DTO RoomFormat
 
     /**
      * Calls RoomDaoImpl getRoominesses() method
      *
      * @return <tt>List</tt> of roominesses values
-     * @throws SQLException
      * @throws ServiceException
      */
-    public List<Integer> getRoominesses() throws SQLException, ServiceException {
+    public List<Integer> getRoominesses() throws ServiceException {
         List<Integer> roominessList;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             roominessList = roomDaoInst.getRoominesses();
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("GetRoominesses ");
+        }catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return roominessList;
     }
@@ -193,24 +183,22 @@ public class RoomServiceImpl extends GeneralService<Room> {
      *
      * @param room -  <tt>Room</tt>  to check if it is new
      * @return true if the <tt>Room</tt> is new
-     * @throws SQLException
      * @throws ServiceException
      */
-    public boolean isNewRoom(Room room) throws SQLException, ServiceException {
+    public boolean isNewRoom(Room room) throws ServiceException {
         boolean isNew = false;
         try {
-            connection = PoolManager.getInstance().getConnection();
-            connection.setAutoCommit(false);
+            Session session = util.getSession();
+            transaction = session.beginTransaction();
             if ((roomDaoInst.getById(room.getRoomId()) == null) & (roomDaoInst.isNewRoom(room.getRoomNumber()))) {
                 isNew = true;
             }
-            connection.commit();
-        } catch (SQLException | DaoException e) {
-            connection.rollback();
-            logger.error(transactionFailedMessage);
+            transaction.commit();
+            logger.info("checkIsNewRoom(room): " + room);
+        } catch (HibernateException e) {
+            transaction.rollback();
+            logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
-        } finally {
-            PoolManager.releaseConnection(connection);
         }
         return isNew;
     }
