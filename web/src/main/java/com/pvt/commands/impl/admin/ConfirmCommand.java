@@ -14,7 +14,6 @@ import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 public class ConfirmCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
@@ -30,7 +29,7 @@ public class ConfirmCommand implements Command {
                 OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.CONFIRMED);
                 page = CommandType.ADMINORDERS.getCurrentCommand().execute(request);
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
-            } catch (ServiceException | SQLException | RequestNumericAttributeTransferException e) {
+            } catch (ServiceException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }

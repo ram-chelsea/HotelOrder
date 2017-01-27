@@ -11,7 +11,6 @@ import com.pvt.services.impl.RoomServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class GoToMakeOrderCommand implements Command {
                 request.setAttribute(Parameters.ROOMINESSES_LIST, roominessesList);
                 request.setAttribute(Parameters.MIN_CHECK_IN_DATE, new java.sql.Date(new java.util.Date().getTime()));
                 page = pagesConfigManagerInst.getProperty(PagesPaths.MAKE_ORDER_PAGE);
-            } catch (ServiceException | SQLException e) {
+            } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }

@@ -14,7 +14,6 @@ import com.pvt.services.impl.UserServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.List;
 
 public class ShowClientsCommand implements Command {
@@ -31,7 +30,7 @@ public class ShowClientsCommand implements Command {
                 List<User> userList = UserServiceImpl.getInstance().getAll();
                 request.setAttribute(Parameters.USER_LIST, userList);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ADMIN_SHOW_CLIENTS_PAGE);
-            } catch (ServiceException | SQLException e) {
+            } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }

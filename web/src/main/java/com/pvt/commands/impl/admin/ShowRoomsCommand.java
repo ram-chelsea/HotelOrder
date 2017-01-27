@@ -15,7 +15,6 @@ import com.pvt.services.impl.RoomServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.List;
 
 public class ShowRoomsCommand implements Command {
@@ -32,7 +31,7 @@ public class ShowRoomsCommand implements Command {
                 List<Room> roomsList = RoomServiceImpl.getInstance().getAll();
                 request.setAttribute(Parameters.ROOMS_LIST, roomsList);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.SHOW_ROOMS_PAGE);
-            } catch (ServiceException | SQLException e) {
+            } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }

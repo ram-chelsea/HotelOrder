@@ -15,7 +15,6 @@ import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 public class GoToPayCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
@@ -34,7 +33,7 @@ public class GoToPayCommand implements Command {
                 request.setAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManagerInst.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
                 request.setAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManagerInst.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.PAY_PAGE);
-            } catch (ServiceException | SQLException | RequestNumericAttributeTransferException e) {
+            } catch (ServiceException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }

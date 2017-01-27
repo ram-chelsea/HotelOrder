@@ -11,7 +11,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class CreditCardServiceImpl extends GeneralService<CreditCard> {
@@ -64,12 +63,12 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
     }
 
     @Override
-    public List<CreditCard> getAll() throws SQLException {
+    public List<CreditCard> getAll() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public CreditCard getById(int id) throws SQLException {
+    public CreditCard getById(int id) {
         throw new UnsupportedOperationException();
     }
 

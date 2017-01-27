@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class SecurityFilter implements Filter {
     private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
@@ -55,7 +54,7 @@ public class SecurityFilter implements Filter {
                     session.invalidate();
                 }
             }
-        } catch (IllegalArgumentException | SQLException | ServiceException e) {
+        } catch (IllegalArgumentException |ServiceException e) {
             String page = pagesConfigManagerInst.getProperty(PagesPaths.INDEX_PAGE_PATH);
             RequestDispatcher dispatcher = request.getRequestDispatcher(page);
             dispatcher.forward(httpRequest, httpResponse);

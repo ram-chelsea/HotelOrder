@@ -17,7 +17,6 @@ import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 public class CardAmountCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
@@ -34,7 +33,7 @@ public class CardAmountCommand implements Command {
                 CreditCard card = CreditCardServiceImpl.getInstance().getByCardNumber(cardNumber);
                 request.setAttribute(Parameters.CARD, card);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.CARD_AMOUNT_PAGE);
-            } catch (ServiceException | SQLException e) {
+            } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }

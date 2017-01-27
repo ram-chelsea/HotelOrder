@@ -12,7 +12,6 @@ import com.pvt.services.impl.OrderServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 import java.util.List;
 
 public class ShowAdminOrdersCommand implements Command {
@@ -38,7 +37,7 @@ public class ShowAdminOrdersCommand implements Command {
                 request.setAttribute(Parameters.CONFIRMED_ORDERS_LIST, confirmedOrdersList);
                 request.setAttribute(Parameters.COMPLETED_ORDERS_LIST, completedOrdersList);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ADMIN_SHOW_ORDERS_PAGE);
-            } catch (ServiceException | SQLException e) {
+            } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }

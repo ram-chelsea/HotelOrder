@@ -13,7 +13,6 @@ import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 public class CompleteCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
@@ -29,7 +28,7 @@ public class CompleteCommand implements Command {
                 OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.COMPLETED);
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                 page = CommandType.ADMINORDERS.getCurrentCommand().execute(request);
-            } catch (ServiceException | SQLException | RequestNumericAttributeTransferException e) {
+            } catch (ServiceException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }

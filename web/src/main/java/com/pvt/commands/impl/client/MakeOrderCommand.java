@@ -17,7 +17,6 @@ import com.pvt.utils.RequestParameterParser;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.List;
 
 public class MakeOrderCommand implements Command {
@@ -57,7 +56,7 @@ public class MakeOrderCommand implements Command {
                     request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                     page = CommandType.GOTOMAKEORDER.getCurrentCommand().execute(request);
                 }
-            } catch (ServiceException | SQLException e) {
+            } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             } catch (IllegalArgumentException e) {

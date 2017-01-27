@@ -11,7 +11,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class UserServiceImpl extends GeneralService<User> {
@@ -88,7 +87,7 @@ public class UserServiceImpl extends GeneralService<User> {
     }
 
     @Override
-    public User getById(int id) throws SQLException {
+    public User getById(int id){
         throw new UnsupportedOperationException();
     }
 
@@ -146,7 +145,7 @@ public class UserServiceImpl extends GeneralService<User> {
      * @return true if <tt>User</tt> <i>user</i> exists in the database
      * @throws ServiceException
      */
-    public boolean checkIsNewUser(User user) throws SQLException, ServiceException {
+    public boolean checkIsNewUser(User user) throws ServiceException {
         boolean isNew = false;
         try {
             Session session = util.getSession();

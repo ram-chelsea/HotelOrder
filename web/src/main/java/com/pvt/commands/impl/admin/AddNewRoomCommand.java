@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 public class AddNewRoomCommand implements Command {
     private RoomServiceImpl roomServiceInst = RoomServiceImpl.getInstance();
@@ -48,7 +47,7 @@ public class AddNewRoomCommand implements Command {
                 }
                 page = CommandType.GOTOADDNEWROOM.getCurrentCommand().execute(request);
 
-            } catch (ServiceException | SQLException e) {
+            } catch (ServiceException e) {
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
             } catch (IllegalArgumentException e) {

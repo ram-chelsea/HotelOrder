@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 public class AddCreditCardCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
@@ -47,7 +46,7 @@ public class AddCreditCardCommand implements Command {
                     request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                 }
                 page = CommandType.GOTOADDCREDITCARD.getCurrentCommand().execute(request);
-            } catch (ServiceException | SQLException e) {
+            } catch (ServiceException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             } catch (NumberFormatException e) {

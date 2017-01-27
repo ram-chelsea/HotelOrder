@@ -15,7 +15,6 @@ import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 
 public class LoginUserCommand implements Command {
@@ -44,7 +43,7 @@ public class LoginUserCommand implements Command {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.INDEX_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_LOGIN_OR_PASSWORD, messageManagerInst.getProperty(MessageConstants.WRONG_LOGIN_OR_PASSWORD));
             }
-        } catch (ServiceException | SQLException e) {
+        } catch (ServiceException e) {
             page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
             request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
         }

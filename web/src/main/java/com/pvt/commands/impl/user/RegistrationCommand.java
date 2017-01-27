@@ -13,7 +13,6 @@ import com.pvt.services.impl.UserServiceImpl;
 import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
-import java.sql.SQLException;
 
 public class RegistrationCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
@@ -40,7 +39,7 @@ public class RegistrationCommand implements Command {
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                 page = pagesConfigManagerInst.getProperty(PagesPaths.REGISTRATION_PAGE_PATH);
             }
-        } catch (ServiceException | SQLException e) {
+        } catch (ServiceException e) {
             page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
             request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
         } catch (IllegalArgumentException e) {

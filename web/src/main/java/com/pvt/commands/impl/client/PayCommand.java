@@ -17,7 +17,6 @@ import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.sql.SQLException;
 
 public class PayCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
@@ -50,7 +49,7 @@ public class PayCommand implements Command {
                     page = CommandType.GOTOPAY.getCurrentCommand().execute(request);
                 }
 
-            } catch (ServiceException | SQLException | RequestNumericAttributeTransferException e) {
+            } catch (ServiceException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
             }
@@ -66,6 +65,6 @@ public class PayCommand implements Command {
         if (card.getAmount() >= order.getTotalPrice()) {
             isEnoughMoneyToPayOrder = true;
         }
-        return isEnoughMoneyToPayOrder;
+        return isEnoughMoneyToPayOrder;//TODO synchronizing or making synchronized method
     }
 }
