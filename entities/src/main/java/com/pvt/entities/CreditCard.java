@@ -21,14 +21,14 @@ public class CreditCard extends Entity {
     @Id
     @Column(name = "ID")
     @GeneratedValue
-    private int cardId;
+    private Integer cardId;
 
     @Column(name = "CARD_NUMBER")
     private String cardNumber;
 
     @Column(name = "IS_VALID")
-    private boolean isValid;
+    private Boolean isValid;
 
     @Column(name = "AMOUNT")
-    private int amount;
+    private Integer amount;
 }

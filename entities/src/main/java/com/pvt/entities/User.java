@@ -21,7 +21,7 @@ public class User extends Entity {
     @Id
     @Column(name = "ID")
     @GeneratedValue
-    private int userId;
+    private Integer userId;
 
     @Column(name = "LOGIN")
     private String login;

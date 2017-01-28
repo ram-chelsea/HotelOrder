@@ -20,18 +20,18 @@ public class Room extends Entity {
     @Id
     @Column(name = "ID")
     @GeneratedValue
-    private int roomId;
+    private Integer roomId;
 
     @Column(name = "ROOM_NUMBER")
     private String roomNumber;
 
     @Column(name = "ROOMINESS")
-    private int roominess;
+    private Integer roominess;
 
     @Column(name = "ROOM_CLASS")
     @Enumerated(EnumType.STRING)
     private RoomClass roomClass;
 
     @Column(name = "PRICE")
-    private int price;
+    private Integer price;
 }

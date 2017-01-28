@@ -21,7 +21,7 @@ public class Order extends Entity {
     @Id
     @Column(name = "ID")
     @GeneratedValue
-    private int orderId;
+    private Integer orderId;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -42,6 +42,6 @@ public class Order extends Entity {
     private OrderStatus orderStatus;
 
     @Column(name = "TOTAL_PRICE")
-    private int totalPrice;
+    private Integer totalPrice;
 
 }

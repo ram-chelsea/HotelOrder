@@ -24,7 +24,7 @@ public class RequestParameterParser {
 
     public static User getUser(HttpServletRequest request) throws IllegalArgumentException {
         HttpSession session = request.getSession();
-        int userId = 0;
+        Integer userId = null;
         UserRole userRole = null;
         String firstName = request.getParameter(Parameters.USER_FIRST_NAME);
         String lastName = request.getParameter(Parameters.USER_LAST_NAME);
@@ -45,14 +45,13 @@ public class RequestParameterParser {
     public static Order getNewOrder(HttpServletRequest request) throws IllegalArgumentException, ServiceException, RequestNumericAttributeTransferException {
         HttpSession session = request.getSession();
         RoomServiceImpl roomServiceInst = RoomServiceImpl.getInstance();
-        int orderId = 0;
         int roomId = RequestParameterParser.getRoomId(request);
         Room room = roomServiceInst.getById(roomId);
         User user = (User) session.getAttribute(Parameters.USER);
         Date checkIn = (Date) (session.getAttribute(Parameters.CHECK_IN_DATE));
         Date checkOut = (Date) (session.getAttribute(Parameters.CHECK_OUT_DATE));
         int totalPrice = roomServiceInst.computeTotalPriceForRoom(room, checkIn, checkOut);
-        Order order = EntityBuilder.buildOrder(orderId, user, room, checkIn, checkOut, OrderStatus.REQUESTED, totalPrice);
+        Order order = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, totalPrice);
         return order;
     }
 
@@ -96,52 +95,27 @@ public class RequestParameterParser {
     }
 
     public static CreditCard getNewCreditCard(HttpServletRequest request) throws NumberFormatException {
-        int cardId = 0;
-        boolean isValid = true;
         String cardNumber = request.getParameter(Parameters.CARD_NUMBER);
         int amount = Integer.valueOf(request.getParameter(Parameters.AMOUNT));
-
-        CreditCard card = EntityBuilder.buildCreditCard(cardId, cardNumber, isValid, amount);
+        CreditCard card = EntityBuilder.buildCreditCard(null, cardNumber, true, amount);
         return card;
     }
 
     public static Room getNewRoom(HttpServletRequest request) throws IllegalArgumentException {
-        int roomId = 0;
         String roomNumber = request.getParameter(Parameters.ROOM_NUMBER);
         int roominess = Integer.valueOf(request.getParameter(Parameters.ROOMINESS));
         RoomClass roomClass = RoomClass.valueOf(request.getParameter(Parameters.ROOM_CLASS));
         int price = Integer.valueOf(request.getParameter(Parameters.ROOM_PRICE));
-        Room room = EntityBuilder.buildRoom(roomId, roomNumber, roominess, roomClass, price);
+        Room room = EntityBuilder.buildRoom(null, roomNumber, roominess, roomClass, price);
         return room;
     }
 
     public static Room getOrderedRoomFormat(HttpServletRequest request) throws IllegalArgumentException {
-        int roomId = 0;
-        String roomNumber = "0";
         int roominess = Integer.valueOf(request.getParameter(Parameters.ROOMINESS));
         RoomClass roomClass = RoomClass.valueOf(request.getParameter(Parameters.ROOM_CLASS));
-        int price = 0;
 
-        Room orderedRoomFormat = EntityBuilder.buildRoom(roomId, roomNumber, roominess, roomClass, price);
+        Room orderedRoomFormat = EntityBuilder.buildRoom(null, null, roominess, roomClass, null);
         return orderedRoomFormat;
-    }
-
-    public static CommandType getGoToPayOrCancelCommandType(HttpServletRequest request) throws IllegalArgumentException {
-        String commandName = request.getParameter(Parameters.GOTOPAY_CANCEL_BUTTON);
-        CommandType commandType = CommandType.GOTOPAY;
-        if (commandName != null) {
-            commandType = CommandType.valueOf(commandName.toUpperCase());
-        }
-        return commandType;
-    }
-
-    public static CommandType getConfirmOrDenyCommandType(HttpServletRequest request) throws IllegalArgumentException {
-        String commandName = request.getParameter(Parameters.CONFIRM_OR_DENY_BUTTON);
-        CommandType commandType = CommandType.DENY;
-        if (commandName != null) {
-            commandType = CommandType.valueOf(commandName.toUpperCase());
-        }
-        return commandType;
     }
 
     public static Date getCheckInDate(HttpServletRequest request) throws IllegalArgumentException {

@@ -108,7 +108,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      *                   with the corresponding <tt>roomNumber</tt> property value doesn't exist in the database
      * @return true if <tt>Room</tt> with <i>roomNumber</i> doesn't exist in the database
      */
-    public boolean isNewRoom(String roomNumber){
+    public boolean isNewRoom(String roomNumber) {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.CHECK_IS_NEW_ROOM);
         query.setParameter(0, roomNumber);
@@ -124,7 +124,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      * @param roomId   determinates <tt>Room</tt> object, whose <i>price</i> value is updated
      * @param newPrice determines value of <tt>price</tt> property to what <tt>Room</tt> object <tt>price</tt> property value is changed
      */
-    public void updateRoomPrice(int roomId, int newPrice){
+    public void updateRoomPrice(int roomId, int newPrice) {
         Session session = util.getSession();
         Room room = (Room) session.get(Room.class, roomId);
         room.setPrice(newPrice);

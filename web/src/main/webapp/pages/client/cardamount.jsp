@@ -15,7 +15,7 @@
 
     <tr>
         <td>${ card.cardNumber }</td>
-        <td>${ card.isValid() }</td>
+        <td>${ card.isValid }</td>
         <td>${ card.amount }</td>
     </tr>
 </table>

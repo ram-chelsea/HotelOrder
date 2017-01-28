@@ -143,7 +143,7 @@ public class UserServiceImpl extends GeneralService<User> {
         boolean isNew = false;
         try {
             util.getSession().beginTransaction();
-            if ((userDaoInst.getById(user.getUserId()) == null) & (userDaoInst.isNewUser(user.getLogin()))) {
+            if (userDaoInst.isNewUser(user.getLogin())) {
                 isNew = true;
             }
             util.getSession().getTransaction().commit();

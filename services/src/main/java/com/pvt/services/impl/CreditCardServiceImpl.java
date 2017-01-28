@@ -121,7 +121,7 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
         boolean isNew = false;
         try {
             util.getSession().beginTransaction();
-            if ((cardDaoInst.getById(card.getCardId()) == null) & (cardDaoInst.isNewCreditCard(card.getCardNumber()))) {
+            if (cardDaoInst.isNewCreditCard(card.getCardNumber())) {
                 isNew = true;
             }
             util.getSession().getTransaction().commit();

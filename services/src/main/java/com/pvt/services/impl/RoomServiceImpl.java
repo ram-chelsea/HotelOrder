@@ -181,7 +181,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
         boolean isNew = false;
         try {
             util.getSession().beginTransaction();
-            if ((roomDaoInst.getById(room.getRoomId()) == null) & (roomDaoInst.isNewRoom(room.getRoomNumber()))) {
+            if (roomDaoInst.isNewRoom(room.getRoomNumber())) {
                 isNew = true;
             }
             util.getSession().getTransaction().commit();
