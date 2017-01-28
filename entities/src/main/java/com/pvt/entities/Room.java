@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Describes <tt>Room</tt> entity
@@ -15,8 +17,9 @@ import javax.persistence.*;
 @Table(name = "rooms")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "roomId", callSuper = false)
+@EqualsAndHashCode(exclude = "orders", callSuper = false)
 public class Room extends Entity {
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "ID")
     @GeneratedValue
@@ -34,4 +37,7 @@ public class Room extends Entity {
 
     @Column(name = "PRICE")
     private Integer price;
+
+    @OneToMany(mappedBy = "room")
+    private Set<Order> orders = new HashSet<>();
 }

@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Describes <tt>User</tt> entity
@@ -15,8 +17,9 @@ import javax.persistence.*;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "userId", callSuper = false)
+@EqualsAndHashCode(exclude = "orders", callSuper = false)
 public class User extends Entity {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "ID")
@@ -38,5 +41,8 @@ public class User extends Entity {
     @Column(name = "USER_ROLE")
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Order> orders = new HashSet<>();
 
 }

@@ -18,6 +18,7 @@ import java.sql.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Order extends Entity {
+    private static final long serialVersionUID = 1L;
     @Id
     @Column(name = "ID")
     @GeneratedValue

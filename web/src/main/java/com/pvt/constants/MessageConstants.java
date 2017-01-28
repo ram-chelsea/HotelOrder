@@ -1,7 +1,7 @@
 package com.pvt.constants;
 
 
-public class MessageConstants {
+public final class MessageConstants {
     public static final String WRONG_LOGIN_OR_PASSWORD = "message.loginerror";
     public static final String USER_EXISTS = "message.userexistserror";
     public static final String ROOM_EXISTS = "message.roomexistserror";

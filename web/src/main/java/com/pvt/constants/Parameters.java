@@ -1,7 +1,7 @@
 package com.pvt.constants;
 
 
-public class Parameters {
+public final class Parameters {
     public static final String USER_FIRST_NAME = "firstname";
     public static final String USER_LAST_NAME = "lastname";
     public static final String USER_LOGIN = "login";

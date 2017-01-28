@@ -1,7 +1,7 @@
 package com.pvt.constants;
 
 
-public class PagesPaths {
+public final class PagesPaths {
     public static final String INDEX_PAGE_PATH = "path.page.index";
     public static final String REGISTRATION_PAGE_PATH = "path.page.registration";
     public static final String ERROR_PAGE_PATH = "path.page.error";

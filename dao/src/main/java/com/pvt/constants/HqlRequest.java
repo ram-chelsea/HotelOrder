@@ -3,7 +3,7 @@ package com.pvt.constants;
 /**
  * Contains constants representing HQL requests being used in the project
  */
-public class HqlRequest {
+public final class HqlRequest {
     public static final String GET_ALL_CLIENTS =
             "SELECT U FROM User U WHERE U.userRole = 'CLIENT' ";
     public static final String GET_USER_BY_LOGIN =

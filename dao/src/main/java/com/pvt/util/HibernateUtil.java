@@ -1,13 +1,3 @@
-/*
- * Copyright (c) 2012 by VeriFone, Inc.
- * All Rights Reserved.
- *
- * THIS FILE CONTAINS PROPRIETARY AND CONFIDENTIAL INFORMATION
- * AND REMAINS THE UNPUBLISHED PROPERTY OF VERIFONE, INC.
- *
- * Use, disclosure, or reproduction is prohibited
- * without prior written approval from VeriFone, Inc.
- */
 package com.pvt.util;
 
 import org.apache.log4j.Logger;
@@ -18,7 +8,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
-    private static HibernateUtil util = null;
+    private static HibernateUtil util;
     private static Logger logger = Logger.getLogger(HibernateUtil.class);
     private SessionFactory sessionFactory;
     private final ThreadLocal<Session> sessions = new ThreadLocal();
@@ -59,7 +49,4 @@ public class HibernateUtil {
         return session;
     }
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
 }

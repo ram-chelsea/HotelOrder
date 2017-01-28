@@ -8,5 +8,5 @@ import java.io.Serializable;
  */
 public abstract class Entity implements Serializable {
 
-    protected static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 }

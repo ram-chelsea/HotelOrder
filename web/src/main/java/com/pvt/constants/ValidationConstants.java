@@ -1,6 +1,6 @@
 package com.pvt.constants;
 
-public class ValidationConstants {
+public final class ValidationConstants {
 
     public static final String CARD_NUMBER_FORMAT_REGEXP = "validation.cardnumberformatregexp";
     public static final String CARD_NUMBER_INPUT_PLACEHOLDER = "validation.cardnumberinputplaceholder";
