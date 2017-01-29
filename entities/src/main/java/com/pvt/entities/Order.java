@@ -5,6 +5,7 @@ import com.pvt.constants.OrderStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -17,6 +18,7 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@ToString
 public class Order extends Entity {
     private static final long serialVersionUID = 1L;
     @Id

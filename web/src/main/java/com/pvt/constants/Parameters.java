@@ -70,7 +70,7 @@ public final class Parameters {
     public static final String ROOM_NEW_PRICE_INPUT_PLACEHOLDER = "roomNewPriceInputPlaceHolder";
     public static final String AMOUNT_INPUT_PLACEHOLDER = "amountInputPlaceHolder";
     public static final String MIN_CHECK_IN_DATE = "minCheckInDate";
-
+    public static final String MIN_CHECK_OUT_DATE = "minCheckOutDate";
     private Parameters() {
     }
 }

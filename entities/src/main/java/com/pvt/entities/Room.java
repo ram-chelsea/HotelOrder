@@ -5,6 +5,7 @@ import com.pvt.constants.RoomClass;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = "orders", callSuper = false)
+@ToString(exclude = "orders")
 public class Room extends Entity {
     private static final long serialVersionUID = 1L;
     @Id

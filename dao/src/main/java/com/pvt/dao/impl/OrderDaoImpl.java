@@ -46,7 +46,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      *
      * @param order <tt>Order</tt> element, which properties will be pushed into the database
      */
-    public void save(Order order){
+    public void save(Order order) {
         Session session = util.getSession();
         session.save(order);
     }
@@ -56,7 +56,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      *
      * @return <tt>List</tt> of all  <tt>Order</tt> objects being contained in the database
      */
-    public List<Order> getAll(){
+    public List<Order> getAll() {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_ALL_ORDERS);
         List<Order> orderList = query.list();
@@ -69,7 +69,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      * @param orderId value of <tt>Order</tt> property being used to get the object from the database
      * @return <tt>Order</tt> object, having corresponding <i>orderId</i> value
      */
-    public Order getById(int orderId){
+    public Order getById(int orderId) {
         Session session = util.getSession();
         Order order = (Order) session.get(Order.class, orderId);
         return order;
@@ -80,7 +80,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      *
      * @param orderId value of <tt>Order</tt> property being used to delete the corresponding object from the database
      */
-    public void delete(int orderId){
+    public void delete(int orderId) {
         Session session = util.getSession();
         Order order = (Order) session.get(Order.class, orderId);
         session.delete(order);
@@ -92,7 +92,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      * @param status describes value of <tt>status</tt> property being used to determinate <tt>Order</tt> objects list
      * @return <tt>List</tt> of all  <tt>Order</tt> objects with <i>status</i> value being contained in the database
      */
-    public List<Order> getOrdersListByStatus(OrderStatus status){
+    public List<Order> getOrdersListByStatus(OrderStatus status) {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_ORDERS_BY_STATUS);
         query.setParameter(0, status);
@@ -107,7 +107,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      * @param userId determinates <tt>User</tt> object, whose <i>status</i> value orders are got
      * @return all <tt>Order</tt> objects of <tt>User</tt> with <i>userId</i> property value with <i>status</i> value being contained in the database
      */
-    public List<Order> getClientOrdersListByStatus(OrderStatus status, int userId){
+    public List<Order> getClientOrdersListByStatus(OrderStatus status, int userId) {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_CLIENTS_ORDERS_BY_STATUS);
         query.setParameter(0, status);
@@ -121,14 +121,33 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      * Update value of <tt>status</tt> property value of <tt>Order</tt> with <i>orderId</i> property value
      * to <i>orderStatus</i> value
      *
-     * @param orderId     determinate <tt>Order</tt> object, whose <i>status</i> value is updated
+     * @param orderId        determines <tt>Order</tt> object, whose <i>status</i> value is updated
      * @param newOrderStatus determines value of <tt>status</tt> property to what <tt>Order</tt> object <tt>status</tt> property value is changed
      */
-    public void updateOrderStatus(int orderId, OrderStatus newOrderStatus){
+    public void updateOrderStatus(int orderId, OrderStatus newOrderStatus) {
         Session session = util.getSession();
         Order order = (Order) session.get(Order.class, orderId);
         order.setOrderStatus(newOrderStatus);
         session.update(order);
+    }
+
+    /**
+     * Checking if the <tt>Order</tt> object <tt>room</tt> field is free for period defined by
+     * <tt>checkInDate</tt> and tt>checkOutDate</tt> fields
+     *
+     * @param order determines the <tt>Order</tt> object <tt>room</tt> field is free for period defined by
+     *              <tt>checkInDate</tt> and tt>checkOutDate</tt> fields
+     * @return true if the <tt>room</tt> is free for the period
+     */
+    public boolean isFreeRoomForPeriodInOrder(Order order) {
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.CHECK_IS_FREE_ROOM_FOR_PERIOD_IN_ORDER);
+        query.setParameter(0, order.getRoom());
+        query.setParameter(1, order.getCheckInDate());
+        query.setParameter(2, order.getCheckOutDate());
+        int count = ((Long) query.uniqueResult()).intValue();
+        boolean isFree = (count == 0);
+        return isFree;
     }
 
 }

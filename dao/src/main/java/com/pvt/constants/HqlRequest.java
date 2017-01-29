@@ -25,6 +25,9 @@ public final class HqlRequest {
                         "WHERE O.orderStatus IN ('REQUESTED', 'CONFIRMED', 'ORDERED') AND (O.checkOutDate >= ? AND O.checkInDate <= ?))";
     public static final String GET_ALL_ROOMINESSES =
             "SELECT DISTINCT R.roominess FROM Room R ORDER BY R.roominess";
+    public static final String CHECK_IS_FREE_ROOM_FOR_PERIOD_IN_ORDER =
+            "SELECT count(O) FROM Order O WHERE O.room = ? AND O.orderStatus IN ('REQUESTED', 'CONFIRMED', 'ORDERED')" +
+                    " AND (O.checkOutDate >= ? AND O.checkInDate <= ?)";
 
     public static final String GET_ALL_ORDERS =
             "FROM Order";

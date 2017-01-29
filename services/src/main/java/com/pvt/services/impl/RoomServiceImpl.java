@@ -80,7 +80,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
             throw new ServiceException(e.getMessage());
         }
         return rooms;
-    }//TODO разобраться с NPE. List<Room> rooms = new ArrayList<>(); или List<Room> rooms;
+    }
 
     /**
      * Calls RoomDaoImpl getById() method
@@ -162,7 +162,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
             roominessList = roomDaoInst.getRoominesses();
             util.getSession().getTransaction().commit();
             logger.info("GetRoominesses ");
-        }catch (HibernateException e) {
+        } catch (HibernateException e) {
             util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());

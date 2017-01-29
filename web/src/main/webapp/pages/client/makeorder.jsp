@@ -34,11 +34,11 @@
 
         <tr>
             <td>From:</td>
-            <td><input type="date" name="checkin" min="${minCheckInDate}" value="" size="20" required/></td>
+            <td><input type="date" name="checkin" min="${minCheckInDate}" value="${minCheckInDate}" size="20" required/></td>
         </tr>
         <tr>
             <td>Till:</td>
-            <td><input type="date" name="checkout" value="" size="20" required/></td>
+            <td><input type="date" name="checkout" value="${minCheckOutDate}" size="20" required/></td>
         </tr>
     </table>
     <input type="submit" value="Search suited rooms"/>

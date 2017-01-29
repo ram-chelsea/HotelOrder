@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 
 public class RequestCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
+    private OrderServiceImpl orderServiceInst = OrderServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -30,10 +31,18 @@ public class RequestCommand implements Command {
             try {
                 util.openSession();
                 Order order = RequestParameterParser.getNewOrder(request);
-                OrderServiceImpl.getInstance().add(order);
-                util.getSession().close();
-                request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
-                page = CommandType.CLIENTORDERS.getCurrentCommand().execute(request);
+                if (orderServiceInst.checkIsRoomFreeForPeriodInOrder(order)) {
+                    orderServiceInst.add(order);
+                    util.getSession().close();
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
+                    page = CommandType.CLIENTORDERS.getCurrentCommand().execute(request);
+                } else {
+                    util.getSession().close();
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.ROOM_WAS_BOOKED));
+                    page = CommandType.GOTOMAKEORDER.getCurrentCommand().execute(request);
+                }
+
+
             } catch (ServiceException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));
@@ -44,4 +53,5 @@ public class RequestCommand implements Command {
         }
         return page;
     }
-}
+
+}//TODO synchronized

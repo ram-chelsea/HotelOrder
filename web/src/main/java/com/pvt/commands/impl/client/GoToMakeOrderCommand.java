@@ -12,11 +12,13 @@ import com.pvt.services.impl.RoomServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class GoToMakeOrderCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
     private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
+    private final int MILLIS_A_DAY = 24 * 60 * 60 * 1000;
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -32,7 +34,9 @@ public class GoToMakeOrderCommand implements Command {
                 ArrayList roomsClassesList = RoomClass.enumToList();
                 request.setAttribute(Parameters.ROOMS_CLASSES_LIST, roomsClassesList);
                 request.setAttribute(Parameters.ROOMINESSES_LIST, roominessesList);
-                request.setAttribute(Parameters.MIN_CHECK_IN_DATE, new java.sql.Date(new java.util.Date().getTime()));
+                Date currentDate = new Date();
+                request.setAttribute(Parameters.MIN_CHECK_IN_DATE, new java.sql.Date(currentDate.getTime()));
+                request.setAttribute(Parameters.MIN_CHECK_OUT_DATE, new java.sql.Date(currentDate.getTime() + MILLIS_A_DAY));
                 page = pagesConfigManagerInst.getProperty(PagesPaths.MAKE_ORDER_PAGE);
             } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);

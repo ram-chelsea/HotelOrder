@@ -151,6 +151,30 @@ public class OrderServiceImpl extends GeneralService<Order> {
     }
 
     /**
+     * Calls OrderDaoImpl checkIsRoomFreeForPeriodInOrder() method
+     * @param order - <tt>Order</tt> object, which <tt>room</tt> property is checked
+     *              for being free for period defined by <tt>checkInDate</tt> and <tt>checkInDate</tt> fields
+     *
+     * @return true if the <tt>room</tt> is free for the period
+     * @throws ServiceException
+     */
+    public boolean checkIsRoomFreeForPeriodInOrder(Order order) throws ServiceException {
+        boolean isFree;
+        try {
+            util.getSession().beginTransaction();
+            isFree = orderDaoInst.isFreeRoomForPeriodInOrder(order);
+            util.getSession().getTransaction().commit();
+            logger.info("checkIsRoomFreeForPeriodInOrder(order): " + order);
+        } catch (HibernateException e) {
+            util.getSession().getTransaction().rollback();
+            logger.error(transactionFailedMessage + e);
+            throw new ServiceException(e.getMessage());
+        }
+        return isFree;
+    }
+
+
+    /**
      * Calls OrderDaoImpl updateOrderStatus() method
      *
      * @param orderId     - orderId determinate the <tt>Order</tt> object to update <tt>status</tt>

@@ -18,6 +18,7 @@ public final class MessageConstants {
     public static final String FORM_SETTINGS_ERROR = "message.formsettingserror";
     public static final String INVALID_DATES_ORDER = "message.invaliddatesorder";
     public static final String NOT_ENOUGH_MONEY = "message.notenoughmoney";
+    public static final String ROOM_WAS_BOOKED = "message.roomwasbooked" ;
 
     private MessageConstants() {
     }
