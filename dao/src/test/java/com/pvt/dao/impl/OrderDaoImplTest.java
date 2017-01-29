@@ -1,181 +1,202 @@
 package com.pvt.dao.impl;
 
+import com.pvt.constants.OrderStatus;
+import com.pvt.constants.RoomClass;
+import com.pvt.constants.SqlRequest;
+import com.pvt.constants.UserRole;
 import com.pvt.dao.EntityDaoImplTest;
+import com.pvt.entities.Order;
+import com.pvt.entities.Room;
+import com.pvt.entities.User;
+import com.pvt.util.EntityBuilder;
+import com.pvt.util.HibernateUtil;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDaoImplTest extends EntityDaoImplTest {
-//    @Before
-//    @After
-//    public void CleanTestDB() throws DaoException, SQLException {
-//        Connection connection = PoolManager.getInstance().getConnection();
-//        Statement statement = connection.createStatement();
-//        statement.executeUpdate(SqlRequest.TRUNCATE_TEST_ORDERS);
-//        statement.executeUpdate(SqlRequest.TRUNCATE_TEST_USERS);
-//        statement.executeUpdate(SqlRequest.TRUNCATE_TEST_ROOMS);
-//
-//    }
-//
-//    @Test
-//    public void testGetInstance() {
-//        OrderDaoImpl firstImpl = OrderDaoImpl.getInstance();
-//        OrderDaoImpl secondImpl = OrderDaoImpl.getInstance();
-//        Assert.assertEquals(firstImpl.hashCode(), secondImpl.hashCode());
-//    }
-//
-//    @Test
-//    public void testAdd() throws DaoException {
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        User preUser = EntityBuilder.buildUser(1, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        UserDaoImpl.getInstance().add(preUser);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        User user = UserDaoImpl.getInstance().getByLogin(preUser.getLogin());
-//        Room room = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        Date checkIn = Date.valueOf("2017-01-12");
-//        Date checkOut = Date.valueOf("2017-01-18");
-//        Order expected = EntityBuilder.buildOrder(0, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
-//        OrderDaoImpl.getInstance().add(expected);
-//        Order actual = OrderDaoImpl.getInstance().getAll().get(0);
-//        Assert.assertTrue(expected.equals(actual));
-//    }
-//
-//    @Test
-//    public void testGetAll() throws DaoException {
-//        List<Order> orderListExpected = new ArrayList<>();
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        Room room = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        User preUser = EntityBuilder.buildUser(1, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        UserDaoImpl.getInstance().add(preUser);
-//        User user = UserDaoImpl.getInstance().getByLogin(preUser.getLogin());
-//        Date checkIn = Date.valueOf("2017-01-12");
-//        Date checkOut = Date.valueOf("2017-01-18");
-//        Order order1 = EntityBuilder.buildOrder(0, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
-//        orderListExpected.add(order1);
-//        Order order2 = EntityBuilder.buildOrder(1, user, room, checkIn, checkOut, OrderStatus.CANCELLED, 60);
-//        orderListExpected.add(order2);
-//        Order order3 = EntityBuilder.buildOrder(2, user, room, checkIn, checkOut, OrderStatus.DENIED, 90);
-//        orderListExpected.add(order3);
-//        for (Order order : orderListExpected) {
-//            OrderDaoImpl.getInstance().add(order);
-//        }
-//        List<Order> orderListActual = OrderDaoImpl.getInstance().getAll();
-//
-//        Assert.assertTrue(orderListExpected.containsAll(orderListActual) && orderListActual.containsAll(orderListExpected));
-//    }
-//
-//    @Test
-//    public void testGetOrdersListByStatus() throws DaoException {
-//        List<Order> orderListExpected = new ArrayList<>();
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        Room room = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        User preUser = EntityBuilder.buildUser(1, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        UserDaoImpl.getInstance().add(preUser);
-//        User user = UserDaoImpl.getInstance().getByLogin(preUser.getLogin());
-//        Date checkIn = Date.valueOf("2017-01-12");
-//        Date checkOut = Date.valueOf("2017-01-18");
-//        Order order1 = EntityBuilder.buildOrder(0, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
-//        orderListExpected.add(order1);
-//        Order order2 = EntityBuilder.buildOrder(1, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 60);
-//        orderListExpected.add(order2);
-//        Order otherOrder1 = EntityBuilder.buildOrder(2, user, room, checkIn, checkOut, OrderStatus.DENIED, 90);
-//        OrderDaoImpl.getInstance().add(otherOrder1);
-//        Order otherOrder2 = EntityBuilder.buildOrder(3, user, room, checkIn, checkOut, OrderStatus.CONFIRMED, 120);
-//        OrderDaoImpl.getInstance().add(otherOrder2);
-//        for (Order order : orderListExpected) {
-//            OrderDaoImpl.getInstance().add(order);
-//        }
-//        List<Order> orderListActual = OrderDaoImpl.getInstance().getOrdersListByStatus(OrderStatus.REQUESTED);
-//        Assert.assertTrue(orderListExpected.containsAll(orderListActual) && orderListActual.containsAll(orderListExpected));
-//    }
-//
-//    @Test
-//    public void testGetClientOrdersListByStatus() throws DaoException {
-//        List<Order> orderListExpected = new ArrayList<>();
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        Room room = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        User preUser1 = EntityBuilder.buildUser(1, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
-//        UserDaoImpl.getInstance().add(preUser1);
-//        User user1 = UserDaoImpl.getInstance().getByLogin(preUser1.getLogin());
-//        User preUser2 = EntityBuilder.buildUser(2, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
-//        UserDaoImpl.getInstance().add(preUser2);
-//        User user2 = UserDaoImpl.getInstance().getByLogin(preUser2.getLogin());
-//        Date checkIn = Date.valueOf("2017-01-12");
-//        Date checkOut = Date.valueOf("2017-01-18");
-//        Order order1 = EntityBuilder.buildOrder(0, user1, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
-//        orderListExpected.add(order1);
-//        Order order2 = EntityBuilder.buildOrder(1, user1, room, checkIn, checkOut, OrderStatus.REQUESTED, 40);
-//        orderListExpected.add(order2);
-//        Order otherOrder1 = EntityBuilder.buildOrder(2, user1, room, checkIn, checkOut, OrderStatus.DENIED, 50);
-//        OrderDaoImpl.getInstance().add(otherOrder1);
-//        Order otherOrder2 = EntityBuilder.buildOrder(3, user2, room, checkIn, checkOut, OrderStatus.REQUESTED, 60);
-//        OrderDaoImpl.getInstance().add(otherOrder2);
-//        Order otherOrder3 = EntityBuilder.buildOrder(4, user2, room, checkIn, checkOut, OrderStatus.COMPLETED, 50);
-//        OrderDaoImpl.getInstance().add(otherOrder3);
-//        for (Order order : orderListExpected) {
-//            OrderDaoImpl.getInstance().add(order);
-//        }
-//        List<Order> orderListActual = OrderDaoImpl.getInstance().getClientOrdersListByStatus(OrderStatus.REQUESTED, user1.getUserId());
-//        Assert.assertTrue(orderListExpected.containsAll(orderListActual) && orderListActual.containsAll(orderListExpected));
-//    }
-//
-//    @Test
-//    public void testGetById() throws DaoException {
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        Room room = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        User preUser = EntityBuilder.buildUser(1, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        UserDaoImpl.getInstance().add(preUser);
-//        User user = UserDaoImpl.getInstance().getByLogin(preUser.getLogin());
-//        Date checkIn = Date.valueOf("2017-01-12");
-//        Date checkOut = Date.valueOf("2017-01-18");
-//        Order preOrder = EntityBuilder.buildOrder(0, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
-//        OrderDaoImpl.getInstance().add(preOrder);
-//        Order otherOrder = EntityBuilder.buildOrder(1, user, room, checkIn, checkOut, OrderStatus.CANCELLED, 60);
-//        OrderDaoImpl.getInstance().add(otherOrder);
-//        Order expected = OrderDaoImpl.getInstance().getAll().get(0);
-//        Order actual = OrderDaoImpl.getInstance().getById(expected.getOrderId());
-//        Assert.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void testDelete() throws DaoException {
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        Room room = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        User preUser = EntityBuilder.buildUser(1, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        UserDaoImpl.getInstance().add(preUser);
-//        User user = UserDaoImpl.getInstance().getByLogin(preUser.getLogin());
-//        Date checkIn = Date.valueOf("2017-01-12");
-//        Date checkOut = Date.valueOf("2017-01-18");
-//        Order preOrder1 = EntityBuilder.buildOrder(0, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
-//        Order preOrder2 = EntityBuilder.buildOrder(0, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
-//        OrderDaoImpl.getInstance().add(preOrder1);
-//        OrderDaoImpl.getInstance().add(preOrder2);
-//        Order expected = OrderDaoImpl.getInstance().getAll().get(0);
-//        OrderDaoImpl.getInstance().delete(expected.getOrderId());
-//        Order actual = OrderDaoImpl.getInstance().getById(expected.getOrderId());
-//        Assert.assertNull(actual);
-//    }
-//
-//    @Test
-//    public void testUpdateOrderStatus() throws DaoException, SQLException {
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        Room room = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        User preUser = EntityBuilder.buildUser(1, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        UserDaoImpl.getInstance().add(preUser);
-//        User user = UserDaoImpl.getInstance().getByLogin(preUser.getLogin());
-//        Date checkIn = Date.valueOf("2017-01-12");
-//        Date checkOut = Date.valueOf("2017-01-18");
-//        Order preOrder = EntityBuilder.buildOrder(0, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
-//        OrderDaoImpl.getInstance().add(preOrder);
-//        Order expected = OrderDaoImpl.getInstance().getAll().get(0);
-//        OrderStatus expectedStatus = OrderStatus.CONFIRMED;
-//        OrderDaoImpl.getInstance().updateOrderStatus(expected.getOrderId(), expectedStatus);
-//        Order actual = OrderDaoImpl.getInstance().getById(expected.getOrderId());
-//        Assert.assertEquals(expectedStatus, actual.getOrderStatus());
-//    }
-//
+    private HibernateUtil util = HibernateUtil.getHibernateUtil();
+
+    @Before
+    public void CleanTestDBB() {
+        util.openSession();
+        util.getSession().beginTransaction();
+    }
+
+    @After
+    public void CleanTestDBA() {
+        Session session = util.getSession();
+        Query query = session.createSQLQuery(SqlRequest.SET_FOREIGN_KEYS_CHECKS_FALSE);
+        query.executeUpdate();
+        query = session.createSQLQuery(SqlRequest.TRUNCATE_TEST_ORDERS);
+        query.executeUpdate();
+        query = session.createSQLQuery(SqlRequest.TRUNCATE_TEST_USERS);
+        query.executeUpdate();
+        query = session.createSQLQuery(SqlRequest.TRUNCATE_TEST_ROOMS);
+        query.executeUpdate();
+        query = session.createSQLQuery(SqlRequest.SET_FOREIGN_KEYS_CHECKS_TRUE);
+        query.executeUpdate();
+        session.close();
+    }
+
+    @Test
+    public void testGetInstance() {
+        OrderDaoImpl firstImpl = OrderDaoImpl.getInstance();
+        OrderDaoImpl secondImpl = OrderDaoImpl.getInstance();
+        Assert.assertEquals(firstImpl, secondImpl);
+    }
+
+    @Test
+    public void testSave() {
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        User user = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(room);
+        util.getSession().save(user);
+        Date checkIn = Date.valueOf("2017-02-12");
+        Date checkOut = Date.valueOf("2017-02-18");
+        Order expected = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
+        OrderDaoImpl.getInstance().save(expected);
+        util.getSession().getTransaction().commit();
+        Order actual = (Order) util.getSession().get(Order.class, expected.getOrderId());
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetAll() {
+        List<Order> orderListExpected = new ArrayList<>();
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        util.getSession().save(room);
+        User user = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(user);
+        Date checkIn = Date.valueOf("2017-02-12");
+        Date checkOut = Date.valueOf("2017-02-18");
+        Order order1 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
+        orderListExpected.add(order1);
+        Order order2 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.CANCELLED, 60);
+        orderListExpected.add(order2);
+        Order order3 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.DENIED, 90);
+        orderListExpected.add(order3);
+        for (Order order : orderListExpected) {
+            util.getSession().save(order);
+        }
+        util.getSession().getTransaction().commit();
+        List<Order> orderListActual = OrderDaoImpl.getInstance().getAll();
+        Assert.assertTrue(orderListExpected.containsAll(orderListActual) && orderListActual.containsAll(orderListExpected));
+    }
+
+    @Test
+    public void testGetOrdersListByStatus() {
+        List<Order> orderListExpected = new ArrayList<>();
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        User user = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(room);
+        util.getSession().save(user);
+        Date checkIn = Date.valueOf("2017-02-12");
+        Date checkOut = Date.valueOf("2017-02-18");
+        Order order1 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
+        orderListExpected.add(order1);
+        Order order2 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 60);
+        orderListExpected.add(order2);
+        Order otherOrder1 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.DENIED, 90);
+        util.getSession().save(otherOrder1);
+        Order otherOrder2 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.CONFIRMED, 120);
+        util.getSession().save(otherOrder2);
+        for (Order order : orderListExpected) {
+            util.getSession().save(order);
+        }
+        util.getSession().getTransaction().commit();
+        List<Order> orderListActual = OrderDaoImpl.getInstance().getOrdersListByStatus(OrderStatus.REQUESTED);
+        Assert.assertTrue(orderListExpected.containsAll(orderListActual) && orderListActual.containsAll(orderListExpected));
+    }
+
+    @Test
+    public void testGetClientOrdersListByStatus(){
+        List<Order> orderListExpected = new ArrayList<>();
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(room);
+        util.getSession().save(user1);
+        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
+        util.getSession().save(user2);
+        Date checkIn = Date.valueOf("2017-01-12");
+        Date checkOut = Date.valueOf("2017-01-18");
+        Order order1 = EntityBuilder.buildOrder(null, user1, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
+        orderListExpected.add(order1);
+        Order order2 = EntityBuilder.buildOrder(null, user1, room, checkIn, checkOut, OrderStatus.REQUESTED, 40);
+        orderListExpected.add(order2);
+        Order otherOrder1 = EntityBuilder.buildOrder(null, user1, room, checkIn, checkOut, OrderStatus.DENIED, 50);
+        util.getSession().save(otherOrder1);
+        Order otherOrder2 = EntityBuilder.buildOrder(null, user2, room, checkIn, checkOut, OrderStatus.REQUESTED, 60);
+        util.getSession().save(otherOrder2);
+        Order otherOrder3 = EntityBuilder.buildOrder(null, user2, room, checkIn, checkOut, OrderStatus.COMPLETED, 50);
+        util.getSession().save(otherOrder3);
+        for (Order order : orderListExpected) {
+            util.getSession().save(order);
+        }
+        util.getSession().getTransaction().commit();
+        List<Order> orderListActual = OrderDaoImpl.getInstance().getClientOrdersListByStatus(OrderStatus.REQUESTED, user1.getUserId());
+        Assert.assertTrue(orderListExpected.containsAll(orderListActual) && orderListActual.containsAll(orderListExpected));
+    }
+
+    @Test
+    public void testGetById(){
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        User user = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(room);
+        util.getSession().save(user);
+        Date checkIn = Date.valueOf("2017-02-12");
+        Date checkOut = Date.valueOf("2017-02-18");
+        Order expected = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
+        util.getSession().save(expected);
+        Order falseOrder = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.CANCELLED, 60);
+        util.getSession().save(falseOrder);
+        util.getSession().getTransaction().commit();
+        Order actual = OrderDaoImpl.getInstance().getById(expected.getOrderId());
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testDelete(){
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        User user = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(room);
+        util.getSession().save(user);
+        Date checkIn = Date.valueOf("2017-02-12");
+        Date checkOut = Date.valueOf("2017-02-18");
+        Order order1 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
+        Order order2 = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
+        util.getSession().save(order1);
+        util.getSession().save(order2);
+        int id = order2.getOrderId();
+        util.getSession().getTransaction().commit();
+        OrderDaoImpl.getInstance().delete(id);
+        Order actual = (Order)util.getSession().get(Order.class, id);
+        Assert.assertNull(actual);
+    }
+
+    @Test
+    public void testUpdateOrderStatus(){
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        User user = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(room);
+        util.getSession().save(user);
+        Date checkIn = Date.valueOf("2017-02-12");
+        Date checkOut = Date.valueOf("2017-02-18");
+        Order expected = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, 30);
+        util.getSession().save(expected);
+        OrderStatus expectedStatus = OrderStatus.CONFIRMED;
+        util.getSession().getTransaction().commit();
+        OrderDaoImpl.getInstance().updateOrderStatus(expected.getOrderId(), expectedStatus);
+        Order actual = (Order) util.getSession().get(Order.class, expected.getOrderId());
+        Assert.assertEquals(expectedStatus, actual.getOrderStatus());
+    }
+
 
 }

@@ -1,129 +1,158 @@
 package com.pvt.dao.impl;
 
+import com.pvt.constants.RoomClass;
+import com.pvt.constants.SqlRequest;
 import com.pvt.dao.EntityDaoImplTest;
+import com.pvt.entities.Room;
+import com.pvt.util.EntityBuilder;
+import com.pvt.util.HibernateUtil;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RoomDaoImplTest extends EntityDaoImplTest {
-//    @Before
-//    @After
-//    public void CleanTestDB() throws DaoException, SQLException {
-//        Connection connection = PoolManager.getInstance().getConnection();
-//        Statement statement = connection.createStatement();
-//        statement.executeUpdate(SqlRequest.TRUNCATE_TEST_ROOMS);
-//    }
-//
-//    @Test
-//    public void testGetInstance() {
-//        RoomDaoImpl firstImpl = RoomDaoImpl.getInstance();
-//        RoomDaoImpl secondImpl = RoomDaoImpl.getInstance();
-//        Assert.assertEquals(firstImpl.hashCode(), secondImpl.hashCode());
-//    }
-//
-//    @Test
-//    public void testGetAll() throws DaoException {
-//        List<Room> roomListExpected = new ArrayList<>();
-//        Room room1 = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        roomListExpected.add(room1);
-//        Room room2 = EntityBuilder.buildRoom(2, "202", 2, RoomClass.STANDART, 45);
-//        roomListExpected.add(room2);
-//        Room room3 = EntityBuilder.buildRoom(3, "203", 3, RoomClass.DELUXE, 150);
-//        roomListExpected.add(room3);
-//        for (Room room : roomListExpected) {
-//            RoomDaoImpl.getInstance().add(room);
-//        }
-//        List<Room> roomListActual = RoomDaoImpl.getInstance().getAll();
-//
-//        Assert.assertTrue(roomListExpected.containsAll(roomListActual) && roomListActual.containsAll(roomListExpected));
-//    }
-//
-//    @Test
-//    public void testAdd() throws DaoException {
-//        Room expected = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(expected);
-//        Room actual = RoomDaoImpl.getInstance().getByRoomNumber(expected.getRoomNumber());
-//        Assert.assertTrue(expected.equals(actual));
-//    }
-//
-//    @Test
-//    public void testGetById() throws DaoException {
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        Room otherRoom = EntityBuilder.buildRoom(2, "202", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        RoomDaoImpl.getInstance().add(otherRoom);
-//        Room expected = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        Room actual = RoomDaoImpl.getInstance().getById(expected.getRoomId());
-//        Assert.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void testByRoomNumber() throws DaoException {
-//        Room expected = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        Room otherRoom = EntityBuilder.buildRoom(2, "202", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(expected);
-//        RoomDaoImpl.getInstance().add(otherRoom);
-//        Room actual = RoomDaoImpl.getInstance().getByRoomNumber(expected.getRoomNumber());
-//        Assert.assertTrue(expected.equals(actual));
-//    }
-//
-//    @Test
-//    public void testDelete() throws DaoException {
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        Room expected = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        RoomDaoImpl.getInstance().delete(expected.getRoomId());
-//        Room actual = RoomDaoImpl.getInstance().getById(expected.getRoomId());
-//        Assert.assertNull(actual);
-//    }
-//
-//    @Test
-//    public void testIsNewRoomTrue() throws DaoException {
-//        Room room1 = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        Room room2 = EntityBuilder.buildRoom(2, "202", 2, RoomClass.STANDART, 45);
-//        RoomDaoImpl.getInstance().add(room1);
-//        boolean isNew = RoomDaoImpl.getInstance().isNewRoom(room2.getRoomNumber());
-//        Assert.assertTrue(isNew);
-//    }
-//
-//    @Test
-//    public void testIsNewRoomFalse() throws DaoException {
-//        Room expected = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(expected);
-//        boolean isNew = RoomDaoImpl.getInstance().isNewRoom(expected.getRoomNumber());
-//        Assert.assertFalse(isNew);
-//    }
-//
-//    @Test
-//    public void testUpdateNewPrice() throws DaoException, SQLException {
-//        Room preRoom = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        RoomDaoImpl.getInstance().add(preRoom);
-//        Room expected = RoomDaoImpl.getInstance().getByRoomNumber(preRoom.getRoomNumber());
-//        int expectedPrice = 15;
-//        RoomDaoImpl.getInstance().updateRoomPrice(expected.getRoomId(), expectedPrice);
-//        Room actual = RoomDaoImpl.getInstance().getById(expected.getRoomId());
-//        Assert.assertEquals(expectedPrice, actual.getPrice());
-//    }
-//
-//    @Test
-//    public void testGetRoominesses() throws DaoException {
-//        List<Room> roomList = new ArrayList<>();
-//        Room room1 = EntityBuilder.buildRoom(1, "201", 1, RoomClass.SUITE, 5);
-//        roomList.add(room1);
-//        Room room2 = EntityBuilder.buildRoom(2, "202", 2, RoomClass.STANDART, 45);
-//        roomList.add(room2);
-//        Room room3 = EntityBuilder.buildRoom(3, "203", 3, RoomClass.DELUXE, 45);
-//        roomList.add(room3);
-//        Room room4 = EntityBuilder.buildRoom(4, "204", 5, RoomClass.SUITE, 5);
-//        roomList.add(room4);
-//        Room room5 = EntityBuilder.buildRoom(5, "205", 7, RoomClass.SUITE, 10);
-//        roomList.add(room5);
-//        List<Integer> expectedRoominessesList = new ArrayList<>();
-//        for (Room room : roomList) {
-//            RoomDaoImpl.getInstance().add(room);
-//            expectedRoominessesList.add(room.getRoominess());
-//        }
-//        List<Integer> actualRoominessesList = RoomDaoImpl.getInstance().getRoominesses();
-//        Assert.assertTrue(expectedRoominessesList.containsAll(actualRoominessesList) && actualRoominessesList.containsAll(expectedRoominessesList));
-//
-//
-//    }
+    private HibernateUtil util = HibernateUtil.getHibernateUtil();
 
+    @Before
+    public void BeforeTest() {
+        util.openSession();
+        util.getSession().beginTransaction();
+    }
+
+    @After
+    public void AfterTestCleanDB() {
+        Session session = util.getSession();
+        Query query = session.createSQLQuery(SqlRequest.SET_FOREIGN_KEYS_CHECKS_FALSE);
+        query.executeUpdate();
+        query = session.createSQLQuery(SqlRequest.TRUNCATE_TEST_ROOMS);
+        query.executeUpdate();
+        query = session.createSQLQuery(SqlRequest.SET_FOREIGN_KEYS_CHECKS_TRUE);
+        query.executeUpdate();
+        session.close();
+    }
+
+    @Test
+    public void testGetInstance() {
+        RoomDaoImpl firstImpl = RoomDaoImpl.getInstance();
+        RoomDaoImpl secondImpl = RoomDaoImpl.getInstance();
+        Assert.assertEquals(firstImpl, secondImpl);
+    }
+
+    @Test
+    public void testGetAll() {
+        List<Room> roomListExpected = new ArrayList<>();
+        Room room1 = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        roomListExpected.add(room1);
+        Room room2 = EntityBuilder.buildRoom(null, "202", 2, RoomClass.STANDART, 45);
+        roomListExpected.add(room2);
+        Room room3 = EntityBuilder.buildRoom(null, "203", 3, RoomClass.DELUXE, 150);
+        roomListExpected.add(room3);
+        for (Room room : roomListExpected) {
+            util.getSession().save(room);
+        }
+        util.getSession().getTransaction().commit();
+        List<Room> roomListActual = RoomDaoImpl.getInstance().getAll();
+        Assert.assertTrue(roomListExpected.containsAll(roomListActual) && roomListActual.containsAll(roomListExpected));
+    }
+
+    @Test
+    public void testSave() {
+        Room expected = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        RoomDaoImpl.getInstance().save(expected);
+        util.getSession().getTransaction().commit();
+        Room actual = (Room) util.getSession().get(Room.class, expected.getRoomId());
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetById() {
+        Room expected = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        Room falseRoom = EntityBuilder.buildRoom(null, "202", 1, RoomClass.SUITE, 5);
+        util.getSession().save(expected);
+        util.getSession().save(falseRoom);
+        util.getSession().getTransaction().commit();
+        Room actual = RoomDaoImpl.getInstance().getById(expected.getRoomId());
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testByRoomNumber() {
+        Room expected = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        Room falseRoom = EntityBuilder.buildRoom(null, "202", 1, RoomClass.SUITE, 5);
+        util.getSession().save(expected);
+        util.getSession().save(falseRoom);
+        util.getSession().getTransaction().commit();
+        Room actual = RoomDaoImpl.getInstance().getByRoomNumber(expected.getRoomNumber());
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testDelete() {
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        util.getSession().save(room);
+        int id = room.getRoomId();
+        util.getSession().getTransaction().commit();
+        RoomDaoImpl.getInstance().delete(id);
+        Room actual = RoomDaoImpl.getInstance().getById(id);
+        Assert.assertNull(actual);
+    }
+
+    @Test
+    public void testIsNewRoomTrue() {
+        Room room1 = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        Room room2 = EntityBuilder.buildRoom(null, "202", 2, RoomClass.STANDART, 45);
+        util.getSession().save(room1);
+        util.getSession().getTransaction().commit();
+        boolean isNew = RoomDaoImpl.getInstance().isNewRoom(room2.getRoomNumber());
+        Assert.assertTrue(isNew);
+    }
+
+    @Test
+    public void testIsNewRoomFalse() {
+        Room room1 = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        Room room2 = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        util.getSession().save(room1);
+        util.getSession().getTransaction().commit();
+        boolean isNew = RoomDaoImpl.getInstance().isNewRoom(room2.getRoomNumber());
+        Assert.assertFalse(isNew);
+    }
+
+    @Test
+    public void testUpdateNewPrice() {
+        Room expected = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        util.getSession().save(expected);
+        int actualPrice = 15;
+        util.getSession().getTransaction().commit();
+        RoomDaoImpl.getInstance().updateRoomPrice(expected.getRoomId(), actualPrice);
+        Assert.assertEquals(actualPrice, (int) expected.getPrice());
+    }
+
+    @Test
+    public void testGetRoominesses() {
+        List<Room> roomList = new ArrayList<>();
+        Room room1 = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        roomList.add(room1);
+        Room room2 = EntityBuilder.buildRoom(null, "202", 2, RoomClass.STANDART, 45);
+        roomList.add(room2);
+        Room room3 = EntityBuilder.buildRoom(null, "203", 2, RoomClass.DELUXE, 45);
+        roomList.add(room3);
+        Room room4 = EntityBuilder.buildRoom(null, "204", 5, RoomClass.SUITE, 5);
+        roomList.add(room4);
+        Room room5 = EntityBuilder.buildRoom(null, "205", 7, RoomClass.SUITE, 10);
+        roomList.add(room5);
+        List<Integer> expectedRoominessesList = new ArrayList<>();
+        for (Room room : roomList) {
+            util.getSession().save(room);
+            expectedRoominessesList.add(room.getRoominess());
+        }
+        util.getSession().getTransaction().commit();
+        List<Integer> actualRoominessesList = RoomDaoImpl.getInstance().getRoominesses();
+        Assert.assertTrue(expectedRoominessesList.containsAll(actualRoominessesList) && actualRoominessesList.containsAll(expectedRoominessesList));
+    }
 }

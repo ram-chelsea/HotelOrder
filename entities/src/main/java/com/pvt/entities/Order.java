@@ -26,11 +26,11 @@ public class Order extends Entity {
     @GeneratedValue
     private Integer orderId;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "ROOM_ID")
     private Room room;
 

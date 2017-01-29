@@ -1,80 +1,102 @@
 package com.pvt.dao.impl;
 
+import com.pvt.constants.SqlRequest;
 import com.pvt.dao.EntityDaoImplTest;
+import com.pvt.entities.CreditCard;
+import com.pvt.util.EntityBuilder;
+import com.pvt.util.HibernateUtil;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CreditCardDaoImplTest extends EntityDaoImplTest {
-//
-//    @Before
-//    @After
-//    public void CleanTestDB() throws DaoException, SQLException {
-//        Connection connection = PoolManager.getInstance().getConnection();
-//        Statement statement = connection.createStatement();
-//        statement.executeUpdate(SqlRequest.TRUNCATE_TEST_CARDS);
-//    }
-//
-//    @Test
-//    public void testGetInstance() {
-//        CreditCardDaoImpl firstImpl = CreditCardDaoImpl.getInstance();
-//        CreditCardDaoImpl secondImpl = CreditCardDaoImpl.getInstance();
-//        Assert.assertEquals(firstImpl.hashCode(), secondImpl.hashCode());
-//    }
-//
-//    @Test
-//    public void testAdd() throws DaoException {
-//        CreditCard expected = EntityBuilder.buildCreditCard(0, "1234567887654321", true, 500);
-//        CreditCardDaoImpl.getInstance().add(expected);
-//        CreditCard actual = CreditCardDaoImpl.getInstance().getByCardNumber(expected.getCardNumber());
-//        Assert.assertTrue(expected.equals(actual));
-//    }
-//
-//    @Test
-//    public void testGetById() throws DaoException {
-//        CreditCard preCard = EntityBuilder.buildCreditCard(0, "1234567887654321", true, 500);
-//        CreditCard otherCard = EntityBuilder.buildCreditCard(1, "8765432112345678", true, 500);
-//        CreditCardDaoImpl.getInstance().add(preCard);
-//        CreditCardDaoImpl.getInstance().add(otherCard);
-//        CreditCard expected = CreditCardDaoImpl.getInstance().getByCardNumber(preCard.getCardNumber());
-//        CreditCard actual = CreditCardDaoImpl.getInstance().getById(expected.getCardId());
-//        Assert.assertEquals(expected, actual);
-//    }
-//
-//    @Test
-//    public void testByCardNumber() throws DaoException {
-//        CreditCard expected = EntityBuilder.buildCreditCard(0, "1234567887654321", true, 500);
-//        CreditCard otherCard = EntityBuilder.buildCreditCard(1, "8765432112345678", true, 500);
-//        CreditCardDaoImpl.getInstance().add(expected);
-//        CreditCardDaoImpl.getInstance().add(otherCard);
-//        CreditCard actual = CreditCardDaoImpl.getInstance().getByCardNumber(expected.getCardNumber());
-//        Assert.assertTrue(expected.equals(actual));
-//    }
-//
-//    @Test
-//    public void testTakeMoneyForOrder() throws DaoException, SQLException {
-//        CreditCard preCard = EntityBuilder.buildCreditCard(0, "1234567887654321", true, 500);
-//        CreditCardDaoImpl.getInstance().add(preCard);
-//        CreditCard expected = CreditCardDaoImpl.getInstance().getByCardNumber(preCard.getCardNumber());
-//        int moneyToTake = 50;
-//        int oldAmount = expected.getAmount();
-//        CreditCardDaoImpl.getInstance().takeMoneyForOrder(expected, moneyToTake);
-//        CreditCard actual = CreditCardDaoImpl.getInstance().getById(expected.getCardId());
-//        Assert.assertEquals(oldAmount - moneyToTake, actual.getAmount());
-//    }
-//
-//    @Test
-//    public void testIsNewCreditCardTrue() throws DaoException {
-//        CreditCard card1 = EntityBuilder.buildCreditCard(0, "1234567887654321", true, 500);
-//        CreditCard card2 = EntityBuilder.buildCreditCard(1, "8765432112345678", true, 500);
-//        CreditCardDaoImpl.getInstance().add(card1);
-//        boolean isNew = CreditCardDaoImpl.getInstance().isNewCreditCard(card2.getCardNumber());
-//        Assert.assertTrue(isNew);
-//    }
-//
-//    @Test
-//    public void testIsNewCreditCardFalse() throws DaoException {
-//        CreditCard expected = EntityBuilder.buildCreditCard(0, "1234567887654321", true, 500);
-//        CreditCardDaoImpl.getInstance().add(expected);
-//        boolean isNew = CreditCardDaoImpl.getInstance().isNewCreditCard(expected.getCardNumber());
-//        Assert.assertFalse(isNew);
-//    }
+    private HibernateUtil util = HibernateUtil.getHibernateUtil();
+
+    @Before
+    public void BeforeTest() {
+        util.openSession();
+        util.getSession().beginTransaction();
+    }
+
+    @After
+    public void AfterTestCleanDB() {
+        Session session = util.getSession();
+        Query query = session.createSQLQuery(SqlRequest.TRUNCATE_TEST_CARDS);
+        query.executeUpdate();
+        session.close();
+    }
+
+    @Test
+    public void testGetInstance() {
+        CreditCardDaoImpl firstImpl = CreditCardDaoImpl.getInstance();
+        CreditCardDaoImpl secondImpl = CreditCardDaoImpl.getInstance();
+        Assert.assertEquals(firstImpl, secondImpl);
+    }
+
+    @Test
+    public void testSave() {
+        CreditCard expected = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
+        CreditCardDaoImpl.getInstance().save(expected);
+        util.getSession().getTransaction().commit();
+        CreditCard actual = (CreditCard) util.getSession().get(CreditCard.class, expected.getCardId());
+        Assert.assertTrue(expected.equals(actual));
+    }
+
+    @Test
+    public void testGetById() {
+        CreditCard falseCard = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
+        CreditCard expected = EntityBuilder.buildCreditCard(null, "8765432112345678", true, 500);
+        util.getSession().save(falseCard);
+        util.getSession().save(expected);
+        util.getSession().getTransaction().commit();
+        CreditCard actual = CreditCardDaoImpl.getInstance().getById(expected.getCardId());
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testByCardNumber() {
+        CreditCard falseCard = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
+        CreditCard expected = EntityBuilder.buildCreditCard(null, "8765432112345678", true, 500);
+        util.getSession().save(falseCard);
+        util.getSession().save(expected);
+        util.getSession().getTransaction().commit();
+        CreditCard actual = CreditCardDaoImpl.getInstance().getByCardNumber(expected.getCardNumber());
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testTakeMoneyForOrder() {
+        CreditCard expected = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
+        util.getSession().save(expected);
+        util.getSession().getTransaction().commit();
+        int moneyToTake = 50;
+        int oldAmount = expected.getAmount();
+        util.getSession().getTransaction().commit();
+        CreditCardDaoImpl.getInstance().takeMoneyForOrder(expected, moneyToTake);
+        Assert.assertEquals(oldAmount - moneyToTake, (int) expected.getAmount());
+    }
+
+    @Test
+    public void testIsNewCreditCardTrue() {
+        CreditCard card1 = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
+        CreditCard card2 = EntityBuilder.buildCreditCard(null, "8765432112345678", true, 500);
+        util.getSession().save(card1);
+        util.getSession().getTransaction().commit();
+        boolean isNew = CreditCardDaoImpl.getInstance().isNewCreditCard(card2.getCardNumber());
+        Assert.assertTrue(isNew);
+    }
+
+    @Test
+    public void testIsNewCreditCardFalse()  {
+        CreditCard card1 = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
+        CreditCard card2 = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 1000);
+        util.getSession().save(card1);
+        util.getSession().getTransaction().commit();
+        boolean isNew = CreditCardDaoImpl.getInstance().isNewCreditCard(card2.getCardNumber());
+        Assert.assertFalse(isNew);
+    }
 
 }

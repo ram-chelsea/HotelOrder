@@ -4,6 +4,8 @@ package com.pvt.constants;
  * Contains constants representing SQL requests being used in the project
  */
 public final class SqlRequest {
+    public static final String SET_FOREIGN_KEYS_CHECKS_FALSE = "SET FOREIGN_KEY_CHECKS = 0";
+    public static final String SET_FOREIGN_KEYS_CHECKS_TRUE = "SET FOREIGN_KEY_CHECKS = 1";
     public static final String TRUNCATE_TEST_USERS = "TRUNCATE TABLE users";
     public static final String TRUNCATE_TEST_ORDERS = "TRUNCATE TABLE orders";
     public static final String TRUNCATE_TEST_ROOMS = "TRUNCATE TABLE rooms";
