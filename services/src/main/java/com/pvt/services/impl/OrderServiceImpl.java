@@ -20,7 +20,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
      */
     private static OrderServiceImpl instance;
     private static OrderDaoImpl orderDaoInst = OrderDaoImpl.getInstance();
-    public static HibernateUtil util = HibernateUtil.getHibernateUtil();
+    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a OrderServiceImpl variable
@@ -192,6 +192,33 @@ public class OrderServiceImpl extends GeneralService<Order> {
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    /**
+     * Calls OrderDaoImpl add() method if OrderDaoImpl checkIsRoomFreeForPeriodInOrder() method returns true
+     * @param order <tt>Order</tt> object,which will be pushed to DB if it's <tt>room</tt> property
+     *              is free for period defined by <tt>checkInDate</tt> and <tt>checkInDate</tt> fields
+     * @return true if <tt>Order</tt> object's <tt>room</tt> property
+     *              is free for period defined by <tt>checkInDate</tt> and <tt>checkInDate</tt> fields
+     * @throws ServiceException
+     */
+    public boolean createOrderIfRoomIsFree(Order order)throws ServiceException{
+        boolean isFree;
+        try {
+            util.getSession().beginTransaction();
+            isFree = orderDaoInst.isFreeRoomForPeriodInOrder(order);
+            if(isFree){
+                orderDaoInst.save(order);
+            }
+            util.getSession().getTransaction().commit();
+            logger.info("createOrderIfRoomIsFree(order): " + order);
+            logger.info("isFree: "+ isFree);
+        } catch (HibernateException e) {
+            util.getSession().getTransaction().rollback();
+            logger.error(transactionFailedMessage + e);
+            throw new ServiceException(e.getMessage());
+        }
+        return isFree;
     }
 
 }

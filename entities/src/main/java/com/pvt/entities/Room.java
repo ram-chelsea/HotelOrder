@@ -23,7 +23,7 @@ import java.util.Set;
 public class Room extends Entity {
     private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "ID")
+    @Column(name = "ROOM_ID")
     @GeneratedValue
     private Integer roomId;
 
@@ -40,6 +40,6 @@ public class Room extends Entity {
     @Column(name = "PRICE")
     private Integer price;
 
-    @OneToMany(mappedBy = "room")
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders = new HashSet<>();
 }

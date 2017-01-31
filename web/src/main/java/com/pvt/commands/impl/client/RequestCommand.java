@@ -31,8 +31,8 @@ public class RequestCommand implements Command {
             try {
                 util.openSession();
                 Order order = RequestParameterParser.getNewOrder(request);
-                if (orderServiceInst.checkIsRoomFreeForPeriodInOrder(order)) {
-                    orderServiceInst.add(order);
+                boolean isFree = orderServiceInst.createOrderIfRoomIsFree(order);
+                if (isFree) {
                     util.getSession().close();
                     request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                     page = CommandType.CLIENTORDERS.getCurrentCommand().execute(request);

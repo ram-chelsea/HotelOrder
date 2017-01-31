@@ -10,9 +10,15 @@
         <property name="connection.password">root</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.connection.pool_size">10</property>
+        <property name="hibernate.connection.isolation">2</property>
         <property name="show_sql">false</property>
         <property name="hbm2ddl.auto">update</property>
-
+        <!--<property name="hibernate.cache.use_second_level_cache">false</property>-->
+        <!--<property name="hibernate.cache.region.factory_class">-->
+            <!--org.hibernate.cache.ehcache.EhCacheRegionFactory-->
+        <!--</property>-->
+        <!--<property name="hibernate.cache.use_query_cache">true</property>-->
+        <!--<property name="net.sf.ehcache.configurationResourceName">/ehcache.xml</property>-->
         <mapping class="com.pvt.entities.User"/>
         <mapping class="com.pvt.entities.Room"/>
         <mapping class="com.pvt.entities.CreditCard"/>

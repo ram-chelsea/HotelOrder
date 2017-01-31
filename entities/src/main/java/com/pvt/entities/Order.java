@@ -1,11 +1,12 @@
 package com.pvt.entities;
 
-
 import com.pvt.constants.OrderStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -19,18 +20,20 @@ import java.sql.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class Order extends Entity {
+public class Order extends com.pvt.entities.Entity {
     private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "ID")
+    @Column(name = "ORDER_ID")
     @GeneratedValue
     private Integer orderId;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
+    @Cascade({CascadeType.PERSIST, CascadeType.SAVE_UPDATE})
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
+    @Cascade({CascadeType.PERSIST, CascadeType.SAVE_UPDATE})
     @JoinColumn(name = "ROOM_ID")
     private Room room;
 

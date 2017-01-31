@@ -33,6 +33,9 @@ public class CardAmountCommand implements Command {
                 util.openSession();
                 CreditCard card = CreditCardServiceImpl.getInstance().getByCardNumber(cardNumber);
                 util.getSession().close();
+                if (card == null) {
+                    request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.CARD_NOT_EXISTS));
+                }
                 request.setAttribute(Parameters.CARD, card);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.CARD_AMOUNT_PAGE);
             } catch (ServiceException e) {
@@ -45,5 +48,4 @@ public class CardAmountCommand implements Command {
         }
         return page;
     }
-
 }

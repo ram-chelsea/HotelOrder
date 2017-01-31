@@ -24,7 +24,7 @@ public class User extends Entity {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "USER_ID")
     @GeneratedValue
     private Integer userId;
 
@@ -44,7 +44,7 @@ public class User extends Entity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders = new HashSet<>();
 
 }

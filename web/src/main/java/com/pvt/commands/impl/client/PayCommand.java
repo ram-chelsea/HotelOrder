@@ -3,7 +3,10 @@ package com.pvt.commands.impl.client;
 
 import com.pvt.commands.Command;
 import com.pvt.commands.factory.CommandType;
-import com.pvt.constants.*;
+import com.pvt.constants.MessageConstants;
+import com.pvt.constants.PagesPaths;
+import com.pvt.constants.Parameters;
+import com.pvt.constants.UserRole;
 import com.pvt.entities.CreditCard;
 import com.pvt.entities.Order;
 import com.pvt.entities.User;
@@ -11,6 +14,7 @@ import com.pvt.exceptions.RequestNumericAttributeTransferException;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.MessageManager;
 import com.pvt.managers.PagesConfigurationManager;
+import com.pvt.services.PayOrderServiceImpl;
 import com.pvt.services.impl.CreditCardServiceImpl;
 import com.pvt.services.impl.OrderServiceImpl;
 import com.pvt.utils.RequestParameterParser;
@@ -36,9 +40,8 @@ public class PayCommand implements Command {
                 String cardNumber = RequestParameterParser.getCardNumber(request);
                 CreditCard card = cardServiceInst.getByCardNumber(cardNumber);
                 if (!card.getCardNumber().isEmpty()) {
-                    if (isEnoughMoneyToPayOrder(card, order)) {
-                        orderServiceInst.updateOrderStatus(orderId, OrderStatus.ORDERED);
-                        cardServiceInst.takeMoneyForOrder(card, order.getTotalPrice());
+                    boolean isEnoughMoney = PayOrderServiceImpl.getInstance().payOrderWithCreditCard(card, order);
+                    if (isEnoughMoney) {
                         util.getSession().close();
                         request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                         page = CommandType.CLIENTORDERS.getCurrentCommand().execute(request);
@@ -47,6 +50,7 @@ public class PayCommand implements Command {
                         request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.NOT_ENOUGH_MONEY));
                         page = CommandType.GOTOPAY.getCurrentCommand().execute(request);
                     }
+
                 } else {
                     util.getSession().close();
                     request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
@@ -63,13 +67,5 @@ public class PayCommand implements Command {
             page = CommandType.LOGOUT.getCurrentCommand().execute(request);
         }
         return page;
-    }
-
-    private boolean isEnoughMoneyToPayOrder(CreditCard card, Order order) {
-        boolean isEnoughMoneyToPayOrder = false;
-        if (card.getAmount() >= order.getTotalPrice()) {
-            isEnoughMoneyToPayOrder = true;
-        }
-        return isEnoughMoneyToPayOrder;//TODO synchronizing or making synchronized method
     }
 }

@@ -19,7 +19,7 @@ public class UserServiceImpl extends GeneralService<User> {
      */
     private static UserServiceImpl instance;
     private static UserDaoImpl userDaoInst = UserDaoImpl.getInstance();
-    public static HibernateUtil util = HibernateUtil.getHibernateUtil();
+    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a UserServiceImpl variable

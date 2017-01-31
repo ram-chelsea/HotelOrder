@@ -113,7 +113,6 @@ public class RequestParameterParser {
     public static Room getOrderedRoomFormat(HttpServletRequest request) throws IllegalArgumentException {
         int roominess = Integer.valueOf(request.getParameter(Parameters.ROOMINESS));
         RoomClass roomClass = RoomClass.valueOf(request.getParameter(Parameters.ROOM_CLASS));
-
         Room orderedRoomFormat = EntityBuilder.buildRoom(null, null, roominess, roomClass, null);
         return orderedRoomFormat;
     }

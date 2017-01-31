@@ -19,7 +19,7 @@ public final class MessageConstants {
     public static final String INVALID_DATES_ORDER = "message.invaliddatesorder";
     public static final String NOT_ENOUGH_MONEY = "message.notenoughmoney";
     public static final String ROOM_WAS_BOOKED = "message.roomwasbooked" ;
-
+    public static final String CARD_NOT_EXISTS = "message.cardnotexistserror";
     private MessageConstants() {
     }
 }

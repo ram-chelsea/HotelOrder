@@ -20,7 +20,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
      */
     private static RoomServiceImpl instance;
     private static RoomDaoImpl roomDaoInst = RoomDaoImpl.getInstance();
-    public static HibernateUtil util = HibernateUtil.getHibernateUtil();
+    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a RoomServiceImpl variable

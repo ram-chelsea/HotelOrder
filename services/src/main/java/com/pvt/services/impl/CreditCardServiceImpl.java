@@ -18,7 +18,7 @@ public class CreditCardServiceImpl extends GeneralService<CreditCard> {
      */
     private static CreditCardServiceImpl instance;
     private static CreditCardDaoImpl cardDaoInst = CreditCardDaoImpl.getInstance();
-    public static HibernateUtil util = HibernateUtil.getHibernateUtil();
+    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a CreditCardServiceImpl variable
