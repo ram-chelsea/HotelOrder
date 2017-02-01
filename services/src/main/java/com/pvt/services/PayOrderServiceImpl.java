@@ -34,7 +34,7 @@ public class PayOrderServiceImpl {
             util.getSession().beginTransaction();
             isEnoughMoney = isEnoughMoneyToPayOrder(card, order);
             if (isEnoughMoney) {
-                OrderDaoImpl.getInstance().updateOrderStatus(order.getOrderId(), OrderStatus.ORDERED);
+                OrderDaoImpl.getInstance().updateOrderStatus(order.getOrderId(), OrderStatus.PAID);
                 CreditCardDaoImpl.getInstance().takeMoneyForOrder(card, order.getTotalPrice());
             }
             util.getSession().getTransaction().commit();

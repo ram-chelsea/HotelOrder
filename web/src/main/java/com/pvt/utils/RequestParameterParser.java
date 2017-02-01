@@ -127,5 +127,22 @@ public class RequestParameterParser {
         return checkOut;
     }
 
+    public static OrderStatus getOrderStatus(HttpServletRequest request) throws IllegalArgumentException {
+        HttpSession session = request.getSession();
+        OrderStatus orderStatus;
+        String orderStatusString;
+        orderStatusString = request.getParameter(Parameters.ORDER_STATUS);
+        UserRole userRole = ((User) session.getAttribute(Parameters.USER)).getUserRole();
+        if (orderStatusString != null) {
+            orderStatus = OrderStatus.valueOf(orderStatusString);
+        } else {
+            if (userRole == UserRole.ADMIN) {
+                orderStatus = OrderStatus.REQUESTED;
+            } else {
+                orderStatus = OrderStatus.CONFIRMED;
+            }
+        }//TODO confirmed, requested в const
+    return  orderStatus;
+    }
 
 }

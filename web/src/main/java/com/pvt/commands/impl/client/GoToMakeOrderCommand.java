@@ -18,7 +18,7 @@ import java.util.List;
 public class GoToMakeOrderCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
     private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
-    private final int MILLIS_A_DAY = 24 * 60 * 60 * 1000;
+    private static final int MILLIS_A_DAY = 24 * 60 * 60 * 1000;
 
     @Override
     public String execute(HttpServletRequest request) {

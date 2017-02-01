@@ -54,4 +54,4 @@ public class RequestCommand implements Command {
         return page;
     }
 
-}//TODO synchronized
+}

@@ -13,6 +13,7 @@ public final class Parameters {
     public static final String CONFIRMED_ORDERS_LIST = "confirmedOrdersList";
     public static final String COMPLETED_ORDERS_LIST = "completedOrdersList";
     public static final String ALL_PAID_ORDERS_LIST = "allPaidOrdersList";
+    public static final String ORDERS_LIST = "ordersList";
     public static final String CLIENT_DENIED_ORDERS_LIST = "deniedClientOrdersList";
     public static final String CLIENT_CONFIRMED_ORDERS_LIST = "confirmedClientOrdersList";
     public static final String CLIENT_REQUESTED_ORDERS_LIST = "requestedClientOrdersList";
@@ -39,13 +40,13 @@ public final class Parameters {
     public static final String CHECK_IN_DATE = "checkin";
     public static final String CHECK_OUT_DATE = "checkout";
     public static final String SUITED_ROOMS_LIST = "suitedRoomsList";
-    public static final String GOTOPAY_CANCEL_BUTTON = "gotopaycancelbutton";
-    public static final String CONFIRM_OR_DENY_BUTTON = "confirmdenybutton";
     public static final String ORDER_ID = "orderId";
     public static final String ORDER = "order";
     public static final String ROOMS_CLASSES_LIST = "roomsClassesList";
     public static final String ROOMINESSES_LIST = "roominessesList";
     public static final String FORM_SETTINGS_ERROR = "formSettingsError";
+    public static final String ORDER_STATUSES_LIST = "orderStatusesList";
+    public static final String ORDER_STATUS = "orderStatus";
 
 
     public static final String CARD_NUMBER_FORMAT_REGEXP = "cardNumberFormatRegExp";

@@ -9,9 +9,11 @@ import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.MessageManager;
 import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.services.impl.OrderServiceImpl;
+import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShowClientOrdersCommand implements Command {
@@ -26,19 +28,15 @@ public class ShowClientOrdersCommand implements Command {
         User user = (User) session.getAttribute(Parameters.USER);
         if ((UserRole.CLIENT).equals(user.getUserRole())) {
             try {
+                OrderStatus orderStatus = RequestParameterParser.getOrderStatus(request);
                 int userId = user.getUserId();
                 util.openSession();
-                List<Order> confirmedClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.CONFIRMED, userId);
-                List<Order> requestedClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.REQUESTED, userId);
-                List<Order> deniedClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.DENIED, userId);
-                List<Order> paidClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.ORDERED, userId);
-                List<Order> completedClientOrdersList = orderServiceInst.getClientOrdersListByStatus(OrderStatus.COMPLETED, userId);
+                List<Order> clientOrdersList = orderServiceInst.getClientOrdersListByStatus(orderStatus, userId);
                 util.getSession().close();
-                request.setAttribute(Parameters.CLIENT_CONFIRMED_ORDERS_LIST, confirmedClientOrdersList);
-                request.setAttribute(Parameters.CLIENT_REQUESTED_ORDERS_LIST, requestedClientOrdersList);
-                request.setAttribute(Parameters.CLIENT_DENIED_ORDERS_LIST, deniedClientOrdersList);
-                request.setAttribute(Parameters.CLIENT_PAID_ORDERS_LIST, paidClientOrdersList);
-                request.setAttribute(Parameters.CLIENT_COMPLETED_ORDERS_LIST, completedClientOrdersList);
+                ArrayList orderStatusesList = OrderStatus.enumToList();
+                request.setAttribute(Parameters.ORDER_STATUSES_LIST, orderStatusesList);
+                request.setAttribute(Parameters.ORDERS_LIST, clientOrdersList);
+                request.setAttribute(Parameters.ORDER_STATUS, orderStatus);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.CLIENT_SHOW_ORDERS_PAGE);
             } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);

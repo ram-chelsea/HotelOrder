@@ -7,7 +7,30 @@
 </head>
 <body>
 <h4>${operationMessage}</h4>
-<h3>Confirmed Orders</h3>
+<form name="chooseOrderStatus" method="POST" action="controller">
+    <input type="hidden" name="command" value="clientorders"/>
+    <table>
+        <tr>
+            <td>Order Status:</td>
+            <td>
+                <select name="orderStatus"/>
+                <c:forEach var="status" items="${orderStatusesList}">
+                    <option value="<c:out value="${status.toString()}"/>"
+                            <c:if test="${status == orderStatus}">
+                                selected="selected"
+                            </c:if>>
+                        <c:out value="${status.toString()}"/>
+                    </option>
+                </c:forEach>
+            </td>
+        </tr>
+    </table>
+    <input type="submit" value="Show Orders with chosen Status"/>
+</form>
+
+<c:choose>
+<c:when test="${!ordersList.isEmpty()}">
+<h4>${orderStatus.toString()} ORDERS</h4>
 <table border="1">
     <tr bgcolor="#CCCCCC">
         <td align="center"><strong>OrderId</strong></td>
@@ -15,101 +38,38 @@
         <td align="center"><strong>CheckInDate</strong></td>
         <td align="center"><strong>CheckOutDate</strong></td>
         <td align="center"><strong>TotalPrice</strong></td>
-        <td align="center"><strong>Pay</strong></td>
-        <td align="center"><strong>Cancel</strong></td>
+        <c:choose>
+            <c:when test="${orderStatus.toString().equals('CONFIRMED')}">
+                <td align="center"><strong>Pay</strong></td>
+                <td align="center"><strong>Cancel</strong></td>
+            </c:when>
+        </c:choose>
     </tr>
-    <c:forEach var="order" items="${confirmedClientOrdersList}">
-        <form action="controller" method="POST">
-            <input type="hidden" name="orderId" value="<c:out value="${order.orderId}"/>"/>
-            <tr>
-                <td><c:out value="${ order.orderId }"/></td>
-                <td><c:out value="${ order.room.roomNumber }"/></td>
-                <td><c:out value="${ order.checkInDate }"/></td>
-                <td><c:out value="${ order.checkOutDate }"/></td>
-                <td><c:out value="${ order.totalPrice}"/></td>
-                <td><input type="submit" name="command" value="gotopay"/></td>
-                <td><input type="submit" name="command" value="cancel"/></td>
-            </tr>
-        </form>
-    </c:forEach>
-</table>
-<h3>Requested Orders</h3>
-<table border="1">
-    <tr bgcolor="#CCCCCC">
-        <td align="center"><strong>OrderId</strong></td>
-        <td align="center"><strong>RoomNumber</strong></td>
-        <td align="center"><strong>CheckInDate</strong></td>
-        <td align="center"><strong>CheckOutDate</strong></td>
-        <td align="center"><strong>TotalPrice</strong></td>
-    </tr>
-    <c:forEach var="order" items="${requestedClientOrdersList}">
+    <c:forEach var="order" items="${ordersList}">
+    <form action="controller" method="POST">
+        <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
         <tr>
             <td><c:out value="${ order.orderId }"/></td>
             <td><c:out value="${ order.room.roomNumber }"/></td>
             <td><c:out value="${ order.checkInDate }"/></td>
             <td><c:out value="${ order.checkOutDate }"/></td>
             <td><c:out value="${ order.totalPrice}"/></td>
+            <c:choose>
+                <c:when test="${orderStatus.toString().equals('CONFIRMED')}">
+                    <td><input type="submit" name="command" value="gotopay"/></td>
+                    <td><input type="submit" name="command" value="cancel"/></td>
+                </c:when>
+            </c:choose>
         </tr>
+    </form>
     </c:forEach>
-</table>
-<h3>Denied Orders</h3>
-<table border="1">
-    <tr bgcolor="#CCCCCC">
-        <td align="center"><strong>OrderId</strong></td>
-        <td align="center"><strong>RoomNumber</strong></td>
-        <td align="center"><strong>CheckInDate</strong></td>
-        <td align="center"><strong>CheckOutDate</strong></td>
-        <td align="center"><strong>TotalPrice</strong></td>
-    </tr>
-    <c:forEach var="order" items="${deniedClientOrdersList}">
-        <tr>
-            <td><c:out value="${ order.orderId }"/></td>
-            <td><c:out value="${ order.room.roomNumber }"/></td>
-            <td><c:out value="${ order.checkInDate }"/></td>
-            <td><c:out value="${ order.checkOutDate }"/></td>
-            <td><c:out value="${ order.totalPrice}"/></td>
-        </tr>
-    </c:forEach>
-</table>
-<h3>Paid Orders</h3>
-<table border="1">
-    <tr bgcolor="#CCCCCC">
-        <td align="center"><strong>OrderId</strong></td>
-        <td align="center"><strong>RoomNumber</strong></td>
-        <td align="center"><strong>CheckInDate</strong></td>
-        <td align="center"><strong>CheckOutDate</strong></td>
-        <td align="center"><strong>TotalPrice</strong></td>
-    </tr>
-    <c:forEach var="order" items="${paidClientOrdersList}">
-        <tr>
-            <td><c:out value="${ order.orderId }"/></td>
-            <td><c:out value="${ order.room.roomNumber }"/></td>
-            <td><c:out value="${ order.checkInDate }"/></td>
-            <td><c:out value="${ order.checkOutDate }"/></td>
-            <td><c:out value="${ order.totalPrice}"/></td>
-        </tr>
-    </c:forEach>
-</table>
-<h3>Completed Orders</h3>
-<table border="1">
-    <tr bgcolor="#CCCCCC">
-        <td align="center"><strong>OrderId</strong></td>
-        <td align="center"><strong>RoomNumber</strong></td>
-        <td align="center"><strong>CheckInDate</strong></td>
-        <td align="center"><strong>CheckOutDate</strong></td>
-        <td align="center"><strong>TotalPrice</strong></td>
-    </tr>
-    <c:forEach var="order" items="${completedClientOrdersList}">
-        <tr>
-            <td><c:out value="${ order.orderId }"/></td>
-            <td><c:out value="${ order.room.roomNumber }"/></td>
-            <td><c:out value="${ order.checkInDate }"/></td>
-            <td><c:out value="${ order.checkOutDate }"/></td>
-            <td><c:out value="${ order.totalPrice}"/></td>
-        </tr>
-    </c:forEach>
-</table>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a>
-<a href="controller?command=logout">Logout</a>
+    </c:when>
+    <c:otherwise>
+    <h3>There are not ${orderStatus.toString()} orders now</h3>
+    </c:otherwise>
+    </c:choose>
+    <br/>
+    <a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
+    <a href="controller?command=logout">Logout</a><br/>
 </body>
 </html>
