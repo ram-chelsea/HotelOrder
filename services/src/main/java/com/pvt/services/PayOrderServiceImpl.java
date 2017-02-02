@@ -10,6 +10,7 @@ import com.pvt.exceptions.ServiceException;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.LockOptions;
 
 public class PayOrderServiceImpl {
     private static Logger logger = Logger.getLogger(PayOrderServiceImpl.class);
@@ -32,13 +33,13 @@ public class PayOrderServiceImpl {
         boolean isEnoughMoney;
         try {
             util.getSession().beginTransaction();
+            util.getSession().refresh(card, LockOptions.UPGRADE);
             isEnoughMoney = isEnoughMoneyToPayOrder(card, order);
             if (isEnoughMoney) {
                 OrderDaoImpl.getInstance().updateOrderStatus(order.getOrderId(), OrderStatus.PAID);
                 CreditCardDaoImpl.getInstance().takeMoneyForOrder(card, order.getTotalPrice());
             }
             util.getSession().getTransaction().commit();
-            logger.info("payOrderWithCreditCard(card, order: " + card + " " + order);
             logger.info("IsEnoughMoneyToPayOrder: " + isEnoughMoney);
         } catch (HibernateException e) {
             util.getSession().getTransaction().rollback();
@@ -47,6 +48,7 @@ public class PayOrderServiceImpl {
         }
         return isEnoughMoney;
     }
+
 
     private boolean isEnoughMoneyToPayOrder(CreditCard card, Order order) {
         boolean isEnoughMoneyToPayOrder = false;

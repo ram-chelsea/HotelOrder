@@ -14,7 +14,7 @@ import com.pvt.utils.RequestParameterParser;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class CompleteCommand implements Command {
+public class ExpireCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
 
     @Override
@@ -26,7 +26,7 @@ public class CompleteCommand implements Command {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
                 util.openSession();
-                OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.COMPLETED);
+                OrderServiceImpl.getInstance().updateOrderStatus(orderId, OrderStatus.EXPIRED);
                 util.getSession().close();
                 request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.SUCCESS_OPERATION));
                 page = CommandType.ADMINORDERS.getCurrentCommand().execute(request);

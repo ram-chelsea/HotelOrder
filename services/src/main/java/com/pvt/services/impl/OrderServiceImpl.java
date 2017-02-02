@@ -4,11 +4,13 @@ package com.pvt.services.impl;
 import com.pvt.constants.OrderStatus;
 import com.pvt.dao.impl.OrderDaoImpl;
 import com.pvt.entities.Order;
+import com.pvt.entities.Room;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.GeneralService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.hibernate.LockOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -206,6 +208,7 @@ public class OrderServiceImpl extends GeneralService<Order> {
         boolean isFree;
         try {
             util.getSession().beginTransaction();
+            util.getSession().load(Room.class, order.getRoom().getRoomId(), LockOptions.UPGRADE);
             isFree = orderDaoInst.isFreeRoomForPeriodInOrder(order);
             if(isFree){
                 orderDaoInst.save(order);

@@ -18,7 +18,7 @@
                     <option value="<c:out value="${status.toString()}"/>"
                             <c:if test="${status == orderStatus}">
                                 selected="selected"
-                             </c:if>>
+                            </c:if>>
                         <c:out value="${status.toString()}"/>
                     </option>
                 </c:forEach>
@@ -29,58 +29,59 @@
 </form>
 
 <c:choose>
-<c:when test="${!ordersList.isEmpty()}">
-<h4>${orderStatus.toString()} ORDERS</h4>
-<table border="1">
-    <tr bgcolor="#CCCCCC">
-        <td align="center"><strong>OrderId</strong></td>
-        <td align="center"><strong>RoomNumber</strong></td>
-        <td align="center"><strong>Client</strong></td>
-        <td align="center"><strong>ClientId</strong></td>
-        <td align="center"><strong>CheckInDate</strong></td>
-        <td align="center"><strong>CheckOutDate</strong></td>
-        <td align="center"><strong>TotalPrice</strong></td>
-        <c:choose>
-            <c:when test="${orderStatus.toString().equals('REQUESTED')}">
-                <td align="center"><strong>Confirm</strong></td>
-                <td align="center"><strong>Deny</strong></td>
-            </c:when>
-            <c:when test="${orderStatus.toString().equals('PAID')}">
-                <td align="center"><strong>Complete</strong></td>
-            </c:when>
-        </c:choose>
+    <c:when test="${!ordersList.isEmpty()}">
+        <h4>${orderStatus.toString()} ORDERS</h4>
+        <table border="1">
+            <tr bgcolor="#CCCCCC">
+                <td align="center"><strong>OrderId</strong></td>
+                <td align="center"><strong>RoomNumber</strong></td>
+                <td align="center"><strong>Client</strong></td>
+                <td align="center"><strong>ClientId</strong></td>
+                <td align="center"><strong>CheckInDate</strong></td>
+                <td align="center"><strong>CheckOutDate</strong></td>
+                <td align="center"><strong>TotalPrice</strong></td>
+                <c:choose>
+                    <c:when test="${orderStatus.toString().equals('REQUESTED')}">
+                        <td align="center"><strong>Confirm</strong></td>
+                        <td align="center"><strong>Deny</strong></td>
+                    </c:when>
+                    <c:when test="${orderStatus.toString().equals('PAID')}">
+                        <td align="center"><strong>Expire</strong></td>
+                    </c:when>
+                </c:choose>
 
-    </tr>
-    <c:forEach var="order" items="${ordersList}">
-    <form action="controller" method="POST">
-        <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
-        <tr>
-            <td><c:out value="${ order.orderId }"/></td>
-            <td><c:out value="${ order.room.roomNumber }"/></td>
-            <td><c:out value="${ order.user.firstName }  ${ order.user.lastName }"/></td>
-            <td><c:out value="${ order.user.userId }"/></td>
-            <td><c:out value="${ order.checkInDate }"/></td>
-            <td><c:out value="${ order.checkOutDate }"/></td>
-            <td><c:out value="${order.totalPrice}"/></td>
-            <c:choose>
-                <c:when test="${orderStatus.toString().equals('REQUESTED')}">
-                    <td><input type="submit" name="command" value="confirm"/></td>
-                    <td><input type="submit" name="command" value="deny"/></td>
-                </c:when>
-                <c:when test="${orderStatus.toString().equals('PAID')}">
-                    <td><input type="submit" name="command" value="complete"/></td>
-                </c:when>
-            </c:choose>
-        </tr>
-    </form>
-    </c:forEach>
+            </tr>
+            <c:forEach var="order" items="${ordersList}">
+                <form action="controller" method="POST">
+                    <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
+                    <tr>
+                        <td><c:out value="${ order.orderId }"/></td>
+                        <td><c:out value="${ order.room.roomNumber }"/></td>
+                        <td><c:out value="${ order.user.firstName }  ${ order.user.lastName }"/></td>
+                        <td><c:out value="${ order.user.userId }"/></td>
+                        <td><c:out value="${ order.checkInDate }"/></td>
+                        <td><c:out value="${ order.checkOutDate }"/></td>
+                        <td><c:out value="${order.totalPrice}"/></td>
+                        <c:choose>
+                            <c:when test="${orderStatus.toString().equals('REQUESTED')}">
+                                <td><input type="submit" name="command" value="confirm"/></td>
+                                <td><input type="submit" name="command" value="deny"/></td>
+                            </c:when>
+                            <c:when test="${orderStatus.toString().equals('PAID')}">
+                                <td><input type="submit" name="command" value="expire"/></td>
+                            </c:when>
+                        </c:choose>
+                    </tr>
+                </form>
+            </c:forEach>
+        </table>
     </c:when>
     <c:otherwise>
-    <h3>There are not ${orderStatus.toString()} orders now</h3>
+        <h3>There are not ${orderStatus.toString()} orders now</h3>
     </c:otherwise>
-    </c:choose>
-    <br/>
-    <a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
-    <a href="controller?command=logout">Logout</a><br/>
+</c:choose>
+<br/>
+<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
+<a href="controller?command=logout">Logout</a><br/>
 </body>
 </html>

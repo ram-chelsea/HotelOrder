@@ -141,7 +141,7 @@ public class RequestParameterParser {
             } else {
                 orderStatus = OrderStatus.CONFIRMED;
             }
-        }//TODO confirmed, requested в const
+        }//TODO confirmed, requested в const default?
     return  orderStatus;
     }
 

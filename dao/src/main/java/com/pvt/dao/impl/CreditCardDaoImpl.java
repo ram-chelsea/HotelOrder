@@ -89,11 +89,12 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
      */
     public CreditCard getByCardNumber(String cardNumber) {
         Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.GET_CREDIT_CARD_BY_NUMBER);
+        Query query = session.createQuery(HqlRequest.GET_CREDIT_CARD_BY_NUMBER)
+                .setCacheable(true);
         query.setParameter(0, cardNumber);
         CreditCard card = (CreditCard) query.uniqueResult();
         return card;
-    }
+    }//TODO cacheable
 
     /**
      * Decrease the <tt>CreditCard</tt> <i>amount</i> property value on <tt>amount</tt> value

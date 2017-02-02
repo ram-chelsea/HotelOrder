@@ -8,17 +8,7 @@ public final class Parameters {
     public static final String USER_PASSWORD = "password";
     public static final String USER_LIST = "userList";
     public static final String USER = "user";
-    public static final String REQUESTED_ORDERS_LIST = "requestedOrdersList";
-    public static final String CANCELLED_ORDERS_LIST = "cancelledOrdersList";
-    public static final String CONFIRMED_ORDERS_LIST = "confirmedOrdersList";
-    public static final String COMPLETED_ORDERS_LIST = "completedOrdersList";
-    public static final String ALL_PAID_ORDERS_LIST = "allPaidOrdersList";
     public static final String ORDERS_LIST = "ordersList";
-    public static final String CLIENT_DENIED_ORDERS_LIST = "deniedClientOrdersList";
-    public static final String CLIENT_CONFIRMED_ORDERS_LIST = "confirmedClientOrdersList";
-    public static final String CLIENT_REQUESTED_ORDERS_LIST = "requestedClientOrdersList";
-    public static final String CLIENT_COMPLETED_ORDERS_LIST = "completedClientOrdersList";
-    public static final String CLIENT_PAID_ORDERS_LIST = "paidClientOrdersList";
     public static final String ROOMS_LIST = "roomsList";
     public static final String ROOM_ID = "roomId";
     public static final String ROOM = "room";

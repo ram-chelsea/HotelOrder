@@ -83,11 +83,12 @@ public class UserDaoImpl extends GeneralDao<User> {
      */
     public User getByLogin(String login) {
         Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.GET_USER_BY_LOGIN);
+        Query query = session.createQuery(HqlRequest.GET_USER_BY_LOGIN)
+                .setCacheable(true);
         query.setParameter(0, login);
         User user = (User) query.uniqueResult();
         return user;
-    }
+    }//TODO разобраться надо ли setCacheable
 
     /**
      * Delete the Object of <tt>User</tt> class from the database

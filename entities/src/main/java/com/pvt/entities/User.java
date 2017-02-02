@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,7 +21,8 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = "orders", callSuper = false)
 @ToString(exclude = {"password", "orders"})
-public class User extends Entity {
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class User extends com.pvt.entities.Entity {
     private static final long serialVersionUID = 1L;
 
     @Id

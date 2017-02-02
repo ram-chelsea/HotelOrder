@@ -25,9 +25,10 @@
     </table>
     <input type="submit" value="Pay"/>
 </form>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a>
-<a href="controller?command=clientorders">Back to Client Orders</a>
-<a href="controller?command=lookcardamount">Check Card Amount</a>
-<a href="controller?command=logout">Logout</a>
+${operationMessage}<br/>
+<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
+<a href="controller?command=clientorders">Back to Client Orders</a><br/>
+<a href="controller?command=lookcardamount">Check Card Amount</a><br/>
+<a href="controller?command=logout">Logout</a><br/>
 </body>
 </html>

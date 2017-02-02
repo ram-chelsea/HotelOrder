@@ -147,7 +147,7 @@ public class RoomServiceImpl extends GeneralService<Room> {
             throw new ServiceException(e.getMessage());
         }
         return suitedRoomsList;
-    }//TODO DTO RoomFormat
+    }
 
     /**
      * Calls RoomDaoImpl getRoominesses() method

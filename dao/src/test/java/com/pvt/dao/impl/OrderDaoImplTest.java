@@ -135,7 +135,7 @@ public class OrderDaoImplTest extends EntityDaoImplTest {
         util.getSession().save(otherOrder1);
         Order otherOrder2 = EntityBuilder.buildOrder(null, user2, room, checkIn, checkOut, OrderStatus.REQUESTED, 60);
         util.getSession().save(otherOrder2);
-        Order otherOrder3 = EntityBuilder.buildOrder(null, user2, room, checkIn, checkOut, OrderStatus.COMPLETED, 50);
+        Order otherOrder3 = EntityBuilder.buildOrder(null, user2, room, checkIn, checkOut, OrderStatus.EXPIRED, 50);
         util.getSession().save(otherOrder3);
         for (Order order : orderListExpected) {
             util.getSession().save(order);

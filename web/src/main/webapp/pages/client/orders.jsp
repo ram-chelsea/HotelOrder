@@ -29,47 +29,48 @@
 </form>
 
 <c:choose>
-<c:when test="${!ordersList.isEmpty()}">
-<h4>${orderStatus.toString()} ORDERS</h4>
-<table border="1">
-    <tr bgcolor="#CCCCCC">
-        <td align="center"><strong>OrderId</strong></td>
-        <td align="center"><strong>RoomNumber</strong></td>
-        <td align="center"><strong>CheckInDate</strong></td>
-        <td align="center"><strong>CheckOutDate</strong></td>
-        <td align="center"><strong>TotalPrice</strong></td>
-        <c:choose>
-            <c:when test="${orderStatus.toString().equals('CONFIRMED')}">
-                <td align="center"><strong>Pay</strong></td>
-                <td align="center"><strong>Cancel</strong></td>
-            </c:when>
-        </c:choose>
-    </tr>
-    <c:forEach var="order" items="${ordersList}">
-    <form action="controller" method="POST">
-        <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
-        <tr>
-            <td><c:out value="${ order.orderId }"/></td>
-            <td><c:out value="${ order.room.roomNumber }"/></td>
-            <td><c:out value="${ order.checkInDate }"/></td>
-            <td><c:out value="${ order.checkOutDate }"/></td>
-            <td><c:out value="${ order.totalPrice}"/></td>
-            <c:choose>
-                <c:when test="${orderStatus.toString().equals('CONFIRMED')}">
-                    <td><input type="submit" name="command" value="gotopay"/></td>
-                    <td><input type="submit" name="command" value="cancel"/></td>
-                </c:when>
-            </c:choose>
-        </tr>
-    </form>
-    </c:forEach>
+    <c:when test="${!ordersList.isEmpty()}">
+        <h4>${orderStatus.toString()} ORDERS</h4>
+        <table border="1">
+            <tr bgcolor="#CCCCCC">
+                <td align="center"><strong>OrderId</strong></td>
+                <td align="center"><strong>RoomNumber</strong></td>
+                <td align="center"><strong>CheckInDate</strong></td>
+                <td align="center"><strong>CheckOutDate</strong></td>
+                <td align="center"><strong>TotalPrice</strong></td>
+                <c:choose>
+                    <c:when test="${orderStatus.toString().equals('CONFIRMED')}">
+                        <td align="center"><strong>Pay</strong></td>
+                        <td align="center"><strong>Cancel</strong></td>
+                    </c:when>
+                </c:choose>
+            </tr>
+            <c:forEach var="order" items="${ordersList}">
+                <form action="controller" method="POST">
+                    <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
+                    <tr>
+                        <td><c:out value="${ order.orderId }"/></td>
+                        <td><c:out value="${ order.room.roomNumber }"/></td>
+                        <td><c:out value="${ order.checkInDate }"/></td>
+                        <td><c:out value="${ order.checkOutDate }"/></td>
+                        <td><c:out value="${ order.totalPrice}"/></td>
+                        <c:choose>
+                            <c:when test="${orderStatus.toString().equals('CONFIRMED')}">
+                                <td><input type="submit" name="command" value="gotopay"/></td>
+                                <td><input type="submit" name="command" value="cancel"/></td>
+                            </c:when>
+                        </c:choose>
+                    </tr>
+                </form>
+            </c:forEach>
+        </table>
     </c:when>
     <c:otherwise>
-    <h3>There are not ${orderStatus.toString()} orders now</h3>
+        <h3>There are not ${orderStatus.toString()} orders now</h3>
     </c:otherwise>
-    </c:choose>
-    <br/>
-    <a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
-    <a href="controller?command=logout">Logout</a><br/>
+</c:choose>
+<br/>
+<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
+<a href="controller?command=logout">Logout</a><br/>
 </body>
 </html>

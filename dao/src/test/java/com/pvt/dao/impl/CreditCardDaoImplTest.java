@@ -71,7 +71,6 @@ public class CreditCardDaoImplTest extends EntityDaoImplTest {
     public void testTakeMoneyForOrder() {
         CreditCard expected = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
         util.getSession().save(expected);
-        util.getSession().getTransaction().commit();
         int moneyToTake = 50;
         int oldAmount = expected.getAmount();
         util.getSession().getTransaction().commit();

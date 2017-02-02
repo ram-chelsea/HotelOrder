@@ -56,8 +56,6 @@ public class PayCommand implements Command {
                     request.setAttribute(Parameters.OPERATION_MESSAGE, messageManagerInst.getProperty(MessageConstants.EMPTY_FIELDS));
                     page = CommandType.GOTOPAY.getCurrentCommand().execute(request);
                 }
-
-
             } catch (ServiceException | RequestNumericAttributeTransferException e) {
                 page = PagesConfigurationManager.getInstance().getProperty(PagesPaths.ERROR_PAGE_PATH);
                 request.setAttribute(Parameters.ERROR_DATABASE, messageManagerInst.getProperty(MessageConstants.ERROR_DATABASE));

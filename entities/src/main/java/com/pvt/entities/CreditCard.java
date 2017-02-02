@@ -19,7 +19,6 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-//@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CreditCard extends Entity {
     private static final long serialVersionUID = 1L;
     @Id

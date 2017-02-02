@@ -7,7 +7,7 @@ import java.util.Arrays;
  * Describes the enumeration of values <tt<Order/tt> <tt>status</tt> property value can accept
  */
 public enum OrderStatus {
-    REQUESTED, CONFIRMED, DENIED, CANCELLED, PAID, COMPLETED;
+    REQUESTED, CONFIRMED, DENIED, CANCELLED, PAID, EXPIRED;
 
     /**
      * Return <tt>ArrayList</tt> of OrderStatus values
