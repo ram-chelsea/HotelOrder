@@ -5,7 +5,7 @@ import com.pvt.exceptions.ServiceException;
 
 import java.util.List;
 
-public interface Service<T extends Entity> {
+public interface EntityService<T extends Entity> {
     /**
      * Calls Dao save() method
      *

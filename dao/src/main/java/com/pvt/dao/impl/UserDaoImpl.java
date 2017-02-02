@@ -88,7 +88,7 @@ public class UserDaoImpl extends GeneralDao<User> {
         query.setParameter(0, login);
         User user = (User) query.uniqueResult();
         return user;
-    }//TODO разобраться надо ли setCacheable
+    }//TODO разобраться надо ли setCacheale
 
     /**
      * Delete the Object of <tt>User</tt> class from the database

@@ -4,7 +4,7 @@ package com.pvt.services.impl;
 import com.pvt.dao.impl.RoomDaoImpl;
 import com.pvt.entities.Room;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.services.GeneralService;
+import com.pvt.services.AbstractEntityService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -13,7 +13,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomServiceImpl extends GeneralService<Room> {
+public class RoomServiceImpl extends AbstractEntityService<Room> {
     private static Logger logger = Logger.getLogger(RoomServiceImpl.class);
     /**
      * Singleton object of <tt>RoomServiceImpl</tt> class

@@ -14,7 +14,7 @@ import com.pvt.exceptions.RequestNumericAttributeTransferException;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.MessageManager;
 import com.pvt.managers.PagesConfigurationManager;
-import com.pvt.services.PayOrderServiceImpl;
+import com.pvt.services.impl.PayOrderServiceImpl;
 import com.pvt.services.impl.CreditCardServiceImpl;
 import com.pvt.services.impl.OrderServiceImpl;
 import com.pvt.utils.RequestParameterParser;

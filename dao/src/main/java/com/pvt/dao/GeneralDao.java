@@ -8,5 +8,5 @@ import com.pvt.entities.Entity;
  *
  */
 public abstract class GeneralDao<T extends Entity> implements Dao<T> {
-
+    //TODO methods
 }

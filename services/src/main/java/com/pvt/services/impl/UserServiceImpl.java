@@ -4,7 +4,7 @@ package com.pvt.services.impl;
 import com.pvt.dao.impl.UserDaoImpl;
 import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.services.GeneralService;
+import com.pvt.services.AbstractEntityService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -12,7 +12,7 @@ import org.hibernate.HibernateException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserServiceImpl extends GeneralService<User> {
+public class UserServiceImpl extends AbstractEntityService<User> {
     private static Logger logger = Logger.getLogger(UserServiceImpl.class);
     /**
      * Singleton object of <tt>UserServiceImpl</tt> class

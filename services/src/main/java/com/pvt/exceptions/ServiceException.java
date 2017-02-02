@@ -1,7 +1,7 @@
 package com.pvt.exceptions;
 
 /**
- * Exception being thrown in case of SQLException or DaoException having been got during Service operations
+ * Exception being thrown in case of HibernateException having been got during EntityService operations
  */
 public class ServiceException extends Exception {
     public ServiceException(String message) {

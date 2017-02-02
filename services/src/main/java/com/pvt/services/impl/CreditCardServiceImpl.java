@@ -4,14 +4,14 @@ package com.pvt.services.impl;
 import com.pvt.dao.impl.CreditCardDaoImpl;
 import com.pvt.entities.CreditCard;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.services.GeneralService;
+import com.pvt.services.AbstractEntityService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 
 import java.util.List;
 
-public class CreditCardServiceImpl extends GeneralService<CreditCard> {
+public class CreditCardServiceImpl extends AbstractEntityService<CreditCard> {
     private static Logger logger = Logger.getLogger(CreditCardServiceImpl.class);
     /**
      * Singleton object of <tt>CreditCardServiceImpl</tt> class

@@ -6,7 +6,7 @@ import com.pvt.dao.impl.OrderDaoImpl;
 import com.pvt.entities.Order;
 import com.pvt.entities.Room;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.services.GeneralService;
+import com.pvt.services.AbstractEntityService;
 import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
@@ -15,7 +15,7 @@ import org.hibernate.LockOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderServiceImpl extends GeneralService<Order> {
+public class OrderServiceImpl extends AbstractEntityService<Order> {
     private static Logger logger = Logger.getLogger(OrderServiceImpl.class);
     /**
      * Singleton object of <tt>OrderServiceImpl</tt> class

@@ -83,7 +83,8 @@ public class RoomDaoImpl extends GeneralDao<Room> {
      */
     public Room getByRoomNumber(String roomNumber) {
         Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.GET_ROOM_BY_NUMBER);
+        Query query = session.createQuery(HqlRequest.GET_ROOM_BY_NUMBER)
+                .setCacheable(true);
         query.setParameter(0, roomNumber);
         Room room = (Room) query.uniqueResult();
         return room;
