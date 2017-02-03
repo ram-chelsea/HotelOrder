@@ -3,7 +3,7 @@ package com.pvt.service.impl;
 import com.pvt.constants.SqlRequest;
 import com.pvt.entities.CreditCard;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.service.EntityServiceImplTest;
+import com.pvt.service.ServiceImplTest;
 import com.pvt.services.impl.CreditCardServiceImpl;
 import com.pvt.util.EntityBuilder;
 import com.pvt.util.HibernateUtil;
@@ -14,7 +14,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CreditCardServiceImplTest extends EntityServiceImplTest {
+public class CreditCardServiceImplTest extends ServiceImplTest {
     private HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     @Before

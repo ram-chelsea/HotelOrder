@@ -32,8 +32,8 @@
     <input type="hidden" name="command" value="gotochangeroomprice"/>
     <input type="submit" value="Change Room Price"/>
 </form>
-<a href="controller?command=gotoaddnewroom">Add New Room</a>
-<a href="controller?command=gotoadminstartpage">Back to StartPage</a>
+<a href="controller?command=gotoaddnewroom">Add New Room</a><br/>
+<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
 <a href="controller?command=logout">Logout</a>
 </body>
 </html>

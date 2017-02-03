@@ -17,7 +17,7 @@
     </table>
     <input type="submit" value="Check"/>
 </form>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a>
+<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
 <a href="controller?command=logout">Logout</a>
 </body>
 </html>

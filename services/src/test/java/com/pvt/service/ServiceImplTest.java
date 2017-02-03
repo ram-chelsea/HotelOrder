@@ -15,7 +15,7 @@ import org.junit.BeforeClass;
 
 import java.util.Properties;
 
-public abstract class EntityServiceImplTest {
+public abstract class ServiceImplTest {
     public static void setDatabaseByPropertiesFile(String propertiesFile) {
         HibernateUtil util = HibernateUtil.getHibernateUtil();
         try {

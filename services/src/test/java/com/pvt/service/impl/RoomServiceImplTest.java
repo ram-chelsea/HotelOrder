@@ -4,7 +4,7 @@ import com.pvt.constants.RoomClass;
 import com.pvt.constants.SqlRequest;
 import com.pvt.entities.Room;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.service.EntityServiceImplTest;
+import com.pvt.service.ServiceImplTest;
 import com.pvt.services.impl.RoomServiceImpl;
 import com.pvt.util.EntityBuilder;
 import com.pvt.util.HibernateUtil;
@@ -18,7 +18,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomServiceImplTest extends EntityServiceImplTest {
+public class RoomServiceImplTest extends ServiceImplTest {
  private HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     @Before

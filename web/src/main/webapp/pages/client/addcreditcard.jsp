@@ -28,8 +28,8 @@ ${formSettingsError}
     <input type="submit" value="Add Credit Card"/>
 </form>
 ${operationMessage}<br/>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a>
+<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
 <a href="controller?command=lookcardamount">Check Credit Card Amount</a> <br/>
-<a href="controller?command=logout">Logout</a> <br/>
+<a href="controller?command=logout">Logout</a>
 </body>
 </html>

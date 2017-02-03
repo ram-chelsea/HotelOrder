@@ -20,8 +20,8 @@
     </tr>
 </table>
 ${operationMessage}<br/>
-<a href="controller?command=lookcardamount">Back to Look Other Card Amount</a>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a>
+<a href="controller?command=lookcardamount">Back to Look Other Card Amount</a><br/>
+<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
 <a href="controller?command=logout">Logout</a>
 </body>
 </html>

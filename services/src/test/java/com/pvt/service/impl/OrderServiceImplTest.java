@@ -8,7 +8,7 @@ import com.pvt.entities.Order;
 import com.pvt.entities.Room;
 import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.service.EntityServiceImplTest;
+import com.pvt.service.ServiceImplTest;
 import com.pvt.services.impl.OrderServiceImpl;
 import com.pvt.util.EntityBuilder;
 import com.pvt.util.HibernateUtil;
@@ -23,7 +23,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderServiceImplTest extends EntityServiceImplTest {
+public class OrderServiceImplTest extends ServiceImplTest {
     private HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     @Before
@@ -179,6 +179,45 @@ public class OrderServiceImplTest extends EntityServiceImplTest {
         Order actual = (Order) util.getSession().get(Order.class, expected.getOrderId());
         Assert.assertEquals(expectedStatus, actual.getOrderStatus());
     }
+
+    @Test
+    public void createOrderIfRoomIsFreeTrue() throws ServiceException {
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        User user = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(room);
+        util.getSession().save(user);
+        Date checkIn1 = Date.valueOf("2017-02-01");
+        Date checkOut1 = Date.valueOf("2017-02-02");
+        Date checkIn2 = Date.valueOf("2017-02-03");
+        Date checkOut2 = Date.valueOf("2017-02-04");
+        Order order1 = EntityBuilder.buildOrder(null, user, room, checkIn1, checkOut1, OrderStatus.REQUESTED, 5);
+        util.getSession().save(order1);
+        util.getSession().flush();
+        Order order2 = EntityBuilder.buildOrder(null, user, room, checkIn2, checkOut2, OrderStatus.REQUESTED, 5);
+        boolean isFree = OrderServiceImpl.getInstance().createOrderIfRoomIsFree(order2);
+        Order actual = (Order) util.getSession().get(Order.class, order2.getOrderId());
+        Assert.assertTrue(actual.equals(order2)&& isFree);
+    }
+
+    @Test
+    public void createOrderIfRoomIsFreeFalse() throws ServiceException {
+        Room room = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        User user = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+        util.getSession().save(room);
+        util.getSession().save(user);
+        Date checkIn1 = Date.valueOf("2017-02-01");
+        Date checkOut1 = Date.valueOf("2017-02-03");
+        Date checkIn2 = Date.valueOf("2017-02-02");
+        Date checkOut2 = Date.valueOf("2017-02-04");
+        Order order1 = EntityBuilder.buildOrder(null, user, room, checkIn1, checkOut1, OrderStatus.REQUESTED, 10);
+        util.getSession().save(order1);
+        Order order2 = EntityBuilder.buildOrder(null, user, room, checkIn2, checkOut2, OrderStatus.REQUESTED, 10);
+        util.getSession().flush();
+        boolean isFree = OrderServiceImpl.getInstance().createOrderIfRoomIsFree(order2);
+        Boolean isTransient = util.getSession().contains(order2);
+        Assert.assertFalse(isTransient|| isFree);
+    }
+
 
 
 }

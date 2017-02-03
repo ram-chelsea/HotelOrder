@@ -50,4 +50,4 @@ public class Order extends com.pvt.entities.Entity {
     @Column(name = "TOTAL_PRICE")
     private Integer totalPrice;
 
-}
+}//todo auto expiring order after checkoutdate

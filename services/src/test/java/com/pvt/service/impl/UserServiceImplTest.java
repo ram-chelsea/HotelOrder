@@ -4,7 +4,7 @@ import com.pvt.constants.SqlRequest;
 import com.pvt.constants.UserRole;
 import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
-import com.pvt.service.EntityServiceImplTest;
+import com.pvt.service.ServiceImplTest;
 import com.pvt.services.impl.UserServiceImpl;
 import com.pvt.util.EntityBuilder;
 import com.pvt.util.HibernateUtil;
@@ -18,7 +18,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserServiceImplTest extends EntityServiceImplTest {
+public class UserServiceImplTest extends ServiceImplTest {
     private HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     @Before
