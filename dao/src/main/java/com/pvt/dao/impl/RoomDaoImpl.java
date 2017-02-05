@@ -165,4 +165,33 @@ public class RoomDaoImpl extends GeneralDao<Room> {
         return roominessList;
     }
 
+    /**
+     * Returns number of pages with rooms in dependence of <i>roomsPerPage</i>
+     * @param roomsPerPage number of <tt>Room</tt> objects rooms per page
+     * @return number of <tt>Room</tt> objects lists
+     */
+    public int getNumberOfPagesWithRooms(int roomsPerPage) {
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.GET_ALL_ROOMS_NUMBER);
+        int numberOfClients = ((Long) query.uniqueResult()).intValue();
+        int numberOfPages = (numberOfClients - 1) / roomsPerPage+1;
+        return numberOfPages;
+    }
+
+    /**
+     * Returns list of rooms objects on the pageNumber with roomsPerPage
+     *
+     * @param pageNumber   - page number of <tt>Room</tt> objects list
+     * @param roomsPerPage - number of <tt>Room</tt> objects rooms per page
+     * @return <tt>List</tt> of <tt>Room</tt> objects on the <i>pageNumber</i>  with <i>roomsPerPage</i>
+     */
+    public List<Room> getPageOfRooms(int pageNumber, int roomsPerPage) {
+        Session session = util.getSession();
+        int currentIndex = (pageNumber - 1) * roomsPerPage;
+        Query query = session.createQuery(HqlRequest.GET_ALL_ROOMS)
+                .setFirstResult(currentIndex)
+                .setMaxResults(roomsPerPage);
+        List<Room> roomsList = query.list();
+        return roomsList;
+    }
 }

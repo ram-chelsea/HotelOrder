@@ -2,15 +2,13 @@ package com.pvt.commands.impl.admin;
 
 import com.pvt.commands.Command;
 import com.pvt.commands.factory.CommandType;
-import com.pvt.constants.MessageConstants;
-import com.pvt.constants.PagesPaths;
-import com.pvt.constants.Parameters;
-import com.pvt.constants.UserRole;
+import com.pvt.constants.*;
 import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.managers.MessageManager;
 import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.services.impl.UserServiceImpl;
+import com.pvt.utils.RequestParameterParser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,10 +25,18 @@ public class ShowClientsCommand implements Command {
         User user = (User) session.getAttribute(Parameters.USER);
         if (UserRole.ADMIN.equals(user.getUserRole())) {
             try {
+                int clientsPerPage = RequestParameterParser.getClientsPerPage(request);
+                int currentPage = RequestParameterParser.getCurrentPageNumber(request);
                 util.openSession();
-                List<User> userList = UserServiceImpl.getInstance().getAll();
+                int numberOfPages = UserServiceImpl.getInstance().getNumberOfPagesWithClients(clientsPerPage);
+                List<User> userList = UserServiceImpl.getInstance().getPageOfClients(currentPage, clientsPerPage);
                 util.getSession().close();
+                List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
+                request.setAttribute(Parameters.PER_PAGE_NUMBERS_LIST, perPageNumbersList);
                 request.setAttribute(Parameters.USER_LIST, userList);
+                request.setAttribute(Parameters.NUMBER_OF_PAGES, numberOfPages);
+                session.setAttribute(Parameters.CLIENTS_PER_PAGE, clientsPerPage);
+                request.setAttribute(Parameters.CURRENT_PAGE, currentPage);
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ADMIN_SHOW_CLIENTS_PAGE);
             } catch (ServiceException e) {
                 page = pagesConfigManagerInst.getProperty(PagesPaths.ERROR_PAGE_PATH);
@@ -42,4 +48,5 @@ public class ShowClientsCommand implements Command {
         }
         return page;
     }
+
 }

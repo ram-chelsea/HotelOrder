@@ -155,4 +155,44 @@ public class RoomDaoImplTest extends EntityDaoImplTest {
         List<Integer> actualRoominessesList = RoomDaoImpl.getInstance().getRoominesses();
         Assert.assertTrue(expectedRoominessesList.containsAll(actualRoominessesList) && actualRoominessesList.containsAll(expectedRoominessesList));
     }
+
+    @Test
+    public void testGetPagesOfRooms() {
+        Room room1 = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        util.getSession().save(room1);
+        Room room2 = EntityBuilder.buildRoom(null, "202", 2, RoomClass.STANDART, 45);
+        util.getSession().save(room2);
+        Room room3 = EntityBuilder.buildRoom(null, "203", 2, RoomClass.DELUXE, 45);
+        util.getSession().save(room3);
+        Room room4 = EntityBuilder.buildRoom(null, "204", 5, RoomClass.SUITE, 5);
+        util.getSession().save(room4);
+        Room room5 = EntityBuilder.buildRoom(null, "205", 7, RoomClass.SUITE, 10);
+        util.getSession().save(room5);
+        util.getSession().getTransaction().commit();
+        List<Room> roomsListExpected = new ArrayList<>();
+        roomsListExpected.add(room3);
+        roomsListExpected.add(room4);
+        List<Room> roomListActual = RoomDaoImpl.getInstance().getPageOfRooms(2,2);
+        Assert.assertTrue(roomsListExpected.containsAll(roomListActual) && roomListActual.containsAll(roomsListExpected));
+    }
+    @Test
+    public void testGetNumberOfPagesWithRooms(){
+        Room room1 = EntityBuilder.buildRoom(null, "201", 1, RoomClass.SUITE, 5);
+        util.getSession().save(room1);
+        Room room2 = EntityBuilder.buildRoom(null, "202", 2, RoomClass.STANDART, 45);
+        util.getSession().save(room2);
+        Room room3 = EntityBuilder.buildRoom(null, "203", 2, RoomClass.DELUXE, 45);
+        util.getSession().save(room3);
+        Room room4 = EntityBuilder.buildRoom(null, "204", 5, RoomClass.SUITE, 5);
+        util.getSession().save(room4);
+        Room room5 = EntityBuilder.buildRoom(null, "205", 7, RoomClass.SUITE, 10);
+        util.getSession().save(room5);
+        util.getSession().getTransaction().commit();
+        List<Room> roomsListExpected = new ArrayList<>();
+        roomsListExpected.add(room3);
+        roomsListExpected.add(room4);
+        int roomPagesNumber = RoomDaoImpl.getInstance().getNumberOfPagesWithRooms(2);
+        Assert.assertEquals(3, roomPagesNumber);
+    }
+
 }

@@ -5,7 +5,9 @@ package com.pvt.constants;
  */
 public final class HqlRequest {
     public static final String GET_ALL_CLIENTS =
-            "SELECT U FROM User U WHERE U.userRole = 'CLIENT' ";
+            "SELECT U FROM User U WHERE U.userRole = 'CLIENT' ORDER BY U.lastName ";
+    public static final String GET_ALL_CLIENTS_NUMBER =
+            "SELECT count(U) FROM User U WHERE U.userRole = 'CLIENT'";
     public static final String GET_USER_BY_LOGIN =
             "SELECT U FROM User U WHERE U.login = ?";
     public static final String CHECK_LOGIN =
@@ -14,7 +16,9 @@ public final class HqlRequest {
             "SELECT count(U) FROM User U WHERE U.login = ? AND U.password = ?";
 
     public static final String GET_ALL_ROOMS =
-            "FROM Room";
+            "SELECT R FROM Room R ORDER BY R.roomNumber";
+    public static final String GET_ALL_ROOMS_NUMBER =
+            "SELECT count(R) FROM Room R";
     public static final String GET_ROOM_BY_NUMBER =
             "SELECT R FROM Room R WHERE R.roomNumber = ?";
     public static final String CHECK_IS_NEW_ROOM =
@@ -40,5 +44,6 @@ public final class HqlRequest {
             "SELECT C FROM CreditCard C WHERE C.cardNumber = ?";
     public static final String CHECK_IS_NEW_CREDIT_CARD =
             "SELECT count(C) FROM CreditCard C WHERE C.cardNumber = ?";
+
 
 }

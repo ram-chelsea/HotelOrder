@@ -11,6 +11,6 @@
 <a href="controller?command=clients">Show Clients List</a> <br/>
 <a href="controller?command=adminorders">Show Orders List</a> <br/>
 <a href="controller?command=rooms">Show Rooms List</a> <br/>
-<a href="controller?command=logout">Logout</a> <br/>
+<a href="controller?command=logout">Logout</a>
 </body>
 </html>

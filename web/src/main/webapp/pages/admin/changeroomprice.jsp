@@ -28,8 +28,8 @@ ${formSettingsError}<br/>
     <input type="submit" value="Change RoomPrice"/>
 </form>
 ${operationMessage}
-<a href="controller?command=gotoadminstartpage">Back to StartPage</a>
-<a href="controller?command=rooms">Back to RoomsList</a>
+<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
+<a href="controller?command=rooms">Back to RoomsList</a><br/>
 <a href="controller?command=logout">Logout</a>
 </body>
 </html>

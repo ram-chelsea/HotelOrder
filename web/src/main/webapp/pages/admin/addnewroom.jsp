@@ -45,8 +45,8 @@ ${formSettingsError}<br/>
     <input type="submit" value="Add Room"/>
 </form>
 ${operationMessage} <br/>
-<a href="controller?command=gotoadminstartpage">Back to StartPage</a>
+<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
 <a href="controller?command=rooms">Go to Rooms List</a> <br/>
-<a href="controller?command=logout">Logout</a> <br/>
+<a href="controller?command=logout">Logout</a>
 </body>
 </html>

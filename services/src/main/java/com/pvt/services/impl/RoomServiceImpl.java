@@ -194,8 +194,50 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
         return isNew;
     }
 
+    /**
+     * Calls RoomDaoImpl getNumberOfPagesWithRooms() method
+     * @param roomsPerPage - get number of <tt>Room</tt> objects per page
+     * @return number of <tt>Room</tt> objects lists
+     * @throws ServiceException
+     */
+    public int getNumberOfPagesWithRooms(int roomsPerPage) throws ServiceException {
+        int numberOfPages;
+        try {
+            util.getSession().beginTransaction();
+            numberOfPages = roomDaoInst.getNumberOfPagesWithRooms(roomsPerPage);
+            util.getSession().getTransaction().commit();
+            logger.info("getNumberOfPagesWithClients(clientsPerPage): " + roomsPerPage);
+        } catch (HibernateException e) {
+            util.getSession().getTransaction().rollback();
+            logger.error(transactionFailedMessage + e);
+            throw new ServiceException(e.getMessage());
+        }
+        return numberOfPages;
+    }
+
+    /**
+     * Calls RoomDaoImpl getPageOfRooms() method
+     * @param pageNumber - page number of <tt>Room</tt> objects list
+     * @param roomsPerPage - number of <tt>Room</tt> objects rooms per page
+     * @return <tt>List</tt> of <tt>Room</tt> objects on the <i>pageNumber</i>  with <i>roomsPerPage</i>
+     * @throws ServiceException
+     */
+    public List<Room> getPageOfRooms(int pageNumber, int roomsPerPage) throws ServiceException {
+        List<Room> roomsList = new ArrayList<>();
+        try {
+            util.getSession().beginTransaction();
+            roomsList = roomDaoInst.getPageOfRooms(pageNumber, roomsPerPage);
+            util.getSession().getTransaction().commit();
+            logger.info("Get Clients For Page Number " + pageNumber);
+        } catch (HibernateException e) {
+            util.getSession().getTransaction().commit();
+            logger.error(transactionFailedMessage + e);
+            throw new ServiceException(e.getMessage());
+        }
+        return roomsList;
+    }
+
     public int computeTotalPriceForRoom(Room room, Date from, Date till) {
         return getDatesDifferenceInDays(from, till) * room.getPrice();
     }
-
 }

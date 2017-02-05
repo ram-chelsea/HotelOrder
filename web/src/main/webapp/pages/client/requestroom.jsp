@@ -28,8 +28,8 @@
         </form>
     </c:forEach>
 </table>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a>
-<a href="controller?command=gotomakeorder">Back to Make a New Order</a>
+<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
+<a href="controller?command=gotomakeorder">Back to Make a New Order</a><br/>
 <a href="controller?command=logout">Logout</a>
 </body>
 </html>

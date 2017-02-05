@@ -62,6 +62,13 @@ public final class Parameters {
     public static final String AMOUNT_INPUT_PLACEHOLDER = "amountInputPlaceHolder";
     public static final String MIN_CHECK_IN_DATE = "minCheckInDate";
     public static final String MIN_CHECK_OUT_DATE = "minCheckOutDate";
+    public static final String NUMBER_OF_PAGES = "numberOfPages";
+    public static final String CURRENT_INDEX = "currentIndex";
+    public static final String CLIENTS_PER_PAGE = "clientsPerPage";
+    public static final String CURRENT_PAGE = "currentPage";
+    public static final String PER_PAGE_NUMBERS_LIST = "perPageNumbersList";
+    public static final String ROOMS_PER_PAGE = "roomsPerPage";
+
     private Parameters() {
     }
 }

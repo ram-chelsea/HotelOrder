@@ -12,6 +12,6 @@
 <a href="controller?command=gotomakeorder">Make Order</a> <br/>
 <a href="controller?command=lookcardamount">Check Credit Card Amount</a> <br/>
 <a href="controller?command=gotoaddcreditcard">Add Credit Card</a> <br/>
-<a href="controller?command=logout">Logout</a> <br/>
+<a href="controller?command=logout">Logout</a>
 </body>
 </html>

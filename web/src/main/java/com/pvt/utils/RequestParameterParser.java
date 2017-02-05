@@ -1,10 +1,7 @@
 package com.pvt.utils;
 
 import com.pvt.commands.factory.CommandType;
-import com.pvt.constants.OrderStatus;
-import com.pvt.constants.Parameters;
-import com.pvt.constants.RoomClass;
-import com.pvt.constants.UserRole;
+import com.pvt.constants.*;
 import com.pvt.entities.CreditCard;
 import com.pvt.entities.Order;
 import com.pvt.entities.Room;
@@ -19,6 +16,9 @@ import javax.servlet.http.HttpSession;
 import java.sql.Date;
 
 public class RequestParameterParser {
+    private static final OrderStatus DEFAULT_ADMIN_SHOW_LIST_OF_ORDER_STATUS = OrderStatus.REQUESTED;
+    private static final OrderStatus DEFAULT_CLIENT_SHOW_LIST_OF_ORDER_STATUS = OrderStatus.CONFIRMED;
+
     private RequestParameterParser() {
     }
 
@@ -137,12 +137,56 @@ public class RequestParameterParser {
             orderStatus = OrderStatus.valueOf(orderStatusString);
         } else {
             if (userRole == UserRole.ADMIN) {
-                orderStatus = OrderStatus.REQUESTED;
+                orderStatus = DEFAULT_ADMIN_SHOW_LIST_OF_ORDER_STATUS;
             } else {
-                orderStatus = OrderStatus.CONFIRMED;
+                orderStatus = DEFAULT_CLIENT_SHOW_LIST_OF_ORDER_STATUS;
             }
-        }//TODO confirmed, requested в const default?
-    return  orderStatus;
+        }
+        return orderStatus;
     }
 
+    public static Integer getClientsPerPage(HttpServletRequest request) throws NumberFormatException {
+        HttpSession session = request.getSession();
+        String clientsPerPageString = request.getParameter(Parameters.CLIENTS_PER_PAGE);
+        Integer sessionClientsPerPage = (Integer) session.getAttribute(Parameters.CLIENTS_PER_PAGE);
+        Integer clientsPerPage;
+        if (clientsPerPageString != null) {
+            clientsPerPage = Integer.valueOf(clientsPerPageString);
+        } else {
+            if (sessionClientsPerPage != null)
+                clientsPerPage = sessionClientsPerPage;
+            else {
+                clientsPerPage = PaginationConstants.DEFAULT_NUMBER_PER_PAGE;
+            }
+        }
+        return clientsPerPage;
+    }
+
+    public static Integer getCurrentPageNumber(HttpServletRequest request) throws NumberFormatException {
+        String currentPageString = request.getParameter(Parameters.CURRENT_PAGE);
+        Integer currentPage;
+        if (currentPageString == null) {
+            currentPage = PaginationConstants.DEFAULT_CURRENT_PAGE_NUMBER;
+        } else {
+            currentPage = Integer.valueOf(currentPageString);
+        }
+        return currentPage;
+    }
+
+    public static Integer getRoomsPerPage(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        String roomsPerPageString = request.getParameter(Parameters.ROOMS_PER_PAGE);
+        Integer sessionRoomsPerPage = (Integer) session.getAttribute(Parameters.ROOMS_PER_PAGE);
+        Integer roomsPerPage;
+        if (roomsPerPageString != null) {
+            roomsPerPage = Integer.valueOf(roomsPerPageString);
+        } else {
+            if (sessionRoomsPerPage != null)
+                roomsPerPage = sessionRoomsPerPage;
+            else {
+                roomsPerPage = PaginationConstants.DEFAULT_NUMBER_PER_PAGE;
+            }
+        }
+        return roomsPerPage;
+    }
 }

@@ -122,4 +122,47 @@ public class UserServiceImplTest extends ServiceImplTest {
         Assert.assertFalse(isNew);
     }
 
+    @Test
+    public void testGetPagesOfClients() throws ServiceException {
+        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
+        util.getSession().save(user1);
+        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
+        util.getSession().save(user2);
+        User user3 = EntityBuilder.buildUser(null, "TEST_LOGIN_3", "TEST_FIRST_NAME_3", "TEST_LAST_NAME_3", "TEST_PASSWORD_1", UserRole.CLIENT);
+        util.getSession().save(user3);
+        User user4 = EntityBuilder.buildUser(null, "TEST_LOGIN_4", "TEST_FIRST_NAME_4", "TEST_LAST_NAME_4", "TEST_PASSWORD_2", UserRole.CLIENT);
+        util.getSession().save(user4);
+        User user5 = EntityBuilder.buildUser(null, "TEST_LOGIN_5", "TEST_FIRST_NAME_5", "TEST_LAST_NAME_5", "TEST_PASSWORD_1", UserRole.CLIENT);
+        util.getSession().save(user5);
+        User user6 = EntityBuilder.buildUser(null, "TEST_LOGIN_6", "TEST_FIRST_NAME_6", "TEST_LAST_NAME_6", "TEST_PASSWORD_2", UserRole.CLIENT);
+        util.getSession().save(user6);
+        User user7 = EntityBuilder.buildUser(null, "TEST_LOGIN_7", "TEST_FIRST_NAME_7", "TEST_LAST_NAME_7", "TEST_PASSWORD_1", UserRole.CLIENT);
+        util.getSession().save(user7);
+        User user8 = EntityBuilder.buildUser(null, "TEST_LOGIN_8", "TEST_FIRST_NAME_8", "TEST_LAST_NAME_8", "TEST_PASSWORD_2", UserRole.CLIENT);
+        util.getSession().save(user8);
+        List<User> userListExpected = new ArrayList<>();
+        userListExpected.add(user4);
+        userListExpected.add(user5);
+        userListExpected.add(user6);
+        List<User> userListActual = UserServiceImpl.getInstance().getPageOfClients(2, 3);
+        Assert.assertTrue(userListExpected.containsAll(userListActual) && userListActual.containsAll(userListExpected));
+    }
+
+    @Test
+    public void testGetNumberOfPagesWithClients() throws ServiceException {
+        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
+        util.getSession().save(user1);
+        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
+        util.getSession().save(user2);
+        User user3 = EntityBuilder.buildUser(null, "TEST_LOGIN_3", "TEST_FIRST_NAME_3", "TEST_LAST_NAME_3", "TEST_PASSWORD_1", UserRole.CLIENT);
+        util.getSession().save(user3);
+        User user4 = EntityBuilder.buildUser(null, "TEST_LOGIN_4", "TEST_FIRST_NAME_4", "TEST_LAST_NAME_4", "TEST_PASSWORD_2", UserRole.CLIENT);
+        util.getSession().save(user4);
+        User user5 = EntityBuilder.buildUser(null, "TEST_LOGIN_5", "TEST_FIRST_NAME_5", "TEST_LAST_NAME_5", "TEST_PASSWORD_1", UserRole.CLIENT);
+        util.getSession().save(user5);
+        int numberOfPages = UserServiceImpl.getInstance().getNumberOfPagesWithClients(2);
+        Assert.assertEquals(3, numberOfPages);
+    }
+
+
 }

@@ -94,7 +94,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
         query.setParameter(0, cardNumber);
         CreditCard card = (CreditCard) query.uniqueResult();
         return card;
-    }//TODO cacheable
+    }
 
     /**
      * Decrease the <tt>CreditCard</tt> <i>amount</i> property value on <tt>amount</tt> value

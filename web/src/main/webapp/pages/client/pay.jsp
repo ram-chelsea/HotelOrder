@@ -29,6 +29,6 @@ ${operationMessage}<br/>
 <a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
 <a href="controller?command=clientorders">Back to Client Orders</a><br/>
 <a href="controller?command=lookcardamount">Check Card Amount</a><br/>
-<a href="controller?command=logout">Logout</a><br/>
+<a href="controller?command=logout">Logout</a>
 </body>
 </html>

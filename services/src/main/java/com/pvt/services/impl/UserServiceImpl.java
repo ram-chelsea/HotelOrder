@@ -81,6 +81,27 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         }
         return userList;
     }
+    /**
+     * Calls UserDaoImpl getPageOfClients() method
+     * @param pageNumber - page number of <tt>User</tt> objects list with <tt>CLIENT</tt> status
+     * @param clientsPerPage - number of <tt>User</tt> objects with <tt>CLIENT</tt> status per page
+     * @return <tt>List</tt> of <tt>User</tt> objects with <tt>CLIENT</tt> status on the <i>pageNumber</i>  with <i>roomsPerPage</i>
+     * @throws ServiceException
+     */
+    public List<User> getPageOfClients(int pageNumber, int clientsPerPage) throws ServiceException {
+        List<User> userList = new ArrayList<>();
+        try {
+            util.getSession().beginTransaction();
+            userList = userDaoInst.getPageOfClients(pageNumber, clientsPerPage);
+            util.getSession().getTransaction().commit();
+            logger.info("Get Clients For Page Number "+ pageNumber);
+        } catch (HibernateException e) {
+            util.getSession().getTransaction().commit();
+            logger.error(transactionFailedMessage + e);
+            throw new ServiceException(e.getMessage());
+        }
+        return userList;
+    }
 
     @Override
     public User getById(int id) {
@@ -155,5 +176,24 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         }
         return isNew;
     }
-
+    /**
+     * Calls UserDaoImpl getNumberOfPagesWithClients() method
+     * @param clientsPerPage - get number of <tt>User</tt> objects with <tt>CLIENT</tt> status per page
+     * @return number of <tt>User</tt> objects with <tt>CLIENT</tt> status lists
+     * @throws ServiceException
+     */
+    public int getNumberOfPagesWithClients(int clientsPerPage) throws ServiceException {
+        int numberOfPages;
+        try {
+            util.getSession().beginTransaction();
+            numberOfPages = userDaoInst.getNumberOfPagesWithClients(clientsPerPage);
+            util.getSession().getTransaction().commit();
+            logger.info("getNumberOfPagesWithClients(clientsPerPage): " + clientsPerPage);
+        } catch (HibernateException e) {
+            util.getSession().getTransaction().rollback();
+            logger.error(transactionFailedMessage + e);
+            throw new ServiceException(e.getMessage());
+        }
+        return numberOfPages;
+    }
 }

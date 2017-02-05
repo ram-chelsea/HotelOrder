@@ -63,6 +63,24 @@ public class UserDaoImpl extends GeneralDao<User> {
     }
 
     /**
+     * Returns list of rooms objects on the pageNumber with roomsPerPage
+     *
+     * @param pageNumber     - page number of <tt>User</tt> with <tt>CLIENT</tt> status objects list
+     * @param clientsPerPage - number of <tt>User</tt> with <tt>CLIENT</tt> status objects rooms per page
+     * @return <tt>List</tt> of <tt>User</tt> objects with <tt>CLIENT</tt> status on the <i>pageNumber</i>  with <i>roomsPerPage</i>
+     */
+    public List<User> getPageOfClients(int pageNumber, int clientsPerPage) {
+        Session session = util.getSession();
+        int currentIndex = (pageNumber - 1) * clientsPerPage;
+        Query query = session.createQuery(HqlRequest.GET_ALL_CLIENTS)
+                .setFirstResult(currentIndex)
+                .setMaxResults(clientsPerPage);
+        List<User> userList = query.list();
+        return userList;
+    }
+
+
+    /**
      * Returns the Object of <tt>User</tt> class from the database by its <i>orderId</i> value
      *
      * @param userId value of <tt>User</tt> property being used to get the object from the database
@@ -88,7 +106,7 @@ public class UserDaoImpl extends GeneralDao<User> {
         query.setParameter(0, login);
         User user = (User) query.uniqueResult();
         return user;
-    }//TODO разобраться надо ли setCacheale
+    }
 
     /**
      * Delete the Object of <tt>User</tt> class from the database
@@ -138,5 +156,18 @@ public class UserDaoImpl extends GeneralDao<User> {
         return isSiqnedUp;
     }
 
+    /**
+     * Returns number of pages with clients in dependence of <i>clientsPerPage</i>
+     *
+     * @param clientsPerPage number of <tt>User</tt> objects clients  per page
+     * @return number of <tt>User</tt> objects with <tt>CLIENT</tt> status lists
+     */
+    public int getNumberOfPagesWithClients(int clientsPerPage) {
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.GET_ALL_CLIENTS_NUMBER);
+        int numberOfClients = ((Long) query.uniqueResult()).intValue();
+        int numberOfPages = (numberOfClients - 1) / clientsPerPage + 1;
+        return numberOfPages;
+    }
 }
 

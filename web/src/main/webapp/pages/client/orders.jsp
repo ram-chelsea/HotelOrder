@@ -71,6 +71,6 @@
 </c:choose>
 <br/>
 <a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
-<a href="controller?command=logout">Logout</a><br/>
+<a href="controller?command=logout">Logout</a>
 </body>
 </html>
