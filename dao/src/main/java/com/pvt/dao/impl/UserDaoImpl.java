@@ -3,7 +3,6 @@ package com.pvt.dao.impl;
 import com.pvt.constants.HqlRequest;
 import com.pvt.dao.GeneralDao;
 import com.pvt.entities.User;
-import com.pvt.util.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -19,7 +18,6 @@ public class UserDaoImpl extends GeneralDao<User> {
      * Singleton object of <tt>UserDaoImpl</tt> class
      */
     private static UserDaoImpl instance;
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a UserDaoImpl variable
@@ -132,7 +130,7 @@ public class UserDaoImpl extends GeneralDao<User> {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.CHECK_LOGIN);
         query.setParameter(0, login);
-        int count = ((Long) query.uniqueResult()).intValue();
+        long count = (Long) query.uniqueResult();
         boolean isNewUser = (count == 0);
         return isNewUser;
     }
@@ -150,7 +148,7 @@ public class UserDaoImpl extends GeneralDao<User> {
         Query query = session.createQuery(HqlRequest.CHECK_AUTHENTICATION);
         query.setParameter(0, login);
         query.setParameter(1, password);
-        int count = ((Long) query.uniqueResult()).intValue();
+        long count = (Long) query.uniqueResult();
         boolean isSiqnedUp = (count != 0);
 
         return isSiqnedUp;

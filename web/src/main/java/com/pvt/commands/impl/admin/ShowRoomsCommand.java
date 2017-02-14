@@ -18,7 +18,7 @@ import java.util.List;
 public class ShowRoomsCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
     private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
-
+    private RoomServiceImpl roomServiceInst = RoomServiceImpl.getInstance();
     @Override
     public String execute(HttpServletRequest request) {
         String page;
@@ -29,8 +29,8 @@ public class ShowRoomsCommand implements Command {
                 int roomsPerPage = RequestParameterParser.getRoomsPerPage(request);
                 int currentPage = RequestParameterParser.getCurrentPageNumber(request);
                 util.openSession();
-                int numberOfPages = RoomServiceImpl.getInstance().getNumberOfPagesWithRooms(roomsPerPage);
-                List<Room> roomsList = RoomServiceImpl.getInstance().getPageOfRooms(currentPage, roomsPerPage);
+                int numberOfPages =roomServiceInst.getNumberOfPagesWithRooms(roomsPerPage);
+                List<Room> roomsList = roomServiceInst.getPageOfRooms(currentPage, roomsPerPage);
                 util.getSession().close();
                 List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
                 request.setAttribute(Parameters.PER_PAGE_NUMBERS_LIST, perPageNumbersList);

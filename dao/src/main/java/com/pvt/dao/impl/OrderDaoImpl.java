@@ -4,8 +4,6 @@ import com.pvt.constants.HqlRequest;
 import com.pvt.constants.OrderStatus;
 import com.pvt.dao.GeneralDao;
 import com.pvt.entities.Order;
-import com.pvt.entities.User;
-import com.pvt.util.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -21,7 +19,6 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      * Singleton object of <tt>OrderDaoImpl</tt> class
      */
     private static OrderDaoImpl instance;
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a OrderDaoImpl variable
@@ -47,8 +44,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      * @param order <tt>Order</tt> element, which properties will be pushed into the database
      */
     public void save(Order order) {
-        Session session = util.getSession();
-        session.save(order);
+        util.getSession().save(order);
     }
 
     /**
@@ -111,8 +107,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_CLIENTS_ORDERS_BY_STATUS);
         query.setParameter(0, status);
-        User user = (User) session.get(User.class, userId);
-        query.setParameter(1, user);
+        query.setParameter(1, userId);
         List<Order> orderList = query.list();
         return orderList;
     }
@@ -145,7 +140,7 @@ public class OrderDaoImpl extends GeneralDao<Order> {
         query.setParameter(0, order.getRoom());
         query.setParameter(1, order.getCheckInDate());
         query.setParameter(2, order.getCheckOutDate());
-        int count = ((Long) query.uniqueResult()).intValue();
+        long count = (Long) query.uniqueResult();
         boolean isFree = (count == 0);
         return isFree;
     }

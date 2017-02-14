@@ -4,7 +4,6 @@ package com.pvt.dao.impl;
 import com.pvt.constants.HqlRequest;
 import com.pvt.dao.GeneralDao;
 import com.pvt.entities.Room;
-import com.pvt.util.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -18,7 +17,6 @@ import java.util.List;
 public class RoomDaoImpl extends GeneralDao<Room> {
 
     private static RoomDaoImpl instance;
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a RoomDaoImpl variable
@@ -113,7 +111,7 @@ public class RoomDaoImpl extends GeneralDao<Room> {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.CHECK_IS_NEW_ROOM);
         query.setParameter(0, roomNumber);
-        int count = ((Long) query.uniqueResult()).intValue();
+        long count = (Long) query.uniqueResult();
         boolean isNewRoom = (count == 0);
         return isNewRoom;
     }

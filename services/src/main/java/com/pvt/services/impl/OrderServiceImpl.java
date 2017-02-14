@@ -7,7 +7,6 @@ import com.pvt.entities.Order;
 import com.pvt.entities.Room;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
-import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
@@ -22,7 +21,6 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
      */
     private static OrderServiceImpl instance;
     private static OrderDaoImpl orderDaoInst = OrderDaoImpl.getInstance();
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a OrderServiceImpl variable

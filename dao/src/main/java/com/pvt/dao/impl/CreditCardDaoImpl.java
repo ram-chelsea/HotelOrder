@@ -3,7 +3,6 @@ package com.pvt.dao.impl;
 import com.pvt.constants.HqlRequest;
 import com.pvt.dao.GeneralDao;
 import com.pvt.entities.CreditCard;
-import com.pvt.util.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -19,7 +18,6 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
      * Singleton object of <tt>CreditCardDaoImpl</tt> class
      */
     private static CreditCardDaoImpl instance;
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a CreditCardDaoImpl variable
@@ -121,7 +119,7 @@ public class CreditCardDaoImpl extends GeneralDao<CreditCard> {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.CHECK_IS_NEW_CREDIT_CARD);
         query.setParameter(0, cardNumber);
-        int count = ((Long) query.uniqueResult()).intValue();
+        long count = (Long) query.uniqueResult();
         boolean isNewCard = (count == 0);
         return isNewCard;
     }

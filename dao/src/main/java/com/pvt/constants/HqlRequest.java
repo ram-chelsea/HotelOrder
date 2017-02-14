@@ -38,7 +38,7 @@ public final class HqlRequest {
     public static final String GET_ORDERS_BY_STATUS =
             "SELECT O FROM Order O WHERE O.orderStatus = ?";
     public static final String GET_CLIENTS_ORDERS_BY_STATUS =
-            "SELECT O FROM Order O WHERE O.orderStatus = ? AND O.user = ?";
+            "SELECT O FROM Order O WHERE O.orderStatus = ? AND O.userId = ?";
 
     public static final String GET_CREDIT_CARD_BY_NUMBER =
             "SELECT C FROM CreditCard C WHERE C.cardNumber = ?";

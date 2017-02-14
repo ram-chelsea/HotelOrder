@@ -2,11 +2,13 @@ package com.pvt.services;
 
 
 import com.pvt.entities.Entity;
+import com.pvt.util.HibernateUtil;
 
 import java.sql.Date;
 
 public abstract class AbstractEntityService<T extends Entity> implements EntityService<T> {
     protected static final String transactionFailedMessage = "Transaction failed: ";
+    protected static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     protected static int getDatesDifferenceInDays(Date from, Date till) {
         final int MILLIS_A_DAY = 24 * 60 * 60 * 1000;

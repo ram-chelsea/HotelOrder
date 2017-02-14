@@ -5,7 +5,6 @@ import com.pvt.dao.impl.RoomDaoImpl;
 import com.pvt.entities.Room;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
-import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 
@@ -20,7 +19,6 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
      */
     private static RoomServiceImpl instance;
     private static RoomDaoImpl roomDaoInst = RoomDaoImpl.getInstance();
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a RoomServiceImpl variable

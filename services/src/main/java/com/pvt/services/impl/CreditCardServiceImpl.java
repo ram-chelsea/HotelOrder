@@ -5,7 +5,6 @@ import com.pvt.dao.impl.CreditCardDaoImpl;
 import com.pvt.entities.CreditCard;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
-import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 
@@ -18,7 +17,6 @@ public class CreditCardServiceImpl extends AbstractEntityService<CreditCard> {
      */
     private static CreditCardServiceImpl instance;
     private static CreditCardDaoImpl cardDaoInst = CreditCardDaoImpl.getInstance();
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a CreditCardServiceImpl variable

@@ -17,6 +17,7 @@ import java.util.List;
 public class ShowClientsCommand implements Command {
     private MessageManager messageManagerInst = MessageManager.getInstance();
     private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
+    private UserServiceImpl userServiceInst = UserServiceImpl.getInstance();
 
     @Override
     public String execute(HttpServletRequest request) {
@@ -28,8 +29,8 @@ public class ShowClientsCommand implements Command {
                 int clientsPerPage = RequestParameterParser.getClientsPerPage(request);
                 int currentPage = RequestParameterParser.getCurrentPageNumber(request);
                 util.openSession();
-                int numberOfPages = UserServiceImpl.getInstance().getNumberOfPagesWithClients(clientsPerPage);
-                List<User> userList = UserServiceImpl.getInstance().getPageOfClients(currentPage, clientsPerPage);
+                int numberOfPages = userServiceInst.getNumberOfPagesWithClients(clientsPerPage);
+                List<User> userList = userServiceInst.getPageOfClients(currentPage, clientsPerPage);
                 util.getSession().close();
                 List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
                 request.setAttribute(Parameters.PER_PAGE_NUMBERS_LIST, perPageNumbersList);

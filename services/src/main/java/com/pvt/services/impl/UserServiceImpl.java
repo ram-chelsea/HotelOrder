@@ -5,7 +5,6 @@ import com.pvt.dao.impl.UserDaoImpl;
 import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
-import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 
@@ -19,7 +18,6 @@ public class UserServiceImpl extends AbstractEntityService<User> {
      */
     private static UserServiceImpl instance;
     private static UserDaoImpl userDaoInst = UserDaoImpl.getInstance();
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     /**
      * Creates a UserServiceImpl variable

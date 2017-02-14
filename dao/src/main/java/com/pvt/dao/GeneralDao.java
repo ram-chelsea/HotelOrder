@@ -1,6 +1,7 @@
 package com.pvt.dao;
 
 import com.pvt.entities.Entity;
+import com.pvt.util.HibernateUtil;
 
 /**
  * Describes the abstract class of DAO layer implementing <tt>DAO</tt> interface. It is used as a pattern for concrete implementation classes
@@ -8,5 +9,6 @@ import com.pvt.entities.Entity;
  *
  */
 public abstract class GeneralDao<T extends Entity> implements Dao<T> {
+    protected static HibernateUtil util = HibernateUtil.getHibernateUtil();
 
 }
