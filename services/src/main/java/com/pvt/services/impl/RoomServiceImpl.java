@@ -1,7 +1,7 @@
 package com.pvt.services.impl;
 
 
-import com.pvt.dao.impl.RoomDaoImpl;
+import com.pvt.dao.impl.RoomDao;
 import com.pvt.entities.Room;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
@@ -18,7 +18,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
      * Singleton object of <tt>RoomServiceImpl</tt> class
      */
     private static RoomServiceImpl instance;
-    private static RoomDaoImpl roomDaoInst = RoomDaoImpl.getInstance();
+    private static RoomDao roomDaoInst = RoomDao.getInstance();
 
     /**
      * Creates a RoomServiceImpl variable
@@ -39,7 +39,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl add() method
+     * Calls RoomDao add() method
      *
      * @param room - <tt>Room</tt> object to add
      * @throws ServiceException
@@ -59,7 +59,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl getAll() method
+     * Calls RoomDao getAllClients() method
      *
      * @return <tt>List</tt> of all <tt>Room</tt> objects
      * @throws ServiceException
@@ -81,7 +81,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl getById() method
+     * Calls RoomDao get() method
      *
      * @param roomId - <tt>Room</tt> object <tt>roomId</tt> property to get the object
      * @return <tt>Room</tt> with <i>roomId</i> id value
@@ -92,7 +92,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
         Room room;
         try {
             util.getSession().beginTransaction();
-            room = roomDaoInst.getById(roomId);
+            room = roomDaoInst.get(Room.class, roomId);
             util.getSession().getTransaction().commit();
             logger.info("GetById(roomId): " + roomId);
         } catch (HibernateException e) {
@@ -104,7 +104,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl updateRoomPrice() method
+     * Calls RoomDao updateRoomPrice() method
      *
      * @param roomId   - roomId determinate the <tt>Room</tt> object to update <tt>price</tt>
      * @param newPrice -  value to update <tt>Room</tt> object <tt>price</tt> property
@@ -113,7 +113,9 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     public void updateRoomPrice(int roomId, int newPrice) throws ServiceException {
         try {
             util.getSession().beginTransaction();
-            roomDaoInst.updateRoomPrice(roomId, newPrice);
+            Room room = roomDaoInst.get(Room.class, roomId);
+            room.setPrice(newPrice);
+            roomDaoInst.update(room);
             util.getSession().getTransaction().commit();
             logger.info("UpdateRoomPrice(roomId, newPrice): " + roomId + ", " + newPrice);
         } catch (HibernateException e) {
@@ -124,7 +126,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl getSuitedRooms() method
+     * Calls RoomDao getSuitedRooms() method
      *
      * @param orderedRoomFormat <tt>Room</tt> to determine properties requested rooms should fit
      * @param checkInDate       order starting date
@@ -148,7 +150,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl getRoominesses() method
+     * Calls RoomDao getRoominesses() method
      *
      * @return <tt>List</tt> of roominesses values
      * @throws ServiceException
@@ -169,7 +171,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl isNewRoom() method
+     * Calls RoomDao isNewRoom() method
      *
      * @param room -  <tt>Room</tt>  to check if it is new
      * @return true if the <tt>Room</tt> is new
@@ -193,7 +195,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl getNumberOfPagesWithRooms() method
+     * Calls RoomDao getNumberOfPagesWithRooms() method
      * @param roomsPerPage - get number of <tt>Room</tt> objects per page
      * @return number of <tt>Room</tt> objects lists
      * @throws ServiceException
@@ -214,7 +216,7 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDaoImpl getPageOfRooms() method
+     * Calls RoomDao getPageOfRooms() method
      * @param pageNumber - page number of <tt>Room</tt> objects list
      * @param roomsPerPage - number of <tt>Room</tt> objects rooms per page
      * @return <tt>List</tt> of <tt>Room</tt> objects on the <i>pageNumber</i>  with <i>roomsPerPage</i>

@@ -1,7 +1,7 @@
 package com.pvt.services.impl;
 
 
-import com.pvt.dao.impl.UserDaoImpl;
+import com.pvt.dao.impl.UserDao;
 import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
@@ -17,7 +17,8 @@ public class UserServiceImpl extends AbstractEntityService<User> {
      * Singleton object of <tt>UserServiceImpl</tt> class
      */
     private static UserServiceImpl instance;
-    private static UserDaoImpl userDaoInst = UserDaoImpl.getInstance();
+
+    private UserDao userDao=UserDao.getInstance();
 
     /**
      * Creates a UserServiceImpl variable
@@ -38,7 +39,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
     }
 
     /**
-     * Calls UserDaoImpl add() method
+     * Calls UserDao add() method
      *
      * @param user - <tt>User</tt> object to add
      * @throws ServiceException
@@ -47,7 +48,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
     public void add(User user) throws ServiceException {
         try {
             util.getSession().beginTransaction();
-            userDaoInst.save(user);
+            userDao.save(user);
             util.getSession().getTransaction().commit();
             logger.info("Save(user):" + user);
         } catch (HibernateException e) {
@@ -58,18 +59,17 @@ public class UserServiceImpl extends AbstractEntityService<User> {
     }
 
     /**
-     * Calls UserDaoImpl getAll() method
+     * Calls UserDao getAllClients() method
      *
      * @return <tt>List</tt> of all <tt>User</tt> objects
      * with CLIENT userRole
      * @throws ServiceException
      */
-    @Override
-    public List<User> getAll() throws ServiceException {
+    public List<User> getAllClients() throws ServiceException {
         List<User> userList = new ArrayList<>();
         try {
             util.getSession().beginTransaction();
-            userList = userDaoInst.getAll();
+            userList = userDao.getAllClients();
             util.getSession().getTransaction().commit();
             logger.info("Get All Clients");
         } catch (HibernateException e) {
@@ -79,9 +79,32 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         }
         return userList;
     }
+
     /**
-     * Calls UserDaoImpl getPageOfClients() method
-     * @param pageNumber - page number of <tt>User</tt> objects list with <tt>CLIENT</tt> status
+     * Calls UserDao getAllClients() method
+     *
+     * @return <tt>List</tt> of all <tt>User</tt> objects
+     * @throws ServiceException
+     */
+    public List<User> getAll() throws ServiceException {
+        List<User> userList = new ArrayList<>();
+        try {
+            util.getSession().beginTransaction();
+            userList = userDao.getAll();
+            util.getSession().getTransaction().commit();
+            logger.info("Get All Clients");
+        } catch (HibernateException e) {
+            util.getSession().getTransaction().commit();
+            logger.error(transactionFailedMessage + e);
+            throw new ServiceException(e.getMessage());
+        }
+        return userList;
+    }
+
+    /**
+     * Calls UserDao getPageOfClients() method
+     *
+     * @param pageNumber     - page number of <tt>User</tt> objects list with <tt>CLIENT</tt> status
      * @param clientsPerPage - number of <tt>User</tt> objects with <tt>CLIENT</tt> status per page
      * @return <tt>List</tt> of <tt>User</tt> objects with <tt>CLIENT</tt> status on the <i>pageNumber</i>  with <i>roomsPerPage</i>
      * @throws ServiceException
@@ -90,9 +113,9 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         List<User> userList = new ArrayList<>();
         try {
             util.getSession().beginTransaction();
-            userList = userDaoInst.getPageOfClients(pageNumber, clientsPerPage);
+            userList = userDao.getPageOfClients(pageNumber, clientsPerPage);
             util.getSession().getTransaction().commit();
-            logger.info("Get Clients For Page Number "+ pageNumber);
+            logger.info("Get Clients For Page Number " + pageNumber);
         } catch (HibernateException e) {
             util.getSession().getTransaction().commit();
             logger.error(transactionFailedMessage + e);
@@ -107,7 +130,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
     }
 
     /**
-     * Calls UserDaoImpl checkUserAuthentication() method
+     * Calls UserDao checkUserAuthentication() method
      *
      * @param login    <tt>User</tt> object <tt>login</tt> property to get the object
      * @param password <tt>User</tt> object <tt>password</tt> property to get the object
@@ -118,7 +141,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         boolean isAuthenticated;
         try {
             util.getSession().beginTransaction();
-            isAuthenticated = userDaoInst.checkUserAuthentication(login, password);
+            isAuthenticated = userDao.checkUserAuthentication(login, password);
             util.getSession().getTransaction().commit();
             logger.info("checkUserAuthentication(login, password): " + login);
         } catch (HibernateException e) {
@@ -130,7 +153,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
     }
 
     /**
-     * Calls UserDaoImpl getByCardNumber() method
+     * Calls UserDao getByCardNumber() method
      *
      * @param login -  <tt>login</tt>  being used to get <tt>User</tt> object
      * @return <tt>User</tt> with <i>login</i> value
@@ -140,7 +163,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         User user;
         try {
             util.getSession().beginTransaction();
-            user = userDaoInst.getByLogin(login);
+            user = userDao.getByLogin(login);
             util.getSession().getTransaction().commit();
             logger.info("getUserByLogin(login): " + login);
         } catch (HibernateException e) {
@@ -152,7 +175,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
     }
 
     /**
-     * Calls UserDaoImpl isNewUser() method
+     * Calls UserDao isNewUser() method
      *
      * @param user <tt>User</tt> object to check if it is new
      * @return true if <tt>User</tt> <i>user</i> exists in the database
@@ -162,7 +185,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         boolean isNew = false;
         try {
             util.getSession().beginTransaction();
-            if (userDaoInst.isNewUser(user.getLogin())) {
+            if (userDao.isNewUser(user.getLogin())) {
                 isNew = true;
             }
             util.getSession().getTransaction().commit();
@@ -174,8 +197,10 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         }
         return isNew;
     }
+
     /**
-     * Calls UserDaoImpl getNumberOfPagesWithClients() method
+     * Calls UserDao getNumberOfPagesWithClients() method
+     *
      * @param clientsPerPage - get number of <tt>User</tt> objects with <tt>CLIENT</tt> status per page
      * @return number of <tt>User</tt> objects with <tt>CLIENT</tt> status lists
      * @throws ServiceException
@@ -184,7 +209,7 @@ public class UserServiceImpl extends AbstractEntityService<User> {
         int numberOfPages;
         try {
             util.getSession().beginTransaction();
-            numberOfPages = userDaoInst.getNumberOfPagesWithClients(clientsPerPage);
+            numberOfPages = userDao.getNumberOfPagesWithClients(clientsPerPage);
             util.getSession().getTransaction().commit();
             logger.info("getNumberOfPagesWithClients(clientsPerPage): " + clientsPerPage);
         } catch (HibernateException e) {

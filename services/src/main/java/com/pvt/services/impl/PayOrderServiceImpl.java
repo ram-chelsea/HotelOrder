@@ -2,8 +2,8 @@ package com.pvt.services.impl;
 
 
 import com.pvt.constants.OrderStatus;
-import com.pvt.dao.impl.CreditCardDaoImpl;
-import com.pvt.dao.impl.OrderDaoImpl;
+import com.pvt.dao.impl.CreditCardDao;
+import com.pvt.dao.impl.OrderDao;
 import com.pvt.entities.CreditCard;
 import com.pvt.entities.Order;
 import com.pvt.exceptions.ServiceException;
@@ -12,6 +12,7 @@ import com.pvt.util.HibernateUtil;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
+
 
 public class PayOrderServiceImpl implements PayOrderService {
     private static Logger logger = Logger.getLogger(PayOrderServiceImpl.class);
@@ -43,8 +44,10 @@ public class PayOrderServiceImpl implements PayOrderService {
             util.getSession().refresh(card, LockOptions.UPGRADE);
             isEnoughMoney = isEnoughMoneyToPayOrder(card, order);
             if (isEnoughMoney) {
-                OrderDaoImpl.getInstance().updateOrderStatus(order.getOrderId(), OrderStatus.PAID);
-                CreditCardDaoImpl.getInstance().takeMoneyForOrder(card, order.getTotalPrice());
+                order.setOrderStatus(OrderStatus.PAID);
+                takeMoneyForOrder(card,order.getTotalPrice());
+                OrderDao.getInstance().update(order);
+                CreditCardDao.getInstance().update(card);
             }
             util.getSession().getTransaction().commit();
             logger.info("IsEnoughMoneyToPayOrder: " + isEnoughMoney);
@@ -68,5 +71,10 @@ public class PayOrderServiceImpl implements PayOrderService {
             isEnoughMoneyToPayOrder = true;
         }
         return isEnoughMoneyToPayOrder;
+    }
+
+    private void takeMoneyForOrder(CreditCard card, int amount){
+        int newAmount = card.getAmount() - amount;
+        card.setAmount(newAmount);
     }
 }

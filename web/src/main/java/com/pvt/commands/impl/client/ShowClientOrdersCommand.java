@@ -29,9 +29,8 @@ public class ShowClientOrdersCommand implements Command {
         if ((UserRole.CLIENT).equals(user.getUserRole())) {
             try {
                 OrderStatus orderStatus = RequestParameterParser.getOrderStatus(request);
-                int userId = user.getUserId();
                 util.openSession();
-                List<Order> clientOrdersList = orderServiceInst.getClientOrdersListByStatus(orderStatus, userId);
+                List<Order> clientOrdersList = orderServiceInst.getClientOrdersListByStatus(orderStatus, user);
                 util.getSession().close();
                 ArrayList orderStatusesList = OrderStatus.enumToList();
                 request.setAttribute(Parameters.ORDER_STATUSES_LIST, orderStatusesList);

@@ -4,8 +4,10 @@ import com.pvt.constants.HqlRequest;
 import com.pvt.constants.OrderStatus;
 import com.pvt.dao.GeneralDao;
 import com.pvt.entities.Order;
+import com.pvt.entities.User;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -13,38 +15,30 @@ import java.util.List;
  * Describes <tt>GeneralDao</tt>-child singleton class being used for executing
  * of CRUD operations with <tt>Order</tt> object
  */
-public class OrderDaoImpl extends GeneralDao<Order> {
+
+public class OrderDao extends GeneralDao<Order> {
 
     /**
-     * Singleton object of <tt>OrderDaoImpl</tt> class
+     * Singleton object of <tt>OrderDao</tt> class
      */
-    private static OrderDaoImpl instance;
+    private static OrderDao instance;
 
     /**
-     * Creates a OrderDaoImpl variable
+     * Creates a OrderDao variable
      */
-    private OrderDaoImpl() {
+    private OrderDao() {
     }
 
     /**
-     * Describes synchronized method of getting <tt>OrderDaoImpl</tt> singleton object
+     * Describes synchronized method of getting <tt>OrderDao</tt> singleton object
      *
-     * @return <tt>OrderDaoImpl</tt> singleton object
+     * @return <tt>OrderDao</tt> singleton object
      */
-    public static synchronized OrderDaoImpl getInstance() {
+    public static synchronized OrderDao getInstance() {
         if (instance == null) {
-            instance = new OrderDaoImpl();
+            instance = new OrderDao();
         }
         return instance;
-    }
-
-    /**
-     * Adds the <tt>Order</tt> object properties values into database
-     *
-     * @param order <tt>Order</tt> element, which properties will be pushed into the database
-     */
-    public void save(Order order) {
-        util.getSession().save(order);
     }
 
     /**
@@ -59,28 +53,6 @@ public class OrderDaoImpl extends GeneralDao<Order> {
         return orderList;
     }
 
-    /**
-     * Returns the Object of <tt>Order</tt> class from the database by its <i>orderId</i> value
-     *
-     * @param orderId value of <tt>Order</tt> property being used to get the object from the database
-     * @return <tt>Order</tt> object, having corresponding <i>orderId</i> value
-     */
-    public Order getById(int orderId) {
-        Session session = util.getSession();
-        Order order = (Order) session.get(Order.class, orderId);
-        return order;
-    }
-
-    /**
-     * Delete the Object of <tt>Order</tt> class from the database by <i>orderId</i> value
-     *
-     * @param orderId value of <tt>Order</tt> property being used to delete the corresponding object from the database
-     */
-    public void delete(int orderId) {
-        Session session = util.getSession();
-        Order order = (Order) session.get(Order.class, orderId);
-        session.delete(order);
-    }
 
     /**
      * Get all <tt>Order</tt> objects with <i>status</i> value being contained in the database
@@ -103,28 +75,15 @@ public class OrderDaoImpl extends GeneralDao<Order> {
      * @param userId determinates <tt>User</tt> object, whose <i>status</i> value orders are got
      * @return all <tt>Order</tt> objects of <tt>User</tt> with <i>userId</i> property value with <i>status</i> value being contained in the database
      */
-    public List<Order> getClientOrdersListByStatus(OrderStatus status, int userId) {
+    public List<Order> getClientOrdersListByStatus(OrderStatus status, User user) {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_CLIENTS_ORDERS_BY_STATUS);
         query.setParameter(0, status);
-        query.setParameter(1, userId);
+        query.setParameter(1, user);
         List<Order> orderList = query.list();
         return orderList;
     }
 
-    /**
-     * Update value of <tt>status</tt> property value of <tt>Order</tt> with <i>orderId</i> property value
-     * to <i>orderStatus</i> value
-     *
-     * @param orderId        determines <tt>Order</tt> object, whose <i>status</i> value is updated
-     * @param newOrderStatus determines value of <tt>status</tt> property to what <tt>Order</tt> object <tt>status</tt> property value is changed
-     */
-    public void updateOrderStatus(int orderId, OrderStatus newOrderStatus) {
-        Session session = util.getSession();
-        Order order = (Order) session.get(Order.class, orderId);
-        order.setOrderStatus(newOrderStatus);
-        session.update(order);
-    }
 
     /**
      * Checking if the <tt>Order</tt> object <tt>room</tt> field is free for period defined by

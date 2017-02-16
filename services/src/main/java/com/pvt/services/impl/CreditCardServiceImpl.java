@@ -1,7 +1,7 @@
 package com.pvt.services.impl;
 
 
-import com.pvt.dao.impl.CreditCardDaoImpl;
+import com.pvt.dao.impl.CreditCardDao;
 import com.pvt.entities.CreditCard;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
@@ -16,7 +16,7 @@ public class CreditCardServiceImpl extends AbstractEntityService<CreditCard> {
      * Singleton object of <tt>CreditCardServiceImpl</tt> class
      */
     private static CreditCardServiceImpl instance;
-    private static CreditCardDaoImpl cardDaoInst = CreditCardDaoImpl.getInstance();
+    private static CreditCardDao cardDaoInst = CreditCardDao.getInstance();
 
     /**
      * Creates a CreditCardServiceImpl variable
@@ -37,7 +37,7 @@ public class CreditCardServiceImpl extends AbstractEntityService<CreditCard> {
     }
 
     /**
-     * Calls CreditCardDaoImpl add() method
+     * Calls CreditCardDao add() method
      *
      * @param card - <tt>CreditCard</tt> object to add
      * @throws ServiceException
@@ -66,28 +66,9 @@ public class CreditCardServiceImpl extends AbstractEntityService<CreditCard> {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * Calls CreditCardDaoImpl takeMoneyForOrder() method
-     *
-     * @param card   - <tt>CreditCard</tt> object to take money from
-     * @param amount money to take from <i>card</i>
-     * @throws ServiceException
-     */
-    public void takeMoneyForOrder(CreditCard card, int amount) throws ServiceException {
-        try {
-            util.getSession().beginTransaction();
-            cardDaoInst.takeMoneyForOrder(card, amount);
-            util.getSession().getTransaction().commit();
-            logger.info("takeMoneyForOrder(card, amount):" + card + ", " + amount);
-        } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
-            logger.error(transactionFailedMessage + e);
-            throw new ServiceException(e.getMessage());
-        }
-    }
 
     /**
-     * Calls CreditCardDaoImpl getByCardNumber() method
+     * Calls CreditCardDao getByCardNumber() method
      *
      * @param cardNumber -  <tt>cardNumber</tt>  being used to get <tt>CreditCard</tt> object
      * @return <tt>cardNumber</tt> with <i>cardNumber</i> value
@@ -109,7 +90,7 @@ public class CreditCardServiceImpl extends AbstractEntityService<CreditCard> {
     }
 
     /**
-     * Calls CreditCardDaoImpl isNewCreditCard() method
+     * Calls CreditCardDao isNewCreditCard() method
      *
      * @param card -  <tt>CreditCard</tt>  to check if it is new
      * @return true if the <tt>CreditCard</tt> is new

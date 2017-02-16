@@ -57,16 +57,16 @@ public class CreditCardServiceImplTest extends ServiceImplTest {
         Assert.assertEquals(expected, actual);
     }
 
-    @Test
-    public void testTakeMoneyForOrder() throws ServiceException {
-        CreditCard expected = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
-        util.getSession().save(expected);
-        int moneyToTake = 50;
-        int oldAmount = expected.getAmount();
-        util.getSession().flush();
-        CreditCardServiceImpl.getInstance().takeMoneyForOrder(expected, moneyToTake);
-        Assert.assertEquals(oldAmount - moneyToTake, (int) expected.getAmount());
-    }
+//    @Test
+//    public void testTakeMoneyForOrder() throws ServiceException {
+//        CreditCard expected = EntityBuilder.buildCreditCard(null, "1234567887654321", true, 500);
+//        util.getSession().save(expected);
+//        int moneyToTake = 50;
+//        int oldAmount = expected.getAmount();
+//        util.getSession().flush();
+//        CreditCardServiceImpl.getInstance().takeMoneyForOrder(expected, moneyToTake);
+//        Assert.assertEquals(oldAmount - moneyToTake, (int) expected.getAmount());
+//    }
 
     @Test
     public void testIsNewCreditCardTrue() throws ServiceException {

@@ -2,9 +2,10 @@ package com.pvt.services.impl;
 
 
 import com.pvt.constants.OrderStatus;
-import com.pvt.dao.impl.OrderDaoImpl;
+import com.pvt.dao.impl.OrderDao;
 import com.pvt.entities.Order;
 import com.pvt.entities.Room;
+import com.pvt.entities.User;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
 import org.apache.log4j.Logger;
@@ -20,7 +21,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
      * Singleton object of <tt>OrderServiceImpl</tt> class
      */
     private static OrderServiceImpl instance;
-    private static OrderDaoImpl orderDaoInst = OrderDaoImpl.getInstance();
+    private static OrderDao orderDaoInst = OrderDao.getInstance();
 
     /**
      * Creates a OrderServiceImpl variable
@@ -41,7 +42,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
     }
 
     /**
-     * Calls OrderDaoImpl add() method
+     * Calls OrderDao add() method
      *
      * @param order - <tt>Order</tt> object to add
      * @throws ServiceException
@@ -61,7 +62,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
     }
 
     /**
-     * Calls OrderDaoImpl getAll() method
+     * Calls OrderDao getAllClients() method
      *
      * @return <tt>List</tt> of all <tt>Order</tt> objects
      * @throws ServiceException
@@ -83,7 +84,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
     }
 
     /**
-     * Calls OrderDaoImpl getById() method
+     * Calls OrderDao get() method
      *
      * @param orderId - <tt>Order</tt> object <tt>orderId</tt> property to get the object
      * @return <tt>Order</tt> with <i>orderId</i> id value
@@ -94,7 +95,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
         Order order;
         try {
             util.getSession().beginTransaction();
-            order = orderDaoInst.getById(orderId);
+            order = orderDaoInst.get(Order.class, orderId);
             util.getSession().getTransaction().commit();
             logger.info("GetById(orderId): " + orderId);
         } catch (HibernateException e) {
@@ -106,7 +107,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
     }
 
     /**
-     * Calls OrderDaoImpl getOrdersListByStatus() method
+     * Calls OrderDao getOrdersListByStatus() method
      *
      * @param status - <tt>Order</tt> object <tt>status</tt> property to get the objects <tt>List</tt>
      * @return <tt>List</tt> of <tt>Order</tt> objects with <i>status</i> value
@@ -128,20 +129,20 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
     }
 
     /**
-     * Calls OrderDaoImpl getClientOrdersListByStatus() method
+     * Calls OrderDao getClientOrdersListByStatus() method
      *
      * @param status - <tt>Order</tt> object <tt>status</tt> property to get the objects <tt>List</tt>
-     * @param userId - userId determinate the <tt>User</tt> object whose orders are requested
+     * @param user - determinate the <tt>User</tt> object whose orders are requested
      * @return <tt>List</tt> of <tt>Order</tt> objects of <tt>User</tt> with<i>userId</i> id and <i>status</i> value
      * @throws ServiceException
      */
-    public List<Order> getClientOrdersListByStatus(OrderStatus status, int userId) throws ServiceException {
+    public List<Order> getClientOrdersListByStatus(OrderStatus status, User user) throws ServiceException {
         List<Order> ordersList = new ArrayList<>();
         try {
             util.getSession().beginTransaction();
-            ordersList = orderDaoInst.getClientOrdersListByStatus(status, userId);
+            ordersList = orderDaoInst.getClientOrdersListByStatus(status, user);
             util.getSession().getTransaction().commit();
-            logger.info("getClientOrdersListByStatus(status, userId):" + status + ", " + userId);
+            logger.info("getClientOrdersListByStatus(status, user):" + status + ", " + user);
         } catch (HibernateException e) {
             util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
@@ -151,7 +152,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
     }
 
     /**
-     * Calls OrderDaoImpl checkIsRoomFreeForPeriodInOrder() method
+     * Calls OrderDao checkIsRoomFreeForPeriodInOrder() method
      * @param order - <tt>Order</tt> object, which <tt>room</tt> property is checked
      *              for being free for period defined by <tt>checkInDate</tt> and <tt>checkInDate</tt> fields
      *
@@ -175,7 +176,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
 
 
     /**
-     * Calls OrderDaoImpl updateOrderStatus() method
+     * Calls OrderDao updateOrderStatus() method
      *
      * @param orderId     - orderId determinate the <tt>Order</tt> object to update <tt>status</tt>
      * @param orderStatus -  value to update <tt>Order</tt> object <tt>status</tt> property
@@ -184,7 +185,9 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
     public void updateOrderStatus(int orderId, OrderStatus orderStatus) throws ServiceException {
         try {
             util.getSession().beginTransaction();
-            orderDaoInst.updateOrderStatus(orderId, orderStatus);
+            Order order = orderDaoInst.get(Order.class, orderId);
+            order.setOrderStatus(orderStatus);
+            orderDaoInst.update(order);
             util.getSession().getTransaction().commit();
             logger.info("updateOrderStatus( orderId, orderStatus): " + orderId + ", " + orderStatus);
         } catch (HibernateException e) {
@@ -195,7 +198,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> {
     }
 
     /**
-     * Calls OrderDaoImpl add() method if OrderDaoImpl checkIsRoomFreeForPeriodInOrder() method returns true
+     * Calls OrderDao add() method if OrderDao checkIsRoomFreeForPeriodInOrder() method returns true
      * @param order <tt>Order</tt> object,which will be pushed to DB if it's <tt>room</tt> property
      *              is free for period defined by <tt>checkInDate</tt> and <tt>checkInDate</tt> fields
      * @return true if <tt>Order</tt> object's <tt>room</tt> property

@@ -142,7 +142,7 @@ public class OrderServiceImplTest extends ServiceImplTest {
             util.getSession().save(order);
         }
         util.getSession().flush();
-        List<Order> orderListActual = OrderServiceImpl.getInstance().getClientOrdersListByStatus(OrderStatus.REQUESTED, user1.getUserId());
+        List<Order> orderListActual = OrderServiceImpl.getInstance().getClientOrdersListByStatus(OrderStatus.REQUESTED, user1);
         Assert.assertTrue(orderListExpected.containsAll(orderListActual) && orderListActual.containsAll(orderListExpected));
     }
 

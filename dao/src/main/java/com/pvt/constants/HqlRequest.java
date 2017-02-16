@@ -4,6 +4,8 @@ package com.pvt.constants;
  * Contains constants representing HQL requests being used in the project
  */
 public final class HqlRequest {
+    public static final String GET_ALL =
+            "SELECT U FROM User U ORDER BY U.lastName ";
     public static final String GET_ALL_CLIENTS =
             "SELECT U FROM User U WHERE U.userRole = 'CLIENT' ORDER BY U.lastName ";
     public static final String GET_ALL_CLIENTS_NUMBER =
@@ -38,7 +40,7 @@ public final class HqlRequest {
     public static final String GET_ORDERS_BY_STATUS =
             "SELECT O FROM Order O WHERE O.orderStatus = ?";
     public static final String GET_CLIENTS_ORDERS_BY_STATUS =
-            "SELECT O FROM Order O WHERE O.orderStatus = ? AND O.userId = ?";
+            "SELECT O FROM Order O WHERE O.orderStatus = ? AND O.user = ?";
 
     public static final String GET_CREDIT_CARD_BY_NUMBER =
             "SELECT C FROM CreditCard C WHERE C.cardNumber = ?";

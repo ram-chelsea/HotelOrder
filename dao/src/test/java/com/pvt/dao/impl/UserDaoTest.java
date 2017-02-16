@@ -1,19 +1,20 @@
-package com.pvt.service.impl;
+package com.pvt.dao.impl;
 
 import com.pvt.constants.SqlRequest;
-import com.pvt.service.ServiceImplTest;
+import com.pvt.dao.EntityDaoImplTest;
 import com.pvt.util.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 
-public class UserServiceImplTest extends ServiceImplTest {
+public class UserDaoTest extends EntityDaoImplTest {
     private HibernateUtil util = HibernateUtil.getHibernateUtil();
 
     @Before
     public void BeforeTest() {
         util.openSession();
+        util.getSession().beginTransaction();
     }
 
     @After
@@ -30,21 +31,22 @@ public class UserServiceImplTest extends ServiceImplTest {
 
 //    @Test
 //    public void testGetInstance() {
-//        UserServiceImpl firstImpl = UserServiceImpl.getInstance();
-//        UserServiceImpl secondImpl = UserServiceImpl.getInstance();
+//        UserDao firstImpl = UserDao.getInstance();
+//        UserDao secondImpl = UserDao.getInstance();
 //        Assert.assertEquals(firstImpl, secondImpl);
 //    }
 //
 //    @Test
-//    public void testAdd() throws ServiceException {
-//        User expected = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        UserServiceImpl.getInstance().add(expected);
+//    public void testSave() {
+//        User expected = EntityBuilder.buildUser(0, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+//        UserDao.getInstance().save(expected);
+//        util.getSession().getTransaction().commit();
 //        User actual = (User) util.getSession().get(User.class, expected.getUserId());
 //        Assert.assertEquals(expected, actual);
 //    }
 //
 //    @Test
-//    public void testGetAll() throws ServiceException {
+//    public void testGetAll() {
 //        List<User> userListExpected = new ArrayList<>();
 //        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
 //        userListExpected.add(user1);
@@ -57,63 +59,87 @@ public class UserServiceImplTest extends ServiceImplTest {
 //        }
 //        User user4 = EntityBuilder.buildUser(null, "TEST_LOGIN_4", "TEST_FIRST_NAME_4", "TEST_LAST_NAME_4", "TEST_PASSWORD_4", UserRole.ADMIN);
 //        util.getSession().save(user4);
-//        util.getSession().flush();
-//        List<User> userListActual = UserServiceImpl.getInstance().getAllClients();
+//        util.getSession().getTransaction().commit();
+//        List<User> userListActual = UserDao.getInstance().getAllClients();
+//
 //        Assert.assertTrue(userListExpected.containsAll(userListActual) && userListActual.containsAll(userListExpected));
 //    }
 //
-//    @Test
-//    public void testCheckUserAuthenticationTrue() throws ServiceException {
-//        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        util.getSession().save(user1);
-//        util.getSession().flush();
-//        boolean isSiqnedUp = UserServiceImpl.getInstance().checkUserAuthentication(user2.getLogin(), user2.getPassword());
-//        Assert.assertTrue(isSiqnedUp);
-//    }
+////    @Test
+////    public void testGetById() {
+////        User expected = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+////        User falseUser = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+////        util.getSession().save(expected);
+////        util.getSession().save(falseUser);
+////        util.getSession().getTransaction().commit();
+////        User actual = UserDao.getInstance().get(expected.getUserId());
+////        Assert.assertEquals(expected, actual);
+////    }
 //
 //    @Test
-//    public void testCheckUserAuthenticationFalse() throws ServiceException {
-//        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
-//        util.getSession().save(user1);
-//        util.getSession().flush();
-//        boolean isSiqnedUp = UserServiceImpl.getInstance().checkUserAuthentication(user2.getLogin(), user2.getPassword());
-//        Assert.assertFalse(isSiqnedUp);
-//    }
-//
-//    @Test
-//    public void testGetUserByLogin() throws ServiceException {
+//    public void testGetByLogin() {
 //        User expected = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
 //        User falseUser = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
 //        util.getSession().save(expected);
 //        util.getSession().save(falseUser);
-//        util.getSession().flush();
-//        User actual = UserServiceImpl.getInstance().getUserByLogin(expected.getLogin());
-//        Assert.assertEquals(expected, actual);
+//        util.getSession().getTransaction().commit();
+//        User actual = UserDao.getInstance().getByLogin(expected.getLogin());
+//        Assert.assertTrue(expected.equals(actual));
 //    }
 //
-//    @Test
-//    public void testCheckIsNewUserTrue() throws ServiceException {
-//        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
-//        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
-//        util.getSession().save(user1);
-//        util.getSession().flush();
-//        boolean isNew = UserServiceImpl.getInstance().checkIsNewUser(user2);
-//        Assert.assertTrue(isNew);
-//    }
+////    @Test
+////    public void testDelete() {
+////        User expected = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+////        util.getSession().save(expected);
+////        int id = expected.getUserId();
+////        util.getSession().getTransaction().commit();
+////        UserDao.getInstance().delete(id);
+////        User actual = UserDao.getInstance().get(id);
+////        Assert.assertNull(actual);
+////    }
 //
 //    @Test
-//    public void testCheckIsNewUserFalse() throws ServiceException {
-//        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
-//        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
+//    public void testIsNewUserFalse() {
+//        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+//        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
 //        util.getSession().save(user1);
-//        boolean isNew = UserServiceImpl.getInstance().checkIsNewUser(user2);
+//        util.getSession().getTransaction().commit();
+//        boolean isNew = UserDao.getInstance().isNewUser(user2.getLogin());
 //        Assert.assertFalse(isNew);
 //    }
 //
 //    @Test
-//    public void testGetPagesOfClients() throws ServiceException {
+//    public void testIsNewUserTrue() {
+//        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
+//        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
+//        util.getSession().save(user1);
+//        util.getSession().getTransaction().commit();
+//        boolean isNew = UserDao.getInstance().isNewUser(user2.getLogin());
+//        Assert.assertTrue(isNew);
+//    }
+//
+//    @Test
+//    public void testCheckUserAuthenticationTrue() {
+//        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+//        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
+//        util.getSession().save(user1);
+//        util.getSession().getTransaction().commit();
+//        boolean isSiqnedUp = UserDao.getInstance().checkUserAuthentication(user2.getLogin(), user2.getPassword());
+//        Assert.assertTrue(isSiqnedUp);
+//    }
+//
+//    @Test
+//    public void testCheckUserAuthenticationFalse() {
+//        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
+//        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
+//        util.getSession().save(user1);
+//        util.getSession().getTransaction().commit();
+//        boolean isSignedUp = UserDao.getInstance().checkUserAuthentication(user2.getLogin(), user2.getPassword());
+//        Assert.assertFalse(isSignedUp);
+//    }
+//
+//    @Test
+//    public void testGetPagesOfClients() {
 //        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
 //        util.getSession().save(user1);
 //        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
@@ -130,16 +156,17 @@ public class UserServiceImplTest extends ServiceImplTest {
 //        util.getSession().save(user7);
 //        User user8 = EntityBuilder.buildUser(null, "TEST_LOGIN_8", "TEST_FIRST_NAME_8", "TEST_LAST_NAME_8", "TEST_PASSWORD_2", UserRole.CLIENT);
 //        util.getSession().save(user8);
+//        util.getSession().getTransaction().commit();
 //        List<User> userListExpected = new ArrayList<>();
 //        userListExpected.add(user4);
 //        userListExpected.add(user5);
 //        userListExpected.add(user6);
-//        List<User> userListActual = UserServiceImpl.getInstance().getPageOfClients(2, 3);
+//        List<User> userListActual = UserDao.getInstance().getPageOfClients(2, 3);
 //        Assert.assertTrue(userListExpected.containsAll(userListActual) && userListActual.containsAll(userListExpected));
 //    }
 //
 //    @Test
-//    public void testGetNumberOfPagesWithClients() throws ServiceException {
+//    public void testGetNumberOfPagesWithClients() {
 //        User user1 = EntityBuilder.buildUser(null, "TEST_LOGIN_1", "TEST_FIRST_NAME_1", "TEST_LAST_NAME_1", "TEST_PASSWORD_1", UserRole.CLIENT);
 //        util.getSession().save(user1);
 //        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
@@ -150,9 +177,9 @@ public class UserServiceImplTest extends ServiceImplTest {
 //        util.getSession().save(user4);
 //        User user5 = EntityBuilder.buildUser(null, "TEST_LOGIN_5", "TEST_FIRST_NAME_5", "TEST_LAST_NAME_5", "TEST_PASSWORD_1", UserRole.CLIENT);
 //        util.getSession().save(user5);
-//        int numberOfPages = UserServiceImpl.getInstance().getNumberOfPagesWithClients(2);
+//        util.getSession().getTransaction().commit();
+//        int numberOfPages = UserDao.getInstance().getNumberOfPagesWithClients(2);
 //        Assert.assertEquals(3, numberOfPages);
 //    }
-//
 //
 }

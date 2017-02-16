@@ -14,14 +14,14 @@ public interface EntityService<T extends Entity> {
     void add(T entity) throws ServiceException;
 
     /**
-     * Calls Dao getAll() method
+     * Calls Dao getAllClients() method
      *
      * @return list of objects of derived class Entity
      */
     List<T> getAll() throws ServiceException;
 
     /**
-     * Calls Dao getById() method
+     * Calls Dao get() method
      *
      * @param id - id of entity
      * @return object of derived class Entity

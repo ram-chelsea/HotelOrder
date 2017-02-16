@@ -12,40 +12,32 @@ import java.util.List;
  * Describes <tt>GeneralDao</tt>-child singleton class being used for executing
  * of CRUD operations with <tt>User</tt> object
  */
-public class UserDaoImpl extends GeneralDao<User> {
+
+public class UserDao extends GeneralDao<User> {
 
     /**
-     * Singleton object of <tt>UserDaoImpl</tt> class
+     * Singleton object of <tt>UserDao</tt> class
      */
-    private static UserDaoImpl instance;
+    private static UserDao instance;
 
     /**
-     * Creates a UserDaoImpl variable
+     * Creates a UserDao variable
      */
-    private UserDaoImpl() {
+    private UserDao() {
     }
 
     /**
-     * Describes synchronized method of getting <tt>UserDaoImpl</tt> singleton object
+     * Describes synchronized method of getting <tt>UserDao</tt> singleton object
      *
-     * @return <tt>UserDaoImpl</tt> singleton object
+     * @return <tt>UserDao</tt> singleton object
      */
-    public static synchronized UserDaoImpl getInstance() {
+    public static synchronized UserDao getInstance() {
         if (instance == null) {
-            instance = new UserDaoImpl();
+            instance = new UserDao();
         }
         return instance;
     }
 
-    /**
-     * Adds the <tt>User</tt> object properties values into database
-     *
-     * @param user <tt>User</tt> element, which properties will be pushed into the database
-     */
-    public void save(User user) {
-        Session session = util.getSession();
-        session.save(user);
-    }
 
     /**
      * Get all <tt>User</tt> objects being contained in the database
@@ -53,9 +45,16 @@ public class UserDaoImpl extends GeneralDao<User> {
      * @return <tt>List</tt> of all  <tt>User</tt> objects being contained in the database
      */
 
-    public List<User> getAll() {
+    public List<User> getAllClients() {
         Session session = util.getSession();
         Query query = session.createQuery(HqlRequest.GET_ALL_CLIENTS);
+        List<User> userList = query.list();
+        return userList;
+    }
+
+    public List<User> getAll() {
+        Session session = util.getSession();
+        Query query = session.createQuery(HqlRequest.GET_ALL);
         List<User> userList = query.list();
         return userList;
     }
@@ -78,18 +77,7 @@ public class UserDaoImpl extends GeneralDao<User> {
     }
 
 
-    /**
-     * Returns the Object of <tt>User</tt> class from the database by its <i>orderId</i> value
-     *
-     * @param userId value of <tt>User</tt> property being used to get the object from the database
-     * @return <tt>User</tt> object, having corresponding <i>userId</i> value
-     */
 
-    public User getById(int userId) {
-        Session session = util.getSession();
-        User user = (User) session.get(User.class, userId);
-        return user;
-    }
 
     /**
      * Get <tt>User</tt> object with <i>login</i> value being contained in the database
@@ -106,17 +94,7 @@ public class UserDaoImpl extends GeneralDao<User> {
         return user;
     }
 
-    /**
-     * Delete the Object of <tt>User</tt> class from the database
-     *
-     * @param userId <tt>User</tt> element property,by  which the element is deleted from the database
-     */
 
-    public void delete(int userId) {
-        Session session = util.getSession();
-        User user = (User) session.get(User.class, userId);
-        session.delete(user);
-    }
 
     /**
      * Checks if the <tt>User</tt> with the corresponding <i>login</i> hasn't existed

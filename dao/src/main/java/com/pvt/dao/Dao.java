@@ -31,14 +31,22 @@ public interface Dao<T extends Entity> {
      * @param id value of object id property being used to get the object from the database
      * @return Object, having corresponding <i>id</i> value
      */
-    T getById(int id);
+    T get(Class<T> clazz, int id);
 
     /**
-     * Delete the Object of <tt>Entity</tt>-child class from the database by its <i>id</i> value
+     * Delete the Object of <tt>Entity</tt>-child class from the database
      *
-     * @param id value of object id property being used to delete the object from the database
+     * @param entity  object being used to delete the object from the database
      */
-    void delete(int id);
+    void delete(T entity);
+    /**
+     * Update the Object of <tt>Entity</tt>-child class in the database
+     *
+     * @param entity  object being used to update
+     */
+    void update(T entity);
+
+
 
 }
 
