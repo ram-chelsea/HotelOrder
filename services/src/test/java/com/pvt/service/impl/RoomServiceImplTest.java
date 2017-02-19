@@ -77,7 +77,7 @@ public class RoomServiceImplTest extends ServiceImplTest {
         util.getSession().save(expected);
         util.getSession().save(falseRoom);
         util.getSession().flush();
-        Room actual = RoomServiceImpl.getInstance().getById(expected.getRoomId());
+        Room actual = RoomServiceImpl.getInstance().get(Room.class, expected.getRoomId());
         Assert.assertEquals(expected, actual);
     }
 

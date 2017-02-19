@@ -29,7 +29,7 @@ public class GoToPayCommand implements Command {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
                 util.openSession();
-                Order order = OrderServiceImpl.getInstance().getById(orderId);
+                Order order = OrderServiceImpl.getInstance().get(Order.class, orderId);
                 util.getSession().close();
                 request.setAttribute(Parameters.ORDER, order);
                 request.setAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManagerInst.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));

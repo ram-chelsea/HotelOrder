@@ -1,132 +1,52 @@
 package com.pvt.services.impl;
 
 
-import com.pvt.dao.impl.RoomDao;
+import com.pvt.dao.RoomDao;
 import com.pvt.entities.Room;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.AbstractEntityService;
+import com.pvt.services.RoomService;
+import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomServiceImpl extends AbstractEntityService<Room> {
+@Service
+@NoArgsConstructor
+public class RoomServiceImpl extends AbstractEntityService<Room> implements RoomService<Room> {
     private static Logger logger = Logger.getLogger(RoomServiceImpl.class);
-    /**
-     * Singleton object of <tt>RoomServiceImpl</tt> class
-     */
-    private static RoomServiceImpl instance;
-    private static RoomDao roomDaoInst = RoomDao.getInstance();
+    @Autowired
+    RoomDao roomDao;
 
     /**
-     * Creates a RoomServiceImpl variable
-     */
-    private RoomServiceImpl() {
-    }
-
-    /**
-     * Describes synchronized method of getting <tt>RoomServiceImpl</tt> singleton object
-     *
-     * @return <tt>RoomServiceImpl</tt> singleton object
-     */
-    public static synchronized RoomServiceImpl getInstance() {
-        if (instance == null) {
-            instance = new RoomServiceImpl();
-        }
-        return instance;
-    }
-
-    /**
-     * Calls RoomDao add() method
-     *
-     * @param room - <tt>Room</tt> object to add
-     * @throws ServiceException
-     */
-    @Override
-    public void add(Room room) throws ServiceException {
-        try {
-            util.getSession().beginTransaction();
-            roomDaoInst.save(room);
-            util.getSession().getTransaction().commit();
-            logger.info("Save(room):" + room);
-        } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
-            logger.error(transactionFailedMessage + e);
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    /**
-     * Calls RoomDao getAllClients() method
-     *
-     * @return <tt>List</tt> of all <tt>Room</tt> objects
-     * @throws ServiceException
-     */
-    @Override
-    public List<Room> getAll() throws ServiceException {
-        List<Room> rooms = new ArrayList<>();
-        try {
-            util.getSession().beginTransaction();
-            rooms = roomDaoInst.getAll();
-            util.getSession().getTransaction().commit();
-            logger.info("Get All Rooms");
-        } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
-            logger.error(transactionFailedMessage + e);
-            throw new ServiceException(e.getMessage());
-        }
-        return rooms;
-    }
-
-    /**
-     * Calls RoomDao get() method
-     *
-     * @param roomId - <tt>Room</tt> object <tt>roomId</tt> property to get the object
-     * @return <tt>Room</tt> with <i>roomId</i> id value
-     * @throws ServiceException
-     */
-    @Override
-    public Room getById(int roomId) throws ServiceException {
-        Room room;
-        try {
-            util.getSession().beginTransaction();
-            room = roomDaoInst.get(Room.class, roomId);
-            util.getSession().getTransaction().commit();
-            logger.info("GetById(roomId): " + roomId);
-        } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
-            logger.error(transactionFailedMessage + e);
-            throw new ServiceException(e.getMessage());
-        }
-        return room;
-    }
-
-    /**
-     * Calls RoomDao updateRoomPrice() method
+     * Calls RoomDaoImpl updateRoomPrice() method
      *
      * @param roomId   - roomId determinate the <tt>Room</tt> object to update <tt>price</tt>
      * @param newPrice -  value to update <tt>Room</tt> object <tt>price</tt> property
      * @throws ServiceException
      */
+    @Override
+    @Transactional
     public void updateRoomPrice(int roomId, int newPrice) throws ServiceException {
         try {
-            util.getSession().beginTransaction();
-            Room room = roomDaoInst.get(Room.class, roomId);
+            Room room = ( Room ) roomDao.get(Room.class, roomId);
             room.setPrice(newPrice);
-            roomDaoInst.update(room);
-            util.getSession().getTransaction().commit();
+            roomDao.update(room);
             logger.info("UpdateRoomPrice(roomId, newPrice): " + roomId + ", " + newPrice);
         } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
     }
 
     /**
-     * Calls RoomDao getSuitedRooms() method
+     * Calls RoomDaoImpl getSuitedRooms() method
      *
      * @param orderedRoomFormat <tt>Room</tt> to determine properties requested rooms should fit
      * @param checkInDate       order starting date
@@ -134,15 +54,14 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
      * @return <tt>List</tt> of suiting the<i>orderedRoomFormat</i> <tt>Room</tt> objects
      * @throws ServiceException
      */
+    @Override
+    @Transactional
     public List<Room> getSuitedRooms(Room orderedRoomFormat, Date checkInDate, Date checkOutDate) throws ServiceException {
         List<Room> suitedRoomsList = new ArrayList<>();
         try {
-            util.getSession().beginTransaction();
-            suitedRoomsList = roomDaoInst.getSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate);
-            util.getSession().getTransaction().commit();
+            suitedRoomsList = roomDao.getSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate);
             logger.info("GetSuitedRooms(orderedRoomFormat, checkInDate, checkOutDate): " + orderedRoomFormat + ", " + checkInDate + ", " + checkOutDate);
         } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -150,20 +69,19 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDao getRoominesses() method
+     * Calls RoomDaoImpl getRoominesses() method
      *
      * @return <tt>List</tt> of roominesses values
      * @throws ServiceException
      */
+    @Override
+    @Transactional
     public List<Integer> getRoominesses() throws ServiceException {
         List<Integer> roominessList = new ArrayList<>();
         try {
-            util.getSession().beginTransaction();
-            roominessList = roomDaoInst.getRoominesses();
-            util.getSession().getTransaction().commit();
+            roominessList = roomDao.getRoominesses();
             logger.info("GetRoominesses ");
         } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -171,23 +89,22 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDao isNewRoom() method
+     * Calls RoomDaoImpl isNewRoom() method
      *
      * @param room -  <tt>Room</tt>  to check if it is new
      * @return true if the <tt>Room</tt> is new
      * @throws ServiceException
      */
+    @Override
+    @Transactional
     public boolean isNewRoom(Room room) throws ServiceException {
         boolean isNew = false;
         try {
-            util.getSession().beginTransaction();
-            if (roomDaoInst.isNewRoom(room.getRoomNumber())) {
+            if (roomDao.isNewRoom(room.getRoomNumber())) {
                 isNew = true;
             }
-            util.getSession().getTransaction().commit();
             logger.info("checkIsNewRoom(room): " + room);
         } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -195,20 +112,20 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDao getNumberOfPagesWithRooms() method
+     * Calls RoomDaoImpl getNumberOfPagesWithRooms() method
+     *
      * @param roomsPerPage - get number of <tt>Room</tt> objects per page
      * @return number of <tt>Room</tt> objects lists
      * @throws ServiceException
      */
+    @Override
+    @Transactional
     public int getNumberOfPagesWithRooms(int roomsPerPage) throws ServiceException {
         int numberOfPages;
         try {
-            util.getSession().beginTransaction();
-            numberOfPages = roomDaoInst.getNumberOfPagesWithRooms(roomsPerPage);
-            util.getSession().getTransaction().commit();
+            numberOfPages = roomDao.getNumberOfPagesWithRooms(roomsPerPage);
             logger.info("getNumberOfPagesWithClients(clientsPerPage): " + roomsPerPage);
         } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
@@ -216,27 +133,27 @@ public class RoomServiceImpl extends AbstractEntityService<Room> {
     }
 
     /**
-     * Calls RoomDao getPageOfRooms() method
-     * @param pageNumber - page number of <tt>Room</tt> objects list
+     * Calls RoomDaoImpl getPageOfRooms() method
+     *
+     * @param pageNumber   - page number of <tt>Room</tt> objects list
      * @param roomsPerPage - number of <tt>Room</tt> objects rooms per page
      * @return <tt>List</tt> of <tt>Room</tt> objects on the <i>pageNumber</i>  with <i>roomsPerPage</i>
      * @throws ServiceException
      */
+    @Override
+    @Transactional
     public List<Room> getPageOfRooms(int pageNumber, int roomsPerPage) throws ServiceException {
         List<Room> roomsList = new ArrayList<>();
         try {
-            util.getSession().beginTransaction();
-            roomsList = roomDaoInst.getPageOfRooms(pageNumber, roomsPerPage);
-            util.getSession().getTransaction().commit();
+            roomsList = roomDao.getPageOfRooms(pageNumber, roomsPerPage);
             logger.info("Get Clients For Page Number " + pageNumber);
         } catch (HibernateException e) {
-            util.getSession().getTransaction().commit();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }
         return roomsList;
     }
-
+    @Override
     public int computeTotalPriceForRoom(Room room, Date from, Date till) {
         return getDatesDifferenceInDays(from, till) * room.getPrice();
     }

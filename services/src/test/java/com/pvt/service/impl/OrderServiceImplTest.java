@@ -159,7 +159,7 @@ public class OrderServiceImplTest extends ServiceImplTest {
         Order falseOrder = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.CANCELLED, 60);
         util.getSession().save(falseOrder);
         util.getSession().flush();
-        Order actual = OrderServiceImpl.getInstance().getById(expected.getOrderId());
+        Order actual = OrderServiceImpl.getInstance().get(Order.class,expected.getOrderId());
         Assert.assertEquals(expected, actual);
     }
 

@@ -2,33 +2,33 @@ package com.pvt.services.impl;
 
 
 import com.pvt.constants.OrderStatus;
-import com.pvt.dao.impl.CreditCardDao;
-import com.pvt.dao.impl.OrderDao;
+import com.pvt.dao.CreditCardDao;
+import com.pvt.dao.OrderDao;
+import com.pvt.dao.impl.CreditCardDaoImpl;
+import com.pvt.dao.impl.OrderDaoImpl;
 import com.pvt.entities.CreditCard;
 import com.pvt.entities.Order;
 import com.pvt.exceptions.ServiceException;
 import com.pvt.services.PayOrderService;
 import com.pvt.util.HibernateUtil;
+import lombok.NoArgsConstructor;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.LockOptions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-
+@Service
+@NoArgsConstructor
 public class PayOrderServiceImpl implements PayOrderService {
     private static Logger logger = Logger.getLogger(PayOrderServiceImpl.class);
     private static final String transactionFailedMessage = "Transaction failed: ";
-    private static HibernateUtil util = HibernateUtil.getHibernateUtil();
-    private static PayOrderServiceImpl instance;
+    @Autowired
+    OrderDao orderDao;
+    @Autowired
+    CreditCardDao creditCardDao;
 
-    private PayOrderServiceImpl() {
-
-    }
-    public static synchronized PayOrderServiceImpl getInstance() {
-        if (instance == null) {
-            instance = new PayOrderServiceImpl();
-        }
-        return instance;
-    }
     /**
      * Calls PayOrderService payOrderWithCreditCard method
      * @param card <tt>CreditCard</tt> object, which used to pay <i>order</i>
@@ -37,22 +37,20 @@ public class PayOrderServiceImpl implements PayOrderService {
      * @throws ServiceException
      */
     @Override
+    @Transactional
     public boolean payOrderWithCreditCard(CreditCard card, Order order) throws ServiceException {
         boolean isEnoughMoney;
         try {
-            util.getSession().beginTransaction();
-            util.getSession().refresh(card, LockOptions.UPGRADE);
+            util.getSession().refresh(card, LockOptions.UPGRADE);//TODO input lockoptions into @transactional
             isEnoughMoney = isEnoughMoneyToPayOrder(card, order);
             if (isEnoughMoney) {
                 order.setOrderStatus(OrderStatus.PAID);
                 takeMoneyForOrder(card,order.getTotalPrice());
-                OrderDao.getInstance().update(order);
-                CreditCardDao.getInstance().update(card);
+                orderDao.update(order);
+                creditCardDao.update(card);
             }
-            util.getSession().getTransaction().commit();
             logger.info("IsEnoughMoneyToPayOrder: " + isEnoughMoney);
         } catch (HibernateException e) {
-            util.getSession().getTransaction().rollback();
             logger.error(transactionFailedMessage + e);
             throw new ServiceException(e.getMessage());
         }

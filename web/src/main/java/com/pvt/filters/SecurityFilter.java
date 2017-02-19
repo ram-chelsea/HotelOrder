@@ -9,6 +9,7 @@ import com.pvt.managers.PagesConfigurationManager;
 import com.pvt.services.impl.UserServiceImpl;
 import com.pvt.util.HibernateUtil;
 import com.pvt.utils.RequestParameterParser;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +19,6 @@ import java.io.IOException;
 
 public class SecurityFilter implements Filter {
     private PagesConfigurationManager pagesConfigManagerInst = PagesConfigurationManager.getInstance();
-    private HibernateUtil util = HibernateUtil.getHibernateUtil();
-
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 

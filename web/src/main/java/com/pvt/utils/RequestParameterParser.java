@@ -31,7 +31,7 @@ public class RequestParameterParser {
         String login = request.getParameter(Parameters.USER_LOGIN);
         String password = request.getParameter(Parameters.USER_PASSWORD);
         if (session.getAttribute(Parameters.USER) != null) {
-            User loggedUser = (User) session.getAttribute(Parameters.USER);
+            User loggedUser = ( User ) session.getAttribute(Parameters.USER);
             userRole = loggedUser.getUserRole();
             userId = loggedUser.getUserId();
             login = loggedUser.getLogin();
@@ -46,10 +46,10 @@ public class RequestParameterParser {
         HttpSession session = request.getSession();
         RoomServiceImpl roomServiceInst = RoomServiceImpl.getInstance();
         int roomId = RequestParameterParser.getRoomId(request);
-        Room room = roomServiceInst.getById(roomId);
-        User user = (User) session.getAttribute(Parameters.USER);
-        Date checkIn = (Date) (session.getAttribute(Parameters.CHECK_IN_DATE));
-        Date checkOut = (Date) (session.getAttribute(Parameters.CHECK_OUT_DATE));
+        Room room = roomServiceInst.get(Room.class, roomId);
+        User user = ( User ) session.getAttribute(Parameters.USER);
+        Date checkIn = ( Date ) (session.getAttribute(Parameters.CHECK_IN_DATE));
+        Date checkOut = ( Date ) (session.getAttribute(Parameters.CHECK_OUT_DATE));
         int totalPrice = roomServiceInst.computeTotalPriceForRoom(room, checkIn, checkOut);
         Order order = EntityBuilder.buildOrder(null, user, room, checkIn, checkOut, OrderStatus.REQUESTED, totalPrice);
         return order;
@@ -132,7 +132,7 @@ public class RequestParameterParser {
         OrderStatus orderStatus;
         String orderStatusString;
         orderStatusString = request.getParameter(Parameters.ORDER_STATUS);
-        UserRole userRole = ((User) session.getAttribute(Parameters.USER)).getUserRole();
+        UserRole userRole = (( User ) session.getAttribute(Parameters.USER)).getUserRole();
         if (orderStatusString != null) {
             orderStatus = OrderStatus.valueOf(orderStatusString);
         } else {
@@ -148,7 +148,7 @@ public class RequestParameterParser {
     public static Integer getClientsPerPage(HttpServletRequest request) throws NumberFormatException {
         HttpSession session = request.getSession();
         String clientsPerPageString = request.getParameter(Parameters.CLIENTS_PER_PAGE);
-        Integer sessionClientsPerPage = (Integer) session.getAttribute(Parameters.CLIENTS_PER_PAGE);
+        Integer sessionClientsPerPage = ( Integer ) session.getAttribute(Parameters.CLIENTS_PER_PAGE);
         Integer clientsPerPage;
         if (clientsPerPageString != null) {
             clientsPerPage = Integer.valueOf(clientsPerPageString);
@@ -176,7 +176,7 @@ public class RequestParameterParser {
     public static Integer getRoomsPerPage(HttpServletRequest request) {
         HttpSession session = request.getSession();
         String roomsPerPageString = request.getParameter(Parameters.ROOMS_PER_PAGE);
-        Integer sessionRoomsPerPage = (Integer) session.getAttribute(Parameters.ROOMS_PER_PAGE);
+        Integer sessionRoomsPerPage = ( Integer ) session.getAttribute(Parameters.ROOMS_PER_PAGE);
         Integer roomsPerPage;
         if (roomsPerPageString != null) {
             roomsPerPage = Integer.valueOf(roomsPerPageString);

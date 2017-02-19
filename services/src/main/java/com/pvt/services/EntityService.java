@@ -26,6 +26,14 @@ public interface EntityService<T extends Entity> {
      * @param id - id of entity
      * @return object of derived class Entity
      */
-    T getById(int id) throws ServiceException;
+    T get(Class<T> clazz, int id) throws ServiceException;
+
+    /**
+     * Calls Dao delete() method
+     *
+     * @param entity object being used to delete the object from the database
+     */
+    void delete(T entity) throws ServiceException;
+
 
 }

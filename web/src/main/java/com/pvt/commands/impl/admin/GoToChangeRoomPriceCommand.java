@@ -30,7 +30,7 @@ public class GoToChangeRoomPriceCommand implements Command {
             try {
                 int roomId = RequestParameterParser.getRoomId(request);
                 util.openSession();
-                Room room = RoomServiceImpl.getInstance().getById(roomId);
+                Room room = RoomServiceImpl.getInstance().get(Room.class, roomId);
                 util.getSession().close();
                 request.setAttribute(Parameters.ROOM, room);
                 request.setAttribute(Parameters.ROOM_NEW_PRICE_INPUT_PLACEHOLDER, validationManagerInst.getProperty(ValidationConstants.ROOM_NEW_PRICE_INPUT_PLACEHOLDER));

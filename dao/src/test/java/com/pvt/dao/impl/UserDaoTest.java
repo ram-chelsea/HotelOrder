@@ -1,45 +1,39 @@
 package com.pvt.dao.impl;
 
-import com.pvt.constants.SqlRequest;
 import com.pvt.dao.EntityDaoImplTest;
-import com.pvt.util.HibernateUtil;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.junit.After;
-import org.junit.Before;
 
 public class UserDaoTest extends EntityDaoImplTest {
-    private HibernateUtil util = HibernateUtil.getHibernateUtil();
-
-    @Before
-    public void BeforeTest() {
-        util.openSession();
-        util.getSession().beginTransaction();
-    }
-
-    @After
-    public void AfterTestCleanDB() {
-        Session session = util.getSession();
-        Query query = session.createSQLQuery(SqlRequest.SET_FOREIGN_KEYS_CHECKS_FALSE);
-        query.executeUpdate();
-        query = session.createSQLQuery(SqlRequest.TRUNCATE_TEST_USERS);
-        query.executeUpdate();
-        query = session.createSQLQuery(SqlRequest.SET_FOREIGN_KEYS_CHECKS_TRUE);
-        query.executeUpdate();
-        session.close();
-    }
+//    private HibernateUtil util = HibernateUtil.getHibernateUtil();
+//
+//    @Before
+//    public void BeforeTest() {
+//        util.openSession();
+//        util.getSession().beginTransaction();
+//    }
+//
+//    @After
+//    public void AfterTestCleanDB() {
+//        Session session = util.getSession();
+//        Query query = session.createSQLQuery(SqlRequest.SET_FOREIGN_KEYS_CHECKS_FALSE);
+//        query.executeUpdate();
+//        query = session.createSQLQuery(SqlRequest.TRUNCATE_TEST_USERS);
+//        query.executeUpdate();
+//        query = session.createSQLQuery(SqlRequest.SET_FOREIGN_KEYS_CHECKS_TRUE);
+//        query.executeUpdate();
+//        session.close();
+//    }
 
 //    @Test
 //    public void testGetInstance() {
-//        UserDao firstImpl = UserDao.getInstance();
-//        UserDao secondImpl = UserDao.getInstance();
+//        UserDaoImpl firstImpl = UserDaoImpl.getInstance();
+//        UserDaoImpl secondImpl = UserDaoImpl.getInstance();
 //        Assert.assertEquals(firstImpl, secondImpl);
 //    }
 //
 //    @Test
 //    public void testSave() {
 //        User expected = EntityBuilder.buildUser(0, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
-//        UserDao.getInstance().save(expected);
+//        UserDaoImpl.getInstance().save(expected);
 //        util.getSession().getTransaction().commit();
 //        User actual = (User) util.getSession().get(User.class, expected.getUserId());
 //        Assert.assertEquals(expected, actual);
@@ -60,7 +54,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 //        User user4 = EntityBuilder.buildUser(null, "TEST_LOGIN_4", "TEST_FIRST_NAME_4", "TEST_LAST_NAME_4", "TEST_PASSWORD_4", UserRole.ADMIN);
 //        util.getSession().save(user4);
 //        util.getSession().getTransaction().commit();
-//        List<User> userListActual = UserDao.getInstance().getAllClients();
+//        List<User> userListActual = UserDaoImpl.getInstance().getAllClients();
 //
 //        Assert.assertTrue(userListExpected.containsAll(userListActual) && userListActual.containsAll(userListExpected));
 //    }
@@ -72,7 +66,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 ////        util.getSession().save(expected);
 ////        util.getSession().save(falseUser);
 ////        util.getSession().getTransaction().commit();
-////        User actual = UserDao.getInstance().get(expected.getUserId());
+////        User actual = UserDaoImpl.getInstance().get(expected.getUserId());
 ////        Assert.assertEquals(expected, actual);
 ////    }
 //
@@ -83,7 +77,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 //        util.getSession().save(expected);
 //        util.getSession().save(falseUser);
 //        util.getSession().getTransaction().commit();
-//        User actual = UserDao.getInstance().getByLogin(expected.getLogin());
+//        User actual = UserDaoImpl.getInstance().getByLogin(expected.getLogin());
 //        Assert.assertTrue(expected.equals(actual));
 //    }
 //
@@ -93,8 +87,8 @@ public class UserDaoTest extends EntityDaoImplTest {
 ////        util.getSession().save(expected);
 ////        int id = expected.getUserId();
 ////        util.getSession().getTransaction().commit();
-////        UserDao.getInstance().delete(id);
-////        User actual = UserDao.getInstance().get(id);
+////        UserDaoImpl.getInstance().delete(id);
+////        User actual = UserDaoImpl.getInstance().get(id);
 ////        Assert.assertNull(actual);
 ////    }
 //
@@ -104,7 +98,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 //        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
 //        util.getSession().save(user1);
 //        util.getSession().getTransaction().commit();
-//        boolean isNew = UserDao.getInstance().isNewUser(user2.getLogin());
+//        boolean isNew = UserDaoImpl.getInstance().isNewUser(user2.getLogin());
 //        Assert.assertFalse(isNew);
 //    }
 //
@@ -114,7 +108,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 //        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
 //        util.getSession().save(user1);
 //        util.getSession().getTransaction().commit();
-//        boolean isNew = UserDao.getInstance().isNewUser(user2.getLogin());
+//        boolean isNew = UserDaoImpl.getInstance().isNewUser(user2.getLogin());
 //        Assert.assertTrue(isNew);
 //    }
 //
@@ -124,7 +118,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 //        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN", "TEST_FIRST_NAME", "TEST_LAST_NAME", "TEST_PASSWORD", UserRole.CLIENT);
 //        util.getSession().save(user1);
 //        util.getSession().getTransaction().commit();
-//        boolean isSiqnedUp = UserDao.getInstance().checkUserAuthentication(user2.getLogin(), user2.getPassword());
+//        boolean isSiqnedUp = UserDaoImpl.getInstance().checkUserAuthentication(user2.getLogin(), user2.getPassword());
 //        Assert.assertTrue(isSiqnedUp);
 //    }
 //
@@ -134,7 +128,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 //        User user2 = EntityBuilder.buildUser(null, "TEST_LOGIN_2", "TEST_FIRST_NAME_2", "TEST_LAST_NAME_2", "TEST_PASSWORD_2", UserRole.CLIENT);
 //        util.getSession().save(user1);
 //        util.getSession().getTransaction().commit();
-//        boolean isSignedUp = UserDao.getInstance().checkUserAuthentication(user2.getLogin(), user2.getPassword());
+//        boolean isSignedUp = UserDaoImpl.getInstance().checkUserAuthentication(user2.getLogin(), user2.getPassword());
 //        Assert.assertFalse(isSignedUp);
 //    }
 //
@@ -161,7 +155,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 //        userListExpected.add(user4);
 //        userListExpected.add(user5);
 //        userListExpected.add(user6);
-//        List<User> userListActual = UserDao.getInstance().getPageOfClients(2, 3);
+//        List<User> userListActual = UserDaoImpl.getInstance().getPageOfClients(2, 3);
 //        Assert.assertTrue(userListExpected.containsAll(userListActual) && userListActual.containsAll(userListExpected));
 //    }
 //
@@ -178,7 +172,7 @@ public class UserDaoTest extends EntityDaoImplTest {
 //        User user5 = EntityBuilder.buildUser(null, "TEST_LOGIN_5", "TEST_FIRST_NAME_5", "TEST_LAST_NAME_5", "TEST_PASSWORD_1", UserRole.CLIENT);
 //        util.getSession().save(user5);
 //        util.getSession().getTransaction().commit();
-//        int numberOfPages = UserDao.getInstance().getNumberOfPagesWithClients(2);
+//        int numberOfPages = UserDaoImpl.getInstance().getNumberOfPagesWithClients(2);
 //        Assert.assertEquals(3, numberOfPages);
 //    }
 //

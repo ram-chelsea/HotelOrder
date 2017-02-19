@@ -1,10 +1,12 @@
 package com.pvt.dao.impl;
 
 import com.pvt.constants.HqlRequest;
+import com.pvt.dao.CreditCardDao;
 import com.pvt.dao.GeneralDao;
 import com.pvt.entities.CreditCard;
+import lombok.NoArgsConstructor;
 import org.hibernate.Query;
-import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,31 +14,9 @@ import java.util.List;
  * Describes <tt>GeneralDao</tt>-child singleton class being used for executing
  * of CRUD operations with <tt>CreditCard</tt> object
  */
-
-public class CreditCardDao extends GeneralDao<CreditCard> {
-
-    /**
-     * Singleton object of <tt>CreditCardDao</tt> class
-     */
-    private static CreditCardDao instance;
-
-    /**
-     * Creates a CreditCardDao variable
-     */
-    private CreditCardDao() {
-    }
-
-    /**
-     * Describes synchronized method of getting <tt>CreditCardDao</tt> singleton object
-     *
-     * @return <tt>CreditCardDao</tt> singleton object
-     */
-    public static synchronized CreditCardDao getInstance() {
-        if (instance == null) {
-            instance = new CreditCardDao();
-        }
-        return instance;
-    }
+@Repository
+@NoArgsConstructor
+public class CreditCardDaoImpl extends GeneralDao<CreditCard> implements CreditCardDao<CreditCard>{
 
     /**
      * <tt>Dao</tt> interface method not being used for this class
@@ -54,8 +34,7 @@ public class CreditCardDao extends GeneralDao<CreditCard> {
      * @return <tt>CreditCard</tt> object, having corresponding <i>cardNumber</i> value
      */
     public CreditCard getByCardNumber(String cardNumber) {
-        Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.GET_CREDIT_CARD_BY_NUMBER)
+        Query query = getSession().createQuery(HqlRequest.GET_CREDIT_CARD_BY_NUMBER)
                 .setCacheable(true);
         query.setParameter(0, cardNumber);
         CreditCard card = (CreditCard) query.uniqueResult();
@@ -72,8 +51,7 @@ public class CreditCardDao extends GeneralDao<CreditCard> {
      * @return true if <tt>CreditCard</tt> with <i>cardNumber</i> doesn't exist in the database
      */
     public boolean isNewCreditCard(String cardNumber) {
-        Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.CHECK_IS_NEW_CREDIT_CARD);
+        Query query = getSession().createQuery(HqlRequest.CHECK_IS_NEW_CREDIT_CARD);
         query.setParameter(0, cardNumber);
         long count = (Long) query.uniqueResult();
         boolean isNewCard = (count == 0);

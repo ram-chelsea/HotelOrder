@@ -36,7 +36,7 @@ public class PayCommand implements Command {
             try {
                 int orderId = RequestParameterParser.getOrderId(request);
                 util.openSession();
-                Order order = orderServiceInst.getById(orderId);
+                Order order = orderServiceInst.get(Order.class, orderId);
                 String cardNumber = RequestParameterParser.getCardNumber(request);
                 CreditCard card = cardServiceInst.getByCardNumber(cardNumber);
                 if (!card.getCardNumber().isEmpty()) {

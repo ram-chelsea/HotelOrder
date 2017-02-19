@@ -2,9 +2,11 @@ package com.pvt.dao.impl;
 
 import com.pvt.constants.HqlRequest;
 import com.pvt.dao.GeneralDao;
+import com.pvt.dao.UserDao;
 import com.pvt.entities.User;
+import lombok.NoArgsConstructor;
 import org.hibernate.Query;
-import org.hibernate.Session;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,49 +14,25 @@ import java.util.List;
  * Describes <tt>GeneralDao</tt>-child singleton class being used for executing
  * of CRUD operations with <tt>User</tt> object
  */
-
-public class UserDao extends GeneralDao<User> {
-
-    /**
-     * Singleton object of <tt>UserDao</tt> class
-     */
-    private static UserDao instance;
-
-    /**
-     * Creates a UserDao variable
-     */
-    private UserDao() {
-    }
-
-    /**
-     * Describes synchronized method of getting <tt>UserDao</tt> singleton object
-     *
-     * @return <tt>UserDao</tt> singleton object
-     */
-    public static synchronized UserDao getInstance() {
-        if (instance == null) {
-            instance = new UserDao();
-        }
-        return instance;
-    }
-
+@Repository
+@NoArgsConstructor
+public class UserDaoImpl extends GeneralDao<User> implements UserDao<User> {
 
     /**
      * Get all <tt>User</tt> objects being contained in the database
      *
      * @return <tt>List</tt> of all  <tt>User</tt> objects being contained in the database
      */
-
+    @Override
     public List<User> getAllClients() {
-        Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.GET_ALL_CLIENTS);
+        Query query = getSession().createQuery(HqlRequest.GET_ALL_CLIENTS);
         List<User> userList = query.list();
         return userList;
     }
 
+    @Override
     public List<User> getAll() {
-        Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.GET_ALL);
+        Query query = getSession().createQuery(HqlRequest.GET_ALL);
         List<User> userList = query.list();
         return userList;
     }
@@ -66,18 +44,15 @@ public class UserDao extends GeneralDao<User> {
      * @param clientsPerPage - number of <tt>User</tt> with <tt>CLIENT</tt> status objects rooms per page
      * @return <tt>List</tt> of <tt>User</tt> objects with <tt>CLIENT</tt> status on the <i>pageNumber</i>  with <i>roomsPerPage</i>
      */
+    @Override
     public List<User> getPageOfClients(int pageNumber, int clientsPerPage) {
-        Session session = util.getSession();
         int currentIndex = (pageNumber - 1) * clientsPerPage;
-        Query query = session.createQuery(HqlRequest.GET_ALL_CLIENTS)
+        Query query = getSession().createQuery(HqlRequest.GET_ALL_CLIENTS)
                 .setFirstResult(currentIndex)
                 .setMaxResults(clientsPerPage);
         List<User> userList = query.list();
         return userList;
     }
-
-
-
 
     /**
      * Get <tt>User</tt> object with <i>login</i> value being contained in the database
@@ -85,16 +60,14 @@ public class UserDao extends GeneralDao<User> {
      * @param login describes value of <tt>login</tt> property being used to determinate <tt>User</tt> object
      * @return <tt>User</tt> object with <i>login</i> value being contained in the database
      */
+    @Override
     public User getByLogin(String login) {
-        Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.GET_USER_BY_LOGIN)
+        Query query = getSession().createQuery(HqlRequest.GET_USER_BY_LOGIN)
                 .setCacheable(true);
         query.setParameter(0, login);
-        User user = (User) query.uniqueResult();
+        User user = ( User ) query.uniqueResult();
         return user;
     }
-
-
 
     /**
      * Checks if the <tt>User</tt> with the corresponding <i>login</i> hasn't existed
@@ -104,11 +77,11 @@ public class UserDao extends GeneralDao<User> {
      *              with the corresponding <tt>login</tt> property value doesn't exist in the database
      * @return true if <tt>User</tt> with <i>login</i> doesn't exist in the database
      */
+    @Override
     public boolean isNewUser(String login) {
-        Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.CHECK_LOGIN);
+        Query query = getSession().createQuery(HqlRequest.CHECK_LOGIN);
         query.setParameter(0, login);
-        long count = (Long) query.uniqueResult();
+        long count = ( Long ) query.uniqueResult();
         boolean isNewUser = (count == 0);
         return isNewUser;
     }
@@ -121,14 +94,13 @@ public class UserDao extends GeneralDao<User> {
      * @param password being used for checking the <tt>User</tt> is authenticated
      * @return true if <tt>User</tt> with <i>login</i> and <i>password</i>  exists in the database
      */
+    @Override
     public boolean checkUserAuthentication(String login, String password) {
-        Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.CHECK_AUTHENTICATION);
+        Query query = getSession().createQuery(HqlRequest.CHECK_AUTHENTICATION);
         query.setParameter(0, login);
         query.setParameter(1, password);
-        long count = (Long) query.uniqueResult();
+        long count = ( Long ) query.uniqueResult();
         boolean isSiqnedUp = (count != 0);
-
         return isSiqnedUp;
     }
 
@@ -138,10 +110,10 @@ public class UserDao extends GeneralDao<User> {
      * @param clientsPerPage number of <tt>User</tt> objects clients  per page
      * @return number of <tt>User</tt> objects with <tt>CLIENT</tt> status lists
      */
+    @Override
     public int getNumberOfPagesWithClients(int clientsPerPage) {
-        Session session = util.getSession();
-        Query query = session.createQuery(HqlRequest.GET_ALL_CLIENTS_NUMBER);
-        int numberOfClients = ((Long) query.uniqueResult()).intValue();
+        Query query = getSession().createQuery(HqlRequest.GET_ALL_CLIENTS_NUMBER);
+        int numberOfClients = (( Long ) query.uniqueResult()).intValue();
         int numberOfPages = (numberOfClients - 1) / clientsPerPage + 1;
         return numberOfPages;
     }

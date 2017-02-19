@@ -3,6 +3,7 @@ package com.pvt.util;
 import com.pvt.constants.OrderStatus;
 import com.pvt.constants.RoomClass;
 import com.pvt.constants.UserRole;
+import com.pvt.dto.UserRegistrationForm;
 import com.pvt.entities.CreditCard;
 import com.pvt.entities.Order;
 import com.pvt.entities.Room;
@@ -25,6 +26,15 @@ public class EntityBuilder {
         user.setLastName(lastName);
         user.setPassword(password);
         user.setUserRole(userRole);
+        return user;
+    }
+    public static User buildUser(UserRegistrationForm userRegistrationForm) {
+        User user = new User();
+        user.setLogin(userRegistrationForm.getLogin());
+        user.setFirstName(userRegistrationForm.getFirstName());
+        user.setLastName(userRegistrationForm.getLastName());
+        user.setPassword(userRegistrationForm.getPassword());
+        user.setUserRole(userRegistrationForm.getUserRole());
         return user;
     }
 
