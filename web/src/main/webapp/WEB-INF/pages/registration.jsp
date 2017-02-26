@@ -64,13 +64,13 @@
 
         @media only screen and (max-width: 640px) {
             .wrapp {
-                width: 74%;
+                width: 70%;
             }
         }
 
         @media only screen and (max-width: 480px) {
             .wrapp {
-                width: 62%;
+                width: 80%;
             }
         }
 
@@ -90,7 +90,6 @@
 <div class="wrapp">
     <div class="reg-form">
         <div id="registrationForm">
-            <input type="hidden" name="command" value="registration"/>
             <table>
                 <tr>
                     <td>Name:</td>

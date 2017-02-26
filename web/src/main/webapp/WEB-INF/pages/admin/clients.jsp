@@ -8,8 +8,7 @@
 </head>
 <body>
 <h4>${operationMessage}</h4>
-<form name="chooseClientsPerPageNumber" method="POST" action="controller">
-    <input type="hidden" name="command" value="clients"/>
+<form name="chooseClientsPerPageNumber" method="GET" action="<c:url value="./clients"/>">
     <table>
         <tr>
             <td>Number Per Page:</td>
@@ -29,8 +28,8 @@
     <input type="submit" value="Choose Number of Clients Per Page"/>
 </form>
 <c:if test="${numberOfPages > 1}">
-    <form name="chooseCurrentPage" method="POST" action="controller">
-        <input type="hidden" name="command" value="clients"/>
+    <form name="chooseCurrentPage" method="GET" action="<c:url value="./clients"/>">
+        <input type="hidden" name="clientsPerPage" value="${clientsPerPage}"/>
         <table>
             <tr>
                 <td>CurrentPage:</td>
@@ -62,7 +61,7 @@
         </tr>
     </c:forEach>
 </table>
-<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
-<a href="controller?command=logout">Logout</a>
+<a href="<c:url value="../${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

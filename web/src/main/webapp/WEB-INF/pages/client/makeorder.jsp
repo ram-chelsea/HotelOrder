@@ -6,13 +6,12 @@
     <title>Make Order</title>
 </head>
 <body>
-<form name="makeOrderForm" method="POST" action="controller">
-    <input type="hidden" name="command" value="makeorder"/>
+<form name="makeOrderForm" method="POST" action="<c:url value="../orders/makeorder"/>">
     <table>
         <tr>
             <td>Roominess:</td>
             <td>
-                <select name="roominess"/>
+                <select name="roominess" id="roominess"/>
                 <c:forEach var="roominess" items="${roominessesList}">
                     <option value="<c:out value="${roominess}"/>">
                         <c:out value="${roominess}"/>
@@ -23,7 +22,7 @@
         <tr>
             <td>RoomClass:</td>
             <td>
-                <select name="roomclass"/>
+                <select name="roomClass" id="roomClass"/>
                 <c:forEach var="roomClass" items="${roomsClassesList}">
                     <option value="<c:out value="${roomClass.toString()}"/>">
                         <c:out value="${roomClass.toString()}"/>
@@ -31,20 +30,20 @@
                 </c:forEach>
             </td>
         </tr>
-
         <tr>
             <td>From:</td>
-            <td><input type="date" name="checkin" min="${minCheckInDate}" value="${minCheckInDate}" size="20" required/></td>
+            <td><input type="date" name="checkIn" id="checkIn" min="${minCheckInDate}" value="${minCheckInDate}"
+                       size="20" required/></td>
         </tr>
         <tr>
             <td>Till:</td>
-            <td><input type="date" name="checkout" value="${minCheckOutDate}" size="20" required/></td>
+            <td><input type="date" name="checkOut" id="checkOut" value="${minCheckOutDate}" size="20" required/></td>
         </tr>
     </table>
     <input type="submit" value="Search suited rooms"/>
 </form>
 ${operationMessage}<br/>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
-<a href="controller?command=logout">Logout</a>
+<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

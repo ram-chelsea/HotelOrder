@@ -5,15 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.pvt</groupId>
-        <artifactId>hotelOrder</artifactId>
-        <version>${com.pvt.hotelOrder.version}</version>
+        <groupId>com.pvtoc</groupId>
+        <artifactId>hotelOrderSpring</artifactId>
+        <version>${com.pvtoc.hotelOrder.version}</version>
     </parent>
 
 
-    <groupId>com.pvt</groupId>
+    <groupId>com.pvtoc</groupId>
     <artifactId>dao</artifactId>
-    <version>${com.pvt.dao.version}</version>
+    <version>${com.pvtoc.dao.version}</version>
     <packaging>jar</packaging>
 
     <name>dao</name>
@@ -21,9 +21,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.pvt</groupId>
+            <groupId>com.pvtoc</groupId>
             <artifactId>entities</artifactId>
-            <version>${com.pvt.entities.version}</version>
+            <version>${com.pvtoc.entities.version}</version>
         </dependency>
 
         <dependency>
@@ -52,36 +52,7 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
+
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
@@ -92,6 +63,13 @@
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

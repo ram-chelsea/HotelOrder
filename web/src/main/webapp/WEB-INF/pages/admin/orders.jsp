@@ -7,8 +7,7 @@
 </head>
 <body>
 <h4>${operationMessage}</h4>
-<form name="chooseOrderStatus" method="POST" action="controller">
-    <input type="hidden" name="command" value="adminorders"/>
+<form name="chooseOrderStatus" method="GET" action="<c:url value="./orders"/>">
     <table>
         <tr>
             <td>Order Status:</td>
@@ -52,7 +51,7 @@
 
             </tr>
             <c:forEach var="order" items="${ordersList}">
-                <form action="controller" method="POST">
+                <form action="<c:url value="./orders/changestatus"/>" method="POST">
                     <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
                     <tr>
                         <td><c:out value="${ order.orderId }"/></td>
@@ -64,11 +63,11 @@
                         <td><c:out value="${order.totalPrice}"/></td>
                         <c:choose>
                             <c:when test="${orderStatus.toString().equals('REQUESTED')}">
-                                <td><input type="submit" name="command" value="confirm"/></td>
-                                <td><input type="submit" name="command" value="deny"/></td>
+                                <td><input type="submit" name="newStatus" value="confirm"/></td>
+                                <td><input type="submit" name="newStatus" value="deny"/></td>
                             </c:when>
                             <c:when test="${orderStatus.toString().equals('PAID')}">
-                                <td><input type="submit" name="command" value="expire"/></td>
+                                <td><input type="submit" name="newStatus" value="expire"/></td>
                             </c:when>
                         </c:choose>
                     </tr>
@@ -81,7 +80,7 @@
     </c:otherwise>
 </c:choose>
 <br/>
-<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
-<a href="controller?command=logout">Logout</a><br/>
+<a href="<c:url value="../${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

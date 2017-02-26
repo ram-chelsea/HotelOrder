@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -13,8 +13,7 @@
 <tr>
     <td>${order.totalPrice}</td>
 </tr>
-<form name="CheckCardForm" method="POST" action="controller">
-    <input type="hidden" name="command" value="pay"/>
+<form name="CheckCardForm" method="POST" action="<c:url value="./pay"/>">
     <input type="hidden" name="orderId" value="${order.orderId}"/>
     <table>
         <tr>
@@ -23,12 +22,12 @@
                        placeholder="${cardNumberInputPlaceholder}" required/></td>
         </tr>
     </table>
-    <input type="submit" value="Pay"/>
+    <input type="submit" name="newStatus" value="pay"/>
 </form>
 ${operationMessage}<br/>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
-<a href="controller?command=clientorders">Back to Client Orders</a><br/>
-<a href="controller?command=lookcardamount">Check Card Amount</a><br/>
-<a href="controller?command=logout">Logout</a>
+<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="../orders"/>">Back to Client Orders</a><br/>
+<a href="<c:url value="/clients/${login}/creditcards/checkcard"/>">Check Credit Card</a> <br/>
+<a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

@@ -2,12 +2,70 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>${title}</title>
     <link href='http://fonts.googleapis.com/css?family=Rokkitt' rel='stylesheet' type='text/css'>
     <style>
 
+        /* normalize */
+        html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, dl, dt, dd, ol, nav ul, nav li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            font-size: 100%;
+            font: inherit;
+            vertical-align: baseline;
+        }
 
+        article, aside, details, figcaption, figure, footer, header, menu, nav, section {
+            display: block;
+        }
+
+        ol, ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        blockquote, q {
+            quotes: none;
+        }
+
+        blockquote:before, blockquote:after, q:before, q:after {
+            content: '';
+            content: none;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        /* start editing from here */
+        a {
+            text-decoration: none;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        /* clear float */
+        nav.vertical ul li {
+            display: block;
+        }
+
+        /* vertical menu */
+        nav.horizontal ul li {
+            display: inline-block;
+        }
+
+        /* horizontal menu */
+        img {
+            max-width: 100%;
+        }
+
+        /*end normalize*/
         body {
             font-family: 'Rokkitt', serif;
             font-size: 100%;
@@ -16,7 +74,7 @@
             background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(13, 151, 214)), to(#2F2727));
             background: -webkit-linear-gradient(top, #2F2727, rgb(13, 151, 214));
             background: -moz-linear-gradient(top, #2F2727, rgb(13, 151, 214));
-
+            background: -ms-linear-gradient(top, #2F2727, rgb(13, 151, 214));
             background: -o-linear-gradient(top, #2F2727, rgb(13, 151, 214));
         }
 
@@ -25,9 +83,10 @@
             margin: 0 auto;
         }
 
+        /*start-login-form*/
         .login_form {
             width: 55%;
-
+        / / background: url("../images/border.png") no-repeat 331 px 77 px;
             float: left;
             position: relative;
         }
@@ -59,6 +118,7 @@
             position: relative;
         }
 
+        /* form element visual styles */
         .login_form li {
             float: left;
             outline: none;
@@ -144,12 +204,6 @@
             float: left;
         }
 
-        .forgot {
-            float: right;
-            margin-right: 77px;
-            width: 35%;
-        }
-
         .forgot a {
             color: #B6B6B6;
             font-size: 1.1em;
@@ -162,6 +216,8 @@
         .forgot a:hover {
             color: #79B42B;
         }
+
+        /* === Form hints === */
 
         .login_form input:focus + .form_hint {
             display: inline;
@@ -176,8 +232,10 @@
             color: #28921f;
         }
 
+        /*end-login-form*/
+        /*start-account*/
         .account {
-            float: right;
+            float: left;
             width: 45%;
         }
 
@@ -208,143 +266,11 @@
             cursor: pointer;
         }
 
-        .span {
-            margin-top: 10.4%;
-            display: block;
-            width: 100%;
-            cursor: pointer;
-            background: #3B5998;
-            transition: all 0.5s ease-out;
-            -webkit-transition: all 0.5s ease-out;
-            -moz-transition: all 0.5s ease-out;
-            -ms-transition: all 0.5s ease-out;
-            -o-transition: all 0.5s ease-out;
-        }
-
-        .span img {
-            background: #354F88;
-            padding: 7px;
-            float: left;
-        }
-
-        .span i {
-            color: #fff;
-            padding: 9px 14px;
-            float: left;
-            font-size: 1.6em;
-            font-weight: 400;
-        }
-
-        .span:hover {
-            background: #354F88;
-        }
-
-        .span1 {
-            margin-top: 9%;
-            width: 100%;
-            background: #45B0E3;
-            transition: all 0.5s ease-out;
-            -webkit-transition: all 0.5s ease-out;
-            -moz-transition: all 0.5s ease-out;
-            -ms-transition: all 0.5s ease-out;
-            -o-transition: all 0.5s ease-out;
-        }
-
-        .span1 img {
-            background: #40A2D1;
-            padding: 7px;
-            float: left;
-        }
-
-        .span1 i {
-            color: #fff;
-            padding: 9px 20px;
-            float: left;
-            font-size: 1.6em;
-            font-weight: 400;
-        }
-
-        .span1:hover {
-            background: #40A2D1;
-        }
-
-        .span2 {
-            margin-top: 9%;
-            width: 100%;
-            background: #2F93C3;
-            transition: all 0.5s ease-out;
-            -webkit-transition: all 0.5s ease-out;
-            -moz-transition: all 0.5s ease-out;
-            -ms-transition: all 0.5s ease-out;
-            -o-transition: all 0.5s ease-out;
-        }
-
-        .span2 img {
-            background: #1077A9;
-            padding: 7px;
-            float: left;
-        }
-
-        .span2 i {
-            color: #fff;
-            padding: 9px 17px;
-            float: left;
-            font-size: 1.6em;
-            font-weight: 400;
-        }
-
-        .span2:hover {
-            background: #1077A9;
-        }
-
-        .span3 {
-            margin-top: 9%;
-            width: 100%;
-            background: #2F93C3;
-            transition: all 0.5s ease-out;
-            -webkit-transition: all 0.5s ease-out;
-            -moz-transition: all 0.5s ease-out;
-            -ms-transition: all 0.5s ease-out;
-            -o-transition: all 0.5s ease-out;
-        }
-
-        .span3 img {
-            background: #1077A9;
-            padding: 7px;
-            float: left;
-        }
-
-        .span3 i {
-            color: #fff;
-            padding: 9px 17px;
-            float: left;
-            font-size: 1.6em;
-            font-weight: 400;
-        }
-
-        .span3:hover {
-            background: #1077A9;
-        }
-
+        /*end-checkbox*/
+        /*-----start-responsive-design------*/
         @media only screen and (max-width: 1440px) {
             .wrap {
                 width: 56%;
-            }
-
-            .span i {
-                font-size: 1.4em;
-            }
-
-            .span1 i {
-                font-size: 1.4em;
-            }
-
-            .span2 i {
-                font-size: 1.4em;
-            }
-
-            .span3 i {
-                font-size: 1.4em;
             }
 
             .login_form p {
@@ -357,22 +283,6 @@
                 width: 59%;
             }
 
-            .span i {
-                font-size: 1.4em;
-            }
-
-            .span1 i {
-                font-size: 1.4em;
-            }
-
-            .span2 i {
-                font-size: 1.4em;
-            }
-
-            .span3 i {
-                font-size: 1.4em;
-            }
-
             .login_form p {
                 padding: 8px 3px;
             }
@@ -381,22 +291,6 @@
         @media only screen and (max-width: 1280px) {
             .wrap {
                 width: 63%;
-            }
-
-            .span i {
-                font-size: 1.3em;
-            }
-
-            .span1 i {
-                font-size: 1.3em;
-            }
-
-            .span2 i {
-                font-size: 1.3em;
-            }
-
-            .span3 i {
-                font-size: 1.3em;
             }
         }
 
@@ -409,26 +303,6 @@
                 width: 77%;
             }
 
-            .span i {
-                font-size: 1.2em;
-                padding: 13px 14px;
-            }
-
-            .span1 i {
-                font-size: 1.2em;
-                padding: 13px 14px;
-            }
-
-            .span2 i {
-                font-size: 1.2em;
-                padding: 13px 14px;
-            }
-
-            .span3 i {
-                font-size: 1.2em;
-                padding: 13px 14px;
-            }
-
         }
 
         @media only screen and (max-width: 800px) {
@@ -436,26 +310,9 @@
                 width: 95%;
             }
 
-            .span i {
-                padding: 14px 12px;
-                font-size: 1.2em;
+            .login_form {
+            / / background: url("../images/border.png") no-repeat 313 px 77 px;
             }
-
-            .span1 i {
-                font-size: 1.2em;
-                padding: 13px 20px;
-            }
-
-            .span2 i {
-                font-size: 1.2em;
-                padding: 13px 20px;
-            }
-
-            .span3 i {
-                font-size: 1.2em;
-                padding: 13px 20px;
-            }
-
         }
 
         @media only screen and (max-width: 640px) {
@@ -483,52 +340,8 @@
                 margin: 22px 0 30px;
             }
 
-            .forgot a {
-                font-size: 1em;
-            }
-
-            .span i {
-                padding: 11px 6px;
-                font-size: 1em;
-            }
-
-            .span img {
-                padding: 2px;
-            }
-
-            .span1 img {
-                padding: 2px;
-            }
-
-            .span1 i {
-                padding: 11px 6px;
-                font-size: 1em;
-            }
-
-            .span2 img {
-                padding: 2px;
-            }
-
-            .span2 i {
-                padding: 11px 6px;
-                font-size: 1em;
-            }
-
-            .span3 img {
-                padding: 2px;
-            }
-
-            .span3 i {
-                padding: 11px 6px;
-                font-size: 1em;
-            }
-
             .account h2 a {
                 font-size: 0.9em;
-            }
-
-            .checkbox i {
-                bottom: 10px;
             }
 
         }
@@ -552,12 +365,6 @@
                 margin: 22px 0 13px;
             }
 
-            .forgot {
-                width: 82%;
-                margin-top: 7px;
-                margin-right: 41px;
-            }
-
             .account {
                 width: 100%;
             }
@@ -565,25 +372,6 @@
             .account h2 a {
                 text-align: left;
                 margin-top: 15px;
-            }
-
-            .span {
-                margin-top: 3.4%;
-            }
-
-            .form_hint {
-                font-size: 0.8em;
-                padding: 6px 5px;
-                right: -128px;
-                bottom: 6px;
-            }
-
-            .form_hint::before {
-                bottom: 5px;
-            }
-
-            .checkbox i {
-                bottom: 34px;
             }
 
             .footer p {
@@ -610,12 +398,6 @@
                 margin: 22px 0 13px;
             }
 
-            .forgot {
-                width: 82%;
-                margin-top: 7px;
-                margin-right: 41px;
-            }
-
             .account {
                 width: 100%;
             }
@@ -623,25 +405,6 @@
             .account h2 a {
                 text-align: left;
                 margin-top: 15px;
-            }
-
-            .span {
-                margin-top: 3.4%;
-            }
-
-            .form_hint {
-                font-size: 0.8em;
-                padding: 6px 5px;
-                right: -128px;
-                bottom: 6px;
-            }
-
-            .form_hint::before {
-                bottom: 5px;
-            }
-
-            .checkbox i {
-                bottom: 34px;
             }
 
             .footer p {
@@ -655,14 +418,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head>
 <body>
+<%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
 <div class="wrap">
     <div class="login-form">
-        <c:url value='../j_spring_security_check' var="loginUrl"/>`
+        <c:url value='/j_spring_security_check' var="loginUrl"/>
         <form class="login_form" name='loginForm' action="${loginUrl}" method='POST'>
             <h1>Login Into Your Account</h1>
             <ul>
                 <li>
-                    <input type="text" class="textbox1" id="username" name="j_username" placeholder="Username" required>
+                    <input type="text" class="textbox1" id="username" name="j_username" placeholder="Username" required="required">
                     <p><img src="../images/contact.png" alt=""></p>
                 </li>
                 <li>
@@ -672,7 +436,7 @@
             </ul>
             <input type="submit" name="Sign In" value="Sign In">
         </form>
-        <c:url value="../registration" var="signupUrl"/>`
+        <c:url value="../registration" var="signupUrl"/>
         <div class="account">
             <h2><a href="${signupUrl}">Don't have an account? Sign Up!</a></h2>
         </div>

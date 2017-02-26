@@ -8,8 +8,7 @@
 </head>
 <body>
 <h4>${operationMessage}</h4>
-<form name="chooseRoomsPerPageNumber" method="POST" action="controller">
-    <input type="hidden" name="command" value="rooms"/>
+<form name="chooseRoomsPerPageNumber" method="GET" action="<c:url value="./rooms"/>">
     <table>
         <tr>
             <td>Number Per Page:</td>
@@ -26,11 +25,11 @@
             </td>
         </tr>
     </table>
-    <input type="submit" value="Choose Number of Clients Per Page"/>
+    <input type="submit" value="Choose Number of Rooms Per Page"/>
 </form>
 <c:if test="${numberOfPages > 1}">
-    <form name="chooseCurrentPage" method="POST" action="controller">
-        <input type="hidden" name="command" value="rooms"/>
+    <form name="chooseCurrentPage" method="GET" action="<c:url value="./rooms"/>">
+        <input type="hidden" name="roomsPerPage" value="${roomsPerPage}"/>
         <table>
             <tr>
                 <td>CurrentPage:</td>
@@ -50,7 +49,7 @@
         <input type="submit" value="Show Page Number"/>
     </form>
 </c:if>
-<form action="controller" method="POST">
+<form action="<c:url value="./rooms/changeroomprice"/>" method="GET">
     <table border="1">
         <tr bgcolor="#CCCCCC">
             <td align="center"><strong>RoomNumber</strong></td>
@@ -72,11 +71,10 @@
         </c:forEach>
     </table>
     <br/>
-    <input type="hidden" name="command" value="gotochangeroomprice"/>
     <input type="submit" value="Change Room Price"/>
 </form>
-<a href="controller?command=gotoaddnewroom">Add New Room</a><br/>
-<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
-<a href="controller?command=logout">Logout</a>
+<a href="<c:url value="./rooms/addnewroom"/>">Add New Room</a><br/>
+<a href="<c:url value="../${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

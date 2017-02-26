@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.pvt</groupId>
-        <artifactId>hotelOrder</artifactId>
-        <version>${com.pvt.hotelOrder.version}</version>
+        <groupId>com.pvtoc</groupId>
+        <artifactId>hotelOrderSpring</artifactId>
+        <version>${com.pvtoc.hotelOrder.version}</version>
     </parent>
 
-    <groupId>com.pvt</groupId>
+    <groupId>com.pvtoc</groupId>
     <artifactId>web</artifactId>
-    <version>${com.pvt.web.version}</version>
+    <version>${com.pvtoc.web.version}</version>
     <packaging>war</packaging>
 
     <name>web</name>
@@ -30,55 +30,22 @@
             <version>${javax.servlet.jstl.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.pvt</groupId>
+            <groupId>com.pvtoc</groupId>
             <artifactId>services</artifactId>
-            <version>${com.pvt.services.version}</version>
+            <version>${com.pvtoc.services.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.pvt</groupId>
+            <groupId>com.pvtoc</groupId>
             <artifactId>entities</artifactId>
-            <version>${com.pvt.entities.version}</version>
+            <version>${com.pvtoc.entities.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.pvt</groupId>
+            <groupId>com.pvtoc</groupId>
             <artifactId>dao</artifactId>
-            <version>${com.pvt.dao.version}</version>
+            <version>${com.pvtoc.dao.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-            <version>4.1.3.RELEASE</version>
-        </dependency>
+
+
     </dependencies>
 
 </project>

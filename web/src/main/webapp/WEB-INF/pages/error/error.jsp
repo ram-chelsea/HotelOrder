@@ -7,6 +7,6 @@
 <body>
 Error: <br/>
 ${errorDatabase} <br/>
-<a href="controller?command=logout">Go to LoginPage</a>
+<a href="">Go to LoginPage</a>
 </body>
 </html>

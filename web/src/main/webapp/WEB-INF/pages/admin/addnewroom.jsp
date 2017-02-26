@@ -5,48 +5,80 @@
 <html>
 <head>
     <title>Add New Room</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js">
+    </script>
 </head>
 <body>
 ${formSettingsError}<br/>
-<form name="newRoomForm" method="POST" action="controller">
-    <input type="hidden" name="command" value="addnewroom"/>
-    <table>
-        <tr>
-            <td>RoomNumber:</td>
-            <td><input type="text" pattern="${newRoomNumberFormatRegExp}" name="roomNumber" size="30"
-                       placeholder="${newRoomNumberInputPlaceholder}" required/></td>
-        </tr>
+<div class="wrapp">
+    <div class="reg-form">
+        <div id="addingRoomForm">
+            <table>
+                <tr>
+                    <td>RoomNumber:</td>
+                    <td><input type="text" pattern="${newRoomNumberFormatRegExp}" name="roomNumber" id="roomNumber"
+                               size="30"
+                               placeholder="${newRoomNumberInputPlaceholder}" required/></td>
+                </tr>
 
-        <tr>
-            <td>Roominess:</td>
-            <td><input type="number" name="roominess" min="${newRoomMinRoominess}" step="${newRoomRoominessStep}"
-                       required/></td>
-        </tr>
+                <tr>
+                    <td>Roominess:</td>
+                    <td><input type="number" name="roominess" id="roominess" min="${newRoomMinRoominess}"
+                               step="${newRoomRoominessStep}"
+                               required/></td>
+                </tr>
 
-        <tr>
-            <td>RoomClass:</td>
-            <td>
-                <select name="roomclass"/>
-                <c:forEach var="roomClass" items="${roomsClassesList}">
-                    <option value="<c:out value="${roomClass.toString()}"/>">
-                        <c:out value="${roomClass.toString()}"/>
-                    </option>
-                </c:forEach>
-            </td>
-        </tr>
+                <tr>
+                    <td>RoomClass:</td>
+                    <td>
+                        <select name="roomClass" id="roomClass"/>
+                        <c:forEach var="roomclass" items="${roomsClassesList}">
+                            <option value="<c:out value="${roomclass.toString()}"/>">
+                                <c:out value="${roomclass.toString()}"/>
+                            </option>
+                        </c:forEach>
+                    </td>
+                </tr>
 
-        <tr>
-            <td>Price:</td>
-            <td><input type="number" name="roomPrice" min="${newRoomMinPrice}" step="${newRoomPriceStep}" required/>
-            </td>
-        </tr>
-
-    </table>
-    <input type="submit" value="Add Room"/>
-</form>
+                <tr>
+                    <td>Price:</td>
+                    <td><input type="number" name="roomPrice" id="roomPrice" min="${newRoomMinPrice}"
+                               step="${newRoomPriceStep}" required/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button type="button" id="addRoom" onclick="proceed()">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
 ${operationMessage} <br/>
-<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
-<a href="controller?command=rooms">Go to Rooms List</a> <br/>
-<a href="controller?command=logout">Logout</a>
+<a href="<c:url value="../rooms"/>">Back to RoomsList</a><br/>
+<a href="<c:url value="/admins/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/login" />">Logout</a>
+<script>
+    function proceed() {
+        var room = {
+            roomNumber: $("#roomNumber").val(),
+            roominess: $("#roominess").val(),
+            roomClass: $("#roomClass").val(),
+            roomPrice: $("#roomPrice").val()
+        };
+        $.ajax({
+            type: "POST",
+            url: '../rooms/addnewroom',
+            data: JSON.stringify(room),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function () {
+                alert('The Room was Added');
+            }
+        });
+    }
+</script>
 </body>
 </html>

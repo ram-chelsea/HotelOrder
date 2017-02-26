@@ -15,9 +15,9 @@
         <td align="center"><strong>Make Request</strong></td>
     </tr>
     <c:forEach var="room" items="${suitedRoomsList}">
-        <form action="controller" method="POST">
+        <form action="<c:url value="../orders/requestroom"/>" method="POST">
             <input type="hidden" name="roomId" value="<c:out value="${room.roomId}"/>"/>
-            <input type="hidden" name="command" value="request"/>
+            <input type="hidden" name="orderRoomForm" value="<c:out value="${orderRoomForm}"/>"/>
             <tr>
                 <td><c:out value="${ room.roomNumber }"/></td>
                 <td><c:out value="${ room.roominess }"/></td>
@@ -28,8 +28,8 @@
         </form>
     </c:forEach>
 </table>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
-<a href="controller?command=gotomakeorder">Back to Make a New Order</a><br/>
-<a href="controller?command=logout">Logout</a>
+<a href="<c:url value="/clients/${login}/orders/makeorder"/>">Back to Make a New Order</a><br/>
+<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

@@ -5,19 +5,32 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+        http://www.springframework.org/schema/context/spring-context.xsd">
     <import resource="classpath*:services-beans.xml"/>
     <import resource="classpath*:dao-beans.xml"/>
     <import resource="classpath*:entities-beans.xml"/>
-    <import resource="spring-security.xml"/>
+    <import resource="web-beans.xml"/>
     <context:annotation-config/>
-    <context:component-scan base-package="com.pvt.controllers"/>
+    <context:component-scan base-package="com.pvtoc.controllers"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
         <property name="prefix" value="/WEB-INF/pages/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+
+    <bean
+            class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                    <constructor-arg name="objectMapper" ref="jacksonObjectMapper" />
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="jacksonObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 
 
 </beans>

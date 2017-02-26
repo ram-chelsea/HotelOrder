@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -20,16 +21,16 @@ ${formSettingsError}<br/>
         <td>${ room.price }</td>
     </tr>
 </table>
-<form action="controller" method="POST">
-    <input type="hidden" name="command" value="changeroomprice"/>
+<form action="<c:url value="../rooms/changeroomprice"/>" method="POST">
     <input type="hidden" name="roomId" value="${room.roomId}"/>
-    <input type="number" name="newprice" min="${roomMinNewPrice}" step="${roomNewPriceStep}"
+    <input type="number" name="newPrice" min="${roomMinNewPrice}" step="${roomNewPriceStep}"
            placeholder="${roomNewPriceInputPlaceHolder}" required/><br>
     <input type="submit" value="Change RoomPrice"/>
 </form>
 ${operationMessage}
-<a href="controller?command=gotoadminstartpage">Back to StartPage</a><br/>
-<a href="controller?command=rooms">Back to RoomsList</a><br/>
-<a href="controller?command=logout">Logout</a>
+
+<a href="<c:url value="../rooms"/>">Back to RoomsList</a><br/>
+<a href="<c:url value="/admins/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

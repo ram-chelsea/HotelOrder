@@ -6,30 +6,54 @@
 <html>
 <head>
     <title>Add Credit Card</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js">
+    </script>
 </head>
 <body>
 ${formSettingsError}
-<form name="newCreditCardForm" method="POST" action="controller">
-    <input type="hidden" name="command" value="addcreditcard"/>
     <table>
         <tr>
             <td>CardNumber:</td>
-            <td><input type="text" pattern="${cardNumberFormatRegExp}" name="cardNumber" size="30"
+            <td><input type="text" pattern="${cardNumberFormatRegExp}" name="cardNumber" id="cardNumber" size="30"
                        placeholder="${cardNumberInputPlaceholder}" required/></td>
         </tr>
 
         <tr>
             <td>Amount:</td>
-            <td><input type="number" name="amount" min="${newCardMinAmount}" step="${newCardAmountStep}"
+            <td><input type="number" name="amount" id="amount" min="${newCardMinAmount}" step="${newCardAmountStep}"
                        placeholder="${amountInputPlaceHolder}" required/></td>
         </tr>
-
+        <tr>
+            <td>
+                <input type="hidden" id="isValid" name="isValid" value="true"/>
+                <button type="button" id="doAddingCard" onclick="proceed()">Submit</button>
+            </td>
+        </tr>
     </table>
-    <input type="submit" value="Add Credit Card"/>
 </form>
 ${operationMessage}<br/>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
-<a href="controller?command=lookcardamount">Check Credit Card Amount</a> <br/>
-<a href="controller?command=logout">Logout</a>
+<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="./checkcard"/>">Check Credit Card Amount</a> <br/>
+<a href="<c:url value="/login" />">Logout</a>
+<script>
+
+    function proceed() {
+        var card = {
+            cardNumber: $("#cardNumber").val(),
+            amount: $("#amount").val(),
+            isValid:  $("#isValid").val()
+        };
+        $.ajax({
+            type: "POST",
+            url: '../creditcards/addcard',
+            data: JSON.stringify(card),
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function () {
+                alert('The Card was added');
+            }
+        });
+    }
+</script>
 </body>
 </html>

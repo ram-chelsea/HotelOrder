@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://maven.apache.org/POM/4.0.0"
+             xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+             http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.pvt</groupId>
-    <artifactId>hotelOrder</artifactId>
-    <version>${com.pvt.hotelOrder.version}</version>
+    <groupId>com.pvtoc</groupId>
+    <artifactId>hotelOrderSpring</artifactId>
+    <version>${com.pvtoc.hotelOrder.version}</version>
     <packaging>pom</packaging>
 
-    <name>hotelOrder</name>
+    <name>HotelOrderSpring</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -21,26 +23,28 @@
         <javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
         <log4j.version>1.2.17</log4j.version>
         <cobertura-maven-plugin.version>2.7</cobertura-maven-plugin.version>
-        <junit.version>4.11</junit.version>
+        <junit.version>4.12</junit.version>
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
         <org.apache.tomcat.catalina>6.0.26</org.apache.tomcat.catalina>
-        <com.pvt.services.version>1.0</com.pvt.services.version>
-        <com.pvt.dao.version>1.0</com.pvt.dao.version>
-        <com.pvt.entities.version>1.0</com.pvt.entities.version>
-        <com.pvt.web.version>1.0</com.pvt.web.version>
-        <com.pvt.hotelOrder.version>1.0</com.pvt.hotelOrder.version>
+        <com.pvtoc.services.version>1.0</com.pvtoc.services.version>
+        <com.pvtoc.dao.version>1.0</com.pvtoc.dao.version>
+        <com.pvtoc.entities.version>1.0</com.pvtoc.entities.version>
+        <com.pvtoc.web.version>1.0</com.pvtoc.web.version>
+        <com.pvtoc.hotelOrder.version>1.0</com.pvtoc.hotelOrder.version>
         <hibernate.version>4.3.11.Final</hibernate.version>
         <lombok.version>1.16.12</lombok.version>
         <ehcache.version>2.6.11</ehcache.version>
         <spring.version>4.3.6.RELEASE</spring.version>
-        <spring-security-version>3.2.5.RELEASE</spring-security-version>
+        <spring-security-version>4.2.1.RELEASE</spring-security-version>
         <aspectj.version>1.8.4</aspectj.version>
         <cglib.version>3.1</cglib.version>
         <jstl.version>1.2</jstl.version>
-        <slf4j.version>1.5.6</slf4j.version>
+        <slf4j.version>1.7.5</slf4j.version>
         <dbcp.version>1.4</dbcp.version>
         <commons-lang.version>2.6</commons-lang.version>
         <jackson.version>2.8.4</jackson.version>
+        <xml.apis.version>1.4.01</xml.apis.version>
+        <org.apache.poi.version>3.9</org.apache.poi.version>
     </properties>
 
     <repositories>
@@ -260,6 +264,23 @@
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>${xml.apis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${org.apache.poi.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>xml-apis</artifactId>
+                    <groupId>xml-apis</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
     </dependencies>
 
@@ -271,7 +292,7 @@
     </modules>
 
     <build>
-        <finalName>hotelOrder</finalName>
+        <finalName>HotelOrderSpring</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

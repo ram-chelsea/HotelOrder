@@ -7,8 +7,7 @@
 </head>
 <body>
 <h4>${operationMessage}</h4>
-<form name="chooseOrderStatus" method="POST" action="controller">
-    <input type="hidden" name="command" value="clientorders"/>
+<form name="chooseOrderStatus" method="GET" action="<c:url value="./orders"/>">
     <table>
         <tr>
             <td>Order Status:</td>
@@ -46,22 +45,27 @@
                 </c:choose>
             </tr>
             <c:forEach var="order" items="${ordersList}">
-                <form action="controller" method="POST">
-                    <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
-                    <tr>
-                        <td><c:out value="${ order.orderId }"/></td>
-                        <td><c:out value="${ order.room.roomNumber }"/></td>
-                        <td><c:out value="${ order.checkInDate }"/></td>
-                        <td><c:out value="${ order.checkOutDate }"/></td>
-                        <td><c:out value="${ order.totalPrice}"/></td>
-                        <c:choose>
-                            <c:when test="${orderStatus.toString().equals('CONFIRMED')}">
-                                <td><input type="submit" name="command" value="gotopay"/></td>
-                                <td><input type="submit" name="command" value="cancel"/></td>
-                            </c:when>
-                        </c:choose>
-                    </tr>
-                </form>
+
+                <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
+                <tr>
+                    <td><c:out value="${ order.orderId }"/></td>
+                    <td><c:out value="${ order.room.roomNumber }"/></td>
+                    <td><c:out value="${ order.checkInDate }"/></td>
+                    <td><c:out value="${ order.checkOutDate }"/></td>
+                    <td><c:out value="${ order.totalPrice}"/></td>
+                    <c:choose>
+                        <c:when test="${orderStatus.toString().equals('CONFIRMED')}">
+                            <form action="<c:url value="./orders/gotopay"/>" method="POST">
+                                <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
+                                <td><input type="submit" name="goToPay" value="gotopay"/></td>
+                            </form>
+                            <form action="<c:url value="./orders/changestatus"/>" method="POST">
+                                <input type="hidden" name="orderId" value="<c:out value="${order.orderId }"/>"/>
+                                <td><input type="submit" name="newStatus" value="cancel"/></td>
+                            </form>
+                        </c:when>
+                    </c:choose>
+                </tr>
             </c:forEach>
         </table>
     </c:when>
@@ -70,7 +74,7 @@
     </c:otherwise>
 </c:choose>
 <br/>
-<a href="controller?command=gotoclientstartpage">Back to StartPage</a><br/>
-<a href="controller?command=logout">Logout</a>
+<a href="<c:url value="../${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>
