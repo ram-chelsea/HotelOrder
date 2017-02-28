@@ -74,7 +74,7 @@
     </c:otherwise>
 </c:choose>
 <br/>
-<a href="<c:url value="../${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

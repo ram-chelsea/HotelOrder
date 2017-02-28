@@ -11,38 +11,43 @@
 </head>
 <body>
 ${formSettingsError}
-<form name="newCreditCardForm">
-    <table>
-        <tr>
-            <td>CardNumber:</td>
-            <td><input type="text" pattern="${cardNumberFormatRegExp}" name="cardNumber" id="cardNumber" size="30"
-                       placeholder="${cardNumberInputPlaceholder}" required/></td>
-        </tr>
-
-        <tr>
-            <td>Amount:</td>
-            <td><input type="number" name="amount" id="amount" min="${newCardMinAmount}" step="${newCardAmountStep}"
-                       placeholder="${amountInputPlaceHolder}" required/></td>
-        </tr>
-        <tr>
-            <td>
-                <input type="hidden" id="isValid" name="isValid" value="true"/>
-                <button type="button" id="doAddingCard" onclick="proceed()">Submit</button>
-            </td>
-        </tr>
-    </table>
-</form>
+<div class="wrapp">
+    <div class="reg-form">
+        <form name="newCreditCardForm" id="newCreditCardForm">
+            <table>
+                <tr>
+                    <td>CardNumber:</td>
+                    <td><input type="text" pattern="${cardNumberFormatRegExp}" name="cardNumber" id="cardNumber"
+                               size="30"
+                               placeholder="${cardNumberInputPlaceholder}" required/></td>
+                </tr>
+                <tr>
+                    <td>Amount:</td>
+                    <td><input type="number" name="amount" id="amount" min="${newCardMinAmount}"
+                               step="${newCardAmountStep}"
+                               placeholder="${amountInputPlaceHolder}" required/></td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="hidden" id="isValid" name="isValid" value="true"/>
+                        <button type="button" id="doAddingCard" onclick="proceed()">Submit</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <div class="clear"></div>
+    </div>
+</div>
 ${operationMessage}<br/>
-<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="./checkcard"/>">Check Credit Card Amount</a> <br/>
 <a href="<c:url value="/login" />">Logout</a>
 <script>
-
     function proceed() {
         var card = {
             cardNumber: $("#cardNumber").val(),
             amount: $("#amount").val(),
-            isValid:  $("#isValid").val()
+            isValid: $("#isValid").val()
         };
         $.ajax({
             type: "POST",

@@ -26,9 +26,9 @@
 </form>
 ${operationMessage}<br/>
 ${formSettingsError}<br/>
-<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="../orders"/>">Back to Client Orders</a><br/>
-<a href="<c:url value="/clients/${login}/creditcards/checkcard"/>">Check Credit Card</a> <br/>
+<a href="<c:url value="/client/creditcards/checkcard"/>">Check Credit Card</a> <br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

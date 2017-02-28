@@ -14,6 +14,8 @@ import com.pvtoc.util.EntityBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @org.springframework.stereotype.Controller
-@RequestMapping(value = "/admins")
+@RequestMapping(value = "/admin")
 public class AdminController {
     private static final String DEFAULT_NUMBER_PER_PAGE = "10";
     private static final String DEFAULT_CURRENT_PAGE_NUMBER = "1";
@@ -41,23 +43,22 @@ public class AdminController {
     @Qualifier("messageManager")
     private Manager messageManager;
 
-    //TODO delete {login} in every url, make common url with credentials getting in jsp
-//TODO make autoExpire
+    //TODO make autoExpire
     //TODO show messages
-    @RequestMapping(value = {"/{login}"}, method = RequestMethod.GET)
-    public String goToAdminStartPage(Model model, @PathVariable(value = Parameters.LOGIN) String login) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.USER, userService.getUserByLogin(login));
+    @RequestMapping(value = {""}, method = RequestMethod.GET)
+    public String goToAdminStartPage(Model model) throws ServletException, IOException, ServiceException {
+        model.addAttribute(Parameters.USER, userService.getUserByLogin(getPrincipalLogin()));
         return "admin/startpage";
     }
 
-    @RequestMapping(value = "/{login}/clients", method = RequestMethod.GET)
+    @RequestMapping(value = "/clients", method = RequestMethod.GET)
     public String showClients(@RequestParam(value = Parameters.CURRENT_PAGE, required = false, defaultValue = DEFAULT_CURRENT_PAGE_NUMBER) int currentPage,
                               @RequestParam(value = Parameters.CLIENTS_PER_PAGE, required = false, defaultValue = DEFAULT_NUMBER_PER_PAGE) int clientsPerPage,
-                              Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+                              Model model) throws ServletException, IOException, ServiceException {
         int numberOfPages = userService.getNumberOfPagesWithClients(clientsPerPage);
         List<User> userList = userService.getPageOfClients(currentPage, clientsPerPage);
         List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.CLIENTS_PER_PAGE, clientsPerPage);
         model.addAttribute(Parameters.CURRENT_PAGE, currentPage);
         model.addAttribute(Parameters.USER_LIST, userList);
@@ -67,26 +68,26 @@ public class AdminController {
         return "admin/clients";
     }//TODO think about pagination to rest
 
-    @RequestMapping(value = "/{login}/orders", method = RequestMethod.GET)
+    @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String showOrders(@RequestParam(value = Parameters.ORDER_STATUS, required = false, defaultValue = DEFAULT_ADMIN_SHOW_LIST_OF_ORDER_STATUS) OrderStatus orderStatus,
-                             Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+                             Model model) throws ServletException, IOException, ServiceException {
         List<Order> ordersList = orderService.getOrdersListByStatus(orderStatus);
         ArrayList orderStatusesList = OrderStatus.enumToList();
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ORDER_STATUSES_LIST, orderStatusesList);
         model.addAttribute(Parameters.ORDERS_LIST, ordersList);
         model.addAttribute(Parameters.ORDER_STATUS, orderStatus);
         return "admin/orders";
     }
 
-    @RequestMapping(value = "/{login}/rooms", method = RequestMethod.GET)
+    @RequestMapping(value = "/rooms", method = RequestMethod.GET)
     public String showRooms(@RequestParam(value = Parameters.CURRENT_PAGE, required = false, defaultValue = DEFAULT_CURRENT_PAGE_NUMBER) int currentPage,
                             @RequestParam(value = Parameters.ROOMS_PER_PAGE, required = false, defaultValue = DEFAULT_NUMBER_PER_PAGE) int roomsPerPage,
-                            Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+                            Model model) throws ServletException, IOException, ServiceException {
         List<Room> roomsList = roomService.getPageOfRooms(currentPage, roomsPerPage);
         List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
         int numberOfPages = roomService.getNumberOfPagesWithRooms(roomsPerPage);
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.PER_PAGE_NUMBERS_LIST, perPageNumbersList);
         model.addAttribute(Parameters.NUMBER_OF_PAGES, numberOfPages);
         model.addAttribute(Parameters.ROOMS_PER_PAGE, roomsPerPage);
@@ -95,11 +96,11 @@ public class AdminController {
         return "admin/rooms";
     }
 
-    @RequestMapping(value = "/{login}/rooms/changeroomprice", method = RequestMethod.GET)
+    @RequestMapping(value = "/rooms/changeroomprice", method = RequestMethod.GET)
     public String goToChangeRoomPrice(@RequestParam(value = Parameters.ROOM_ID) int roomId,
-                                      Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+                                      Model model) throws ServletException, IOException, ServiceException {
         Room room = roomService.get(Room.class, roomId);
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ROOM, room);
         model.addAttribute(Parameters.ROOM_NEW_PRICE_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.ROOM_NEW_PRICE_INPUT_PLACEHOLDER));
         try {
@@ -111,31 +112,30 @@ public class AdminController {
         return "admin/changeroomprice";
     }
 
-    @RequestMapping(value = "/{login}/rooms/changeroomprice", method = RequestMethod.POST)
+    @RequestMapping(value = "/rooms/changeroomprice", method = RequestMethod.POST)
     public String changeRoomPrice(@RequestParam(value = Parameters.ROOM_ID) int roomId,
                                   @RequestParam(value = Parameters.NEW_ROOM_PRICE) int newPrice,
-                                  Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.LOGIN, login);
+                                  Model model) throws ServletException, IOException, ServiceException {
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         if (!Integer.valueOf(newPrice).toString().isEmpty()) {
             if (isNewPriceCorrect(newPrice)) {
                 roomService.updateRoomPrice(roomId, newPrice);
                 model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.ROOM_PRICE_CHANGED));
-                return "redirect:/admins/{login}/rooms";
+                return "redirect:/admin/rooms";
             } else {
                 model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.INVALID_PRICE));
-                return "redirect:/admins/{login}/rooms/changeroomprice";
+                return "redirect:/admin/rooms/changeroomprice";
             }
         } else {
             model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.EMPTY_FIELDS));
-            return "redirect:/admins/{login}/rooms/changeroomprice";
+            return "redirect:/admin/rooms/changeroomprice";
         }
     }
 
-    @RequestMapping(value = "/{login}/rooms/addnewroom", method = RequestMethod.GET)
-    public String goToAddNewRoom(Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-
+    @RequestMapping(value = "/rooms/addnewroom", method = RequestMethod.GET)
+    public String goToAddNewRoom(Model model) throws ServletException, IOException, ServiceException {
         ArrayList roomsClassesList = RoomClass.enumToList();
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ROOMS_CLASSES_LIST, roomsClassesList);
         model.addAttribute(Parameters.NEW_ROOM_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.NEW_ROOM_NUMBER_FORMAT_REGEXP));
         model.addAttribute(Parameters.NEW_ROOM_NUMBER_FORMAT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.NEW_ROOM_NUMBER_FORMAT_PLACEHOLDER));
@@ -151,12 +151,12 @@ public class AdminController {
         return "admin/addnewroom";
     }
 
-    @RequestMapping(value = "/{login}/rooms/addnewroom", method = RequestMethod.POST,
+    @RequestMapping(value = "/rooms/addnewroom", method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public Model addNewRoom(Model model, @PathVariable(value = "login") String login,
+    public Model addNewRoom(Model model,
                             @RequestBody RoomAddingForm roomDto) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         if (areFieldsFullyStocked(roomDto)) {
             if (areNumericFieldsCorrect(roomDto)) {
                 Room room = EntityBuilder.buildRoom(roomDto);
@@ -175,16 +175,16 @@ public class AdminController {
         return model;
     }
 
-    @RequestMapping(value = "/{login}/orders/changestatus", method = RequestMethod.POST)
+    @RequestMapping(value = "/orders/changestatus", method = RequestMethod.POST)
     public String changeOrderStatus(@RequestParam(value = Parameters.ORDER_ID) int orderId,
                                     @RequestParam(value = Parameters.NEW_ORDER_STATUS) String newStatus,
-                                    Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+                                    Model model) throws ServletException, IOException, ServiceException {
         Order order = orderService.get(Order.class, orderId);
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ORDER_STATUS, order.getOrderStatus());
         OrderStatus newOrderStatus = getNewOrderStatus(order.getOrderStatus(), newStatus);
         orderService.updateOrderStatus(orderId, newOrderStatus);
-        return "redirect:/admins/{login}/orders";
+        return "redirect:/admin/orders";
     }
 
     private boolean isNewPriceCorrect(int newPrice) {
@@ -231,4 +231,15 @@ public class AdminController {
         return areCorrect;
     }
 
+    private String getPrincipalLogin() {
+        String userName;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            userName = (( UserDetails ) principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
+    }
 }

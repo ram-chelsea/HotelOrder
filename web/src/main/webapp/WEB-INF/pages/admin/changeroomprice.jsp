@@ -29,7 +29,7 @@
 ${operationMessage}<br/>
 ${formSettingsError}<br/>
 <a href="<c:url value="../rooms"/>">Back to RoomsList</a><br/>
-<a href="<c:url value="/admins/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/admin"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

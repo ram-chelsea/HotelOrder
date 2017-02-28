@@ -85,7 +85,7 @@
 </c:choose>
 ${operationMessage}<br/>
 <a href="<c:url value="./rooms/addnewroom"/>">Add New Room</a><br/>
-<a href="<c:url value="../${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/admin"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

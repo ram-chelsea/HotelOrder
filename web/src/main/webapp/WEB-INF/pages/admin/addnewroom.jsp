@@ -9,7 +9,7 @@
 </head>
 <div class="wrapp">
     <div class="reg-form">
-        <div id="addingRoomForm">
+        <form id="addingRoomForm" name="addingRoomForm">
             <table>
                 <tr>
                     <td>RoomNumber:</td>
@@ -17,14 +17,12 @@
                                size="30"
                                placeholder="${newRoomNumberInputPlaceholder}" required/></td>
                 </tr>
-
                 <tr>
                     <td>Roominess:</td>
                     <td><input type="number" name="roominess" id="roominess" min="${newRoomMinRoominess}"
                                step="${newRoomRoominessStep}"
                                required/></td>
                 </tr>
-
                 <tr>
                     <td>RoomClass:</td>
                     <td>
@@ -36,7 +34,6 @@
                         </c:forEach>
                     </td>
                 </tr>
-
                 <tr>
                     <td>Price:</td>
                     <td><input type="number" name="roomPrice" id="roomPrice" min="${newRoomMinPrice}"
@@ -49,7 +46,7 @@
                     </td>
                 </tr>
             </table>
-        </div>
+        </form>
         <div class="clear"></div>
     </div>
 </div>
@@ -57,7 +54,7 @@ ${formSettingsError}<br/>
 <div id="operationMessage">${operationMessage}</div>
 <br/>
 <a href="<c:url value="../rooms"/>">Back to RoomsList</a><br/>
-<a href="<c:url value="/admins/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/admin"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 <script>
     function proceed() {

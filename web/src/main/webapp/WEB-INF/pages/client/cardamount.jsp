@@ -21,8 +21,8 @@
     </tr>
 </table>
 ${operationMessage}<br/>
-<a href="<c:url value="/clients/${login}/creditcards/checkcard"/>">Back to Look Other Card Amount</a><br/>
-<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/client/creditcards/checkcard"/>">Back to Look Other Card Amount</a><br/>
+<a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

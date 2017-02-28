@@ -28,8 +28,8 @@
         </form>
     </c:forEach>
 </table>
-<a href="<c:url value="/clients/${login}/orders/makeorder"/>">Back to Make a New Order</a><br/>
-<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/client/orders/makeorder"/>">Back to Make a New Order</a><br/>
+<a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

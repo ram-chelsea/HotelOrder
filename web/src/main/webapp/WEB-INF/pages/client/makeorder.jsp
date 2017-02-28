@@ -43,7 +43,7 @@
     <input type="submit" value="Search suited rooms"/>
 </form>
 ${operationMessage}<br/>
-<a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
+<a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>
 </html>

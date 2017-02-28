@@ -89,7 +89,7 @@
 <a href="<c:url value="../login" />">Go to LoginPage</a>
 <div class="wrapp">
     <div class="reg-form">
-        <div id="registrationForm">
+        <form id="registrationForm">
             <table>
                 <tr>
                     <td>Name:</td>
@@ -110,19 +110,19 @@
                     <td><input type="password" id="password" name="password" value="" size="20" placeholder="Password"/>
                     </td>
                 </tr>
-                <tr>
-                    <td>Confirm Password:</td>
-                    <td><input type="password" id="confirmPassword" name="confirmPassword" value="" size="20"
-                               placeholder="Confirm Password"/></td>
-                </tr>
+                <%--<tr>--%>
+                <%--<td>Confirm Password:</td>--%>
+                <%--<td><input type="password" id="confirmPassword" name="confirmPassword" value="" size="20"--%>
+                <%--placeholder="Confirm Password"/></td>--%>
+                <%--</tr>--%>
                 <tr>
                     <td>
-                        <input type="hidden" id="userRole" name="userRole" value="CLIENT"/>
+                        <input type="hidden" id="userRole" name="userRole" value="ROLE_CLIENT"/>
                         <button type="button" id="doRegister" onclick="proceed()">Submit</button>
                     </td>
                 </tr>
             </table>
-        </div>
+        </form>
         <div class="clear"></div>
     </div>
 
@@ -140,12 +140,12 @@ ${operationMessage}<br/>
         };
         $.ajax({
             type: "POST",
-            url: '../user/register',
+            url: '/register',
             data: JSON.stringify(person),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             success: function () {
-                alert('The User was registrated');
+                alert('The User was registered');
             }
         });
 

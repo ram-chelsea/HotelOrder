@@ -14,6 +14,8 @@ import com.pvtoc.util.EntityBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 
 @org.springframework.stereotype.Controller
-@RequestMapping(value = "/clients")
+@RequestMapping(value = "/client")
 public class ClientController {
     private static final int MILLIS_A_DAY = 24 * 60 * 60 * 1000;
     private final String DEFAULT_CLIENT_SHOW_LIST_OF_ORDER_STATUS = "CONFIRMED";
@@ -47,42 +49,42 @@ public class ClientController {
     @Autowired
     private PayOrderService<CreditCard, Order> payOrderService;
 
-    @RequestMapping(value = {"/{login}"}, method = RequestMethod.GET)
-    public String goToClientStartPage(Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.USER, userService.getUserByLogin(login));
+    @RequestMapping(value = {""}, method = RequestMethod.GET)
+    public String goToClientStartPage(Model model) throws ServletException, IOException, ServiceException {
+        model.addAttribute(Parameters.USER, userService.getUserByLogin(getPrincipalLogin()));
         return "client/startpage";
     }
 
-    @RequestMapping(value = "/{login}/orders", method = RequestMethod.GET)
+    @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String showOrders(@RequestParam(value = Parameters.ORDER_STATUS, required = false, defaultValue = DEFAULT_CLIENT_SHOW_LIST_OF_ORDER_STATUS) OrderStatus orderStatus,
-                             Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        User user = userService.getUserByLogin(login);
+                             Model model) throws ServletException, IOException, ServiceException {
+        User user = userService.getUserByLogin(getPrincipalLogin());
         List<Order> ordersList = orderService.getClientOrdersListByStatus(orderStatus, user);
         ArrayList orderStatusesList = OrderStatus.enumToList();
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, user.getLogin());
         model.addAttribute(Parameters.ORDER_STATUSES_LIST, orderStatusesList);
         model.addAttribute(Parameters.ORDERS_LIST, ordersList);
         model.addAttribute(Parameters.ORDER_STATUS, orderStatus);
         return "client/orders";
     }
 
-    @RequestMapping(value = "/{login}/orders/changestatus", method = RequestMethod.POST)
+    @RequestMapping(value = "/orders/changestatus", method = RequestMethod.POST)
     public String changeOrderStatus(@RequestParam(value = Parameters.ORDER_ID) int orderId,
                                     @RequestParam(value = Parameters.NEW_ORDER_STATUS) String newStatus,
-                                    Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+                                    Model model) throws ServletException, IOException, ServiceException {
         Order order = orderService.get(Order.class, orderId);
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ORDER_STATUS, order.getOrderStatus());
         OrderStatus newOrderStatus = getNewOrderStatus(order.getOrderStatus(), newStatus);
         orderService.updateOrderStatus(orderId, newOrderStatus);
-        return "redirect:/clients/{login}/orders";
+        return "redirect:/client/orders";
     }
 
-    @RequestMapping(value = "/{login}/orders/gotopay", method = RequestMethod.POST)
+    @RequestMapping(value = "/orders/gotopay", method = RequestMethod.POST)
     public String goToPayOrder(@RequestParam(value = Parameters.ORDER_ID) int orderId,
-                               Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+                               Model model) throws ServletException, IOException, ServiceException {
         Order order = orderService.get(Order.class, orderId);
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ORDER, order);
         try {
             model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
@@ -93,18 +95,19 @@ public class ClientController {
         return "/client/pay";
     }
 
-    @RequestMapping(value = "/{login}/orders/pay", method = RequestMethod.POST)
+    @RequestMapping(value = "/orders/pay", method = RequestMethod.POST)
     public String payOrder(@RequestParam(value = Parameters.ORDER_ID) int orderId,
                            @RequestParam(value = Parameters.CARD_NUMBER) String cardNumber,
-                           Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+                           Model model) throws ServletException, IOException, ServiceException {
         Order order = orderService.get(Order.class, orderId);
         CreditCard card = creditCardService.getByCardNumber(cardNumber);
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         if (!card.getCardNumber().isEmpty()) {
             boolean isEnoughMoney = payOrderService.payOrderWithCreditCard(card, order);
             if (isEnoughMoney) {
                 model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.SUCCESS_OPERATION));
-                return "redirect:/clients/{login}/orders";
+                model.addAttribute(Parameters.ORDER_STATUS,OrderStatus.PAID);
+                return "redirect:/client/orders";
             } else {
                 model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.NOT_ENOUGH_MONEY));
                 model.addAttribute(Parameters.ORDER, order);
@@ -121,11 +124,11 @@ public class ClientController {
         }
     }
 
-    @RequestMapping(value = "/{login}/orders/makeorder", method = RequestMethod.GET)
-    public String goToMakeOrder(Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
+    @RequestMapping(value = "/orders/makeorder", method = RequestMethod.GET)
+    public String goToMakeOrder(Model model) throws ServletException, IOException, ServiceException {
         List roominessesList = roomService.getRoominesses();
         ArrayList roomsClassesList = RoomClass.enumToList();
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ROOMS_CLASSES_LIST, roomsClassesList);
         model.addAttribute(Parameters.ROOMINESSES_LIST, roominessesList);
         Date currentDate = new Date();
@@ -134,12 +137,12 @@ public class ClientController {
         return "client/makeorder";
     }
 
-    @RequestMapping(value = "/{login}/orders/makeorder", method = RequestMethod.POST)
-    public String showSuitedRooms(Model model, @PathVariable(value = "login") String login,
+    @RequestMapping(value = "/orders/makeorder", method = RequestMethod.POST)
+    public String showSuitedRooms(Model model,
                                   HttpServletRequest request) throws ServletException, IOException, ServiceException {
         OrderRoomForm orderRoomForm = getOrderRoomForm(request);
         request.getSession().setAttribute(Parameters.ORDER_ROOM_FORM, orderRoomForm);
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         if (areFieldsFullStocked(orderRoomForm)) {
             if (isRoominessCorrect(orderRoomForm)) {
                 if (isCheckInOutDatesOrderCorrect(orderRoomForm)) {
@@ -156,57 +159,55 @@ public class ClientController {
         } else {
             model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.EMPTY_FIELDS));
         }
-        return "redirect:/clients/{login}/orders/makeorder";
+        return "redirect:/client/orders/makeorder";
     }
 
-    @RequestMapping(value = "/{login}/orders/requestroom", method = RequestMethod.POST)
-    public String addOrder(Model model, @PathVariable(value = "login") String login,
+    @RequestMapping(value = "/orders/requestroom", method = RequestMethod.POST)
+    public String addOrder(Model model,
                            @RequestParam int roomId,
                            HttpServletRequest request
     ) throws ServletException, IOException, ServiceException {
         OrderRoomForm orderRoomForm = getOrderRoomForm(request);
         Room room = roomService.get(Room.class, roomId);
-        User user = userService.getUserByLogin(login);
+        User user = userService.getUserByLogin(getPrincipalLogin());
         Order order = EntityBuilder.buildOrder(user, room, orderRoomForm);
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, user.getLogin());
         boolean isFree = orderService.createOrderIfRoomIsFree(order);
         if (isFree) {
             model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.SUCCESS_OPERATION));
-            return "redirect:/clients/{login}/orders";
+            model.addAttribute(Parameters.ORDER_STATUS,OrderStatus.REQUESTED);
+            return "redirect:/client/orders";
         } else {
             model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.ROOM_WAS_BOOKED));
-            return "redirect:/clients/{login}/orders/makeorder";
+            return "redirect:/client/orders/makeorder";
         }
 
     }
 
-    @RequestMapping(value = "/{login}/creditcards/checkcard", method = RequestMethod.GET)
-    public String goToCheckCard(Model model,
-                                @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.LOGIN, login);
+    @RequestMapping(value = "/creditcards/checkcard", method = RequestMethod.GET)
+    public String goToCheckCard(Model model) throws ServletException, IOException, ServiceException {
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
         model.addAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
         return "client/lookcardamount";
     }
 
-    @RequestMapping(value = "/{login}/creditcards/checkcard", method = RequestMethod.POST)
-    public String checkCard(Model model, @RequestParam(value = Parameters.CARD_NUMBER) String cardNumber,
-                            @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.LOGIN, login);
+    @RequestMapping(value = "/creditcards/checkcard", method = RequestMethod.POST)
+    public String checkCard(Model model, @RequestParam(value = Parameters.CARD_NUMBER) String cardNumber) throws ServletException, IOException, ServiceException {
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         CreditCard card = creditCardService.getByCardNumber(cardNumber);
         if (card == null) {
             model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.CARD_NOT_EXISTS));
-            return "redirect:/clients/{login}/creditcards/checkcard";
+            return "redirect:/client/creditcards/checkcard";
         } else {
             model.addAttribute(Parameters.CARD, card);
             return "client/cardamount";
         }
     }
 
-    @RequestMapping(value = "/{login}/creditcards/addcard", method = RequestMethod.GET)
-    public String goToAddCard(Model model,
-                              @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.LOGIN, login);
+    @RequestMapping(value = "/creditcards/addcard", method = RequestMethod.GET)
+    public String goToAddCard(Model model) throws ServletException, IOException, ServiceException {
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
         model.addAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
         model.addAttribute(Parameters.AMOUNT_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.AMOUNT_INPUT_PLACEHOLDER));
@@ -219,12 +220,12 @@ public class ClientController {
         return "client/addcreditcard";
     }
 
-    @RequestMapping(value = "/{login}/creditcards/addcard", method = RequestMethod.POST,
+    @RequestMapping(value = "/creditcards/addcard", method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
     @ResponseBody
-    public Model addCard(Model model, @PathVariable(value = "login") String login,
+    public Model addCard(Model model,
                          @RequestBody CreditCardAddingForm cardDto) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.LOGIN, login);
+        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         CreditCard card = EntityBuilder.buildCreditCard(cardDto);
         if (areFieldsFullStocked(cardDto)) {
             if (areValuesCorrect(cardDto)) {
@@ -315,7 +316,17 @@ public class ClientController {
         }
         return areCorrect;
     }
+    private String getPrincipalLogin(){
+        String userName;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
+        if (principal instanceof UserDetails) {
+            userName = ((UserDetails)principal).getUsername();
+        } else {
+            userName = principal.toString();
+        }
+        return userName;
+    }
 
 }
 //TODO check all dto forms for nulls because NPE

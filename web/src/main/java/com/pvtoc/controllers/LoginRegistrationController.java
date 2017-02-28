@@ -23,10 +23,11 @@ public class LoginRegistrationController {
     @Autowired
     private UserService<User> userService;
 
-    @RequestMapping(value = {"/user/register"}, method = RequestMethod.POST,
+    @RequestMapping(value = {"/register"}, method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
+    public
     @ResponseBody
-    public Model registerUser(Model model, @RequestBody UserRegistrationForm registrationForm)
+    Model registerUser(Model model, @RequestBody UserRegistrationForm registrationForm)
             throws UserAlreadyExistAuthenticationException, ServiceException {
 
         User user = EntityBuilder.buildUser(registrationForm);

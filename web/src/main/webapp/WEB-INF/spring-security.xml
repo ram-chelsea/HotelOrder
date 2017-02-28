@@ -11,9 +11,10 @@
         <intercept-url pattern="/" access="permitAll"/>
         <intercept-url pattern="/login" access="permitAll"/>
         <intercept-url pattern="/registration" access="permitAll"/>
+        <intercept-url pattern="/register" access="permitAll"/>
         <intercept-url pattern="/j_spring_security_check" access="permitAll"/>
-        <intercept-url pattern="/admins/**" access="hasRole('ADMIN')"/>
-        <intercept-url pattern="/clients/**" access="hasRole('CLIENT')"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+        <intercept-url pattern="/client/**" access="hasRole('CLIENT')"/>
 
         <form-login authentication-success-handler-ref="authSuccessHandler"
                 login-processing-url="/j_spring_security_check"
