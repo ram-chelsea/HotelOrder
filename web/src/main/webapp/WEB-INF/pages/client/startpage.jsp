@@ -5,8 +5,8 @@
     <title>Welcome, ${user.login}</title>
 </head>
 <body>
-<h2>${user.firstName} ${user.lastName}</h2>
-<h2>${user.login}</h2>
+<h2>User's name: ${user.firstName} ${user.lastName}</h2>
+<h2>User's login: ${user.login}</h2>
 <a href="<c:url value="./${user.login}/orders/makeorder"/>">Make Order</a> <br/>
 <a href="<c:url value="./${user.login}/creditcards/checkcard"/>">Check Credit Card Amount</a> <br/>
 <a href="<c:url value="./${user.login}/creditcards/addcard"/>">Add Credit Card</a> <br/>

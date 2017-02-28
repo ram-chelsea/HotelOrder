@@ -16,8 +16,8 @@ import javax.persistence.*;
 @Table(name = "rooms")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "orders", callSuper = false)
-@ToString(exclude = "orders")
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Room extends Entity {
     private static final long serialVersionUID = 1L;
     @Id

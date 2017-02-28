@@ -7,7 +7,6 @@
     <title>Rooms</title>
 </head>
 <body>
-<h4>${operationMessage}</h4>
 <form name="chooseRoomsPerPageNumber" method="GET" action="<c:url value="./rooms"/>">
     <table>
         <tr>
@@ -49,30 +48,42 @@
         <input type="submit" value="Show Page Number"/>
     </form>
 </c:if>
-<form action="<c:url value="./rooms/changeroomprice"/>" method="GET">
-    <table border="1">
-        <tr bgcolor="#CCCCCC">
-            <td align="center"><strong>RoomNumber</strong></td>
-            <td align="center"><strong>Roominess</strong></td>
-            <td align="center"><strong>RoomClass</strong></td>
-            <td align="center"><strong>PriceForNight</strong></td>
-            <td align="center"><strong>ChangePrice</strong></td>
-        </tr>
-        <c:forEach var="room" items="${roomsList}">
-            <tr>
-                <td><c:out value="${ room.roomNumber }"/></td>
-                <td><c:out value="${ room.roominess }"/></td>
-                <td><c:out value="${ room.roomClass }"/></td>
-                <td><c:out value="${ room.price }"/></td>
-                <td align="center"><input type="radio" name="roomId"
-                                          value="<c:out value="${room.roomId}"/>"/>
-                </td>
-            </tr>
-        </c:forEach>
-    </table>
-    <br/>
-    <input type="submit" value="Change Room Price"/>
-</form>
+<c:choose>
+    <c:when test="${!roomsList.isEmpty()}">
+        <form action="<c:url value="./rooms/changeroomprice"/>" method="GET">
+            <table border="1">
+                <tr bgcolor="#CCCCCC">
+                    <td align="center"><strong>RoomNumber</strong></td>
+                    <td align="center"><strong>Roominess</strong></td>
+                    <td align="center"><strong>RoomClass</strong></td>
+                    <td align="center"><strong>PriceForNight</strong></td>
+                    <td align="center"><strong>ChangePrice</strong></td>
+                </tr>
+                <c:forEach var="room" items="${roomsList}">
+                    <tr>
+                        <td><c:out value="${ room.roomNumber }"/></td>
+                        <td><c:out value="${ room.roominess }"/></td>
+                        <td><c:out value="${ room.roomClass }"/></td>
+                        <td><c:out value="${ room.price }"/></td>
+                        <td align="center"><input type="radio" name="roomId"
+                                                  value="<c:out value="${room.roomId}"/>"
+                                <c:if test="${room == roomsList.get(0)}">
+                                    checked="checked"
+                                </c:if>
+                        />
+                        </td>
+                    </tr>
+                </c:forEach>
+            </table>
+            <br/>
+            <input type="submit" value="Change Room Price"/>
+        </form>
+    </c:when>
+    <c:otherwise>
+        <h3>There are not any rooms</h3>
+    </c:otherwise>
+</c:choose>
+${operationMessage}<br/>
 <a href="<c:url value="./rooms/addnewroom"/>">Add New Room</a><br/>
 <a href="<c:url value="../${login}"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>

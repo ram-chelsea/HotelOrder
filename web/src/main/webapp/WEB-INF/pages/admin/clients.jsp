@@ -7,7 +7,6 @@
     <title>Clients</title>
 </head>
 <body>
-<h4>${operationMessage}</h4>
 <form name="chooseClientsPerPageNumber" method="GET" action="<c:url value="./clients"/>">
     <table>
         <tr>

@@ -5,8 +5,8 @@
     <title>Welcome, Admin</title>
 </head>
 <body>
-<h2>${user.firstName} ${user.lastName}</h2>
-<h2>${user.login}</h2>
+<h2>Admin's name: ${user.firstName} ${user.lastName}</h2>
+<h2>Admin's login: ${user.login}</h2>
 <a href="<c:url value="./${user.login}/clients"/>">Show Clients List</a> <br/>
 <a href="<c:url value="./${user.login}/orders"/>">Show Orders List</a> <br/>
 <a href="<c:url value="./${user.login}/rooms"/>">Show Rooms List</a> <br/>

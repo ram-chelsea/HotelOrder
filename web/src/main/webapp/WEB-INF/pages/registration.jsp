@@ -128,7 +128,6 @@
 
 </div>
 ${operationMessage}<br/>
-${userRegistrationMessage} <br/>
 <script>
 
     function proceed() {

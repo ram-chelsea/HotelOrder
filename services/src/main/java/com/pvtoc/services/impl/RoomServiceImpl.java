@@ -97,11 +97,9 @@ public class RoomServiceImpl extends AbstractEntityService<Room> implements Room
     @Override
     @Transactional
     public boolean isNewRoom(Room room) throws ServiceException {
-        boolean isNew = false;
+        boolean isNew;
         try {
-            if (roomDao.isNewRoom(room.getRoomNumber())) {
-                isNew = true;
-            }
+            isNew = roomDao.isNewRoom(room.getRoomNumber());
             logger.info("checkIsNewRoom(room): " + room);
         } catch (HibernateException e) {
             logger.error(transactionFailedMessage + e);

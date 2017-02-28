@@ -1,5 +1,6 @@
 package com.pvtoc.controllers;
 
+import com.pvtoc.constants.Parameters;
 import com.pvtoc.dto.UserRegistrationForm;
 import com.pvtoc.entities.User;
 import com.pvtoc.exceptions.ServiceException;
@@ -20,23 +21,22 @@ import java.io.IOException;
 @Controller
 public class LoginRegistrationController {
     @Autowired
-    private UserService userService;
+    private UserService<User> userService;
 
     @RequestMapping(value = {"/user/register"}, method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
-    public
     @ResponseBody
-    Model registerUser(Model model, @RequestBody UserRegistrationForm registrationForm)
+    public Model registerUser(Model model, @RequestBody UserRegistrationForm registrationForm)
             throws UserAlreadyExistAuthenticationException, ServiceException {
 
         User user = EntityBuilder.buildUser(registrationForm);
         if (userService.checkIsNewUser(user)) {
             userService.add(user);
-            model.addAttribute("userRegistrationMessage", "User " + user.getLogin() + " was registrated");
+            model.addAttribute(Parameters.OPERATION_MESSAGE, "User " + user.getLogin() + " was registered");
         } else {
-            model.addAttribute("operationMessage", "The User has already existed");
+            model.addAttribute(Parameters.OPERATION_MESSAGE, "The User has already existed");
         }
-        model.addAttribute("title", "User Registration Form");
+        model.addAttribute(Parameters.TITLE, "User Registration Form");
 
         return model;
 
@@ -44,13 +44,13 @@ public class LoginRegistrationController {
 
     @RequestMapping(value = {"/", "login"})
     public String login(Model model) throws ServletException, IOException {
-        model.addAttribute("title", "Login Page");
+        model.addAttribute(Parameters.TITLE, "Login Page");
         return "login";
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public String registration(Model model) throws ServletException, IOException {
-        model.addAttribute("title", "User Registration Form");
+        model.addAttribute(Parameters.TITLE, "User Registration Form");
         return "registration";
     }
 

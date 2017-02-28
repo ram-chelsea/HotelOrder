@@ -2,6 +2,7 @@ package com.pvtoc.constants;
 
 
 public final class Parameters {
+    public static final String TITLE = "title";
     public static final String USER_FIRST_NAME = "firstname";
     public static final String USER_LAST_NAME = "lastname";
     public static final String USER_LOGIN = "login";
@@ -19,7 +20,7 @@ public final class Parameters {
     public static final String ERROR_LOGIN_OR_PASSWORD = "errorLoginOrPassword";
     public static final String ERROR_USER_EXISTS = "errorUserExists";
     public static final String OPERATION_MESSAGE = "operationMessage";
-    public static final String NEW_ROOM_PRICE = "newprice";
+    public static final String NEW_ROOM_PRICE = "newPrice";
     public static final String AMOUNT = "amount";
     public static final String USER_ID = "userId";
     public static final String CARD_NUMBER = "cardNumber";
@@ -68,7 +69,7 @@ public final class Parameters {
     public static final String CURRENT_PAGE = "currentPage";
     public static final String PER_PAGE_NUMBERS_LIST = "perPageNumbersList";
     public static final String ROOMS_PER_PAGE = "roomsPerPage";
-
+    public static final String NEW_ORDER_STATUS = "newStatus";
     private Parameters() {
     }
 }

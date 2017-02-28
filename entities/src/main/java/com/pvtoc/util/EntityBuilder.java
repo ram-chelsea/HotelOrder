@@ -19,6 +19,7 @@ import java.sql.Date;
  */
 public class EntityBuilder {
     private static final int MILLIS_A_DAY = 24 * 60 * 60 * 1000;
+    private static final OrderStatus NEW_ORDER_STATUS = OrderStatus.REQUESTED;
     private EntityBuilder() {
     }
 
@@ -60,7 +61,7 @@ public class EntityBuilder {
         order.setRoom(room);
         order.setCheckInDate(orderRoomForm.getCheckIn());
         order.setCheckOutDate(orderRoomForm.getCheckOut());
-        order.setOrderStatus(OrderStatus.REQUESTED);
+        order.setOrderStatus(NEW_ORDER_STATUS);
         int totalPrice = computeTotalPriceForRoom(room, orderRoomForm.getCheckIn(), orderRoomForm.getCheckOut());
         order.setTotalPrice(totalPrice);
         return order;

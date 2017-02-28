@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
@@ -17,9 +16,8 @@ import javax.persistence.*;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "orders", callSuper = false)
-@ToString(exclude = {"password", "orders"})
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@EqualsAndHashCode(callSuper = false)
+@ToString(exclude = {"password"})
 public class User extends com.pvtoc.entities.Entity {
     private static final long serialVersionUID = 1L;
 
@@ -44,4 +42,4 @@ public class User extends com.pvtoc.entities.Entity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-}
+}//todo valid rules

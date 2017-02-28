@@ -6,7 +6,6 @@
     <title>Orders</title>
 </head>
 <body>
-<h4>${operationMessage}</h4>
 <form name="chooseOrderStatus" method="GET" action="<c:url value="./orders"/>">
     <table>
         <tr>
@@ -26,7 +25,6 @@
     </table>
     <input type="submit" value="Show Orders with chosen Status"/>
 </form>
-
 <c:choose>
     <c:when test="${!ordersList.isEmpty()}">
         <h4>${orderStatus.toString()} ORDERS</h4>

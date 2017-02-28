@@ -11,6 +11,7 @@
 </head>
 <body>
 ${formSettingsError}
+<form name="newCreditCardForm">
     <table>
         <tr>
             <td>CardNumber:</td>

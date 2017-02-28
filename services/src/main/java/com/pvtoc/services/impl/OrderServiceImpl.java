@@ -4,7 +4,6 @@ package com.pvtoc.services.impl;
 import com.pvtoc.constants.OrderStatus;
 import com.pvtoc.dao.OrderDao;
 import com.pvtoc.entities.Order;
-import com.pvtoc.entities.Room;
 import com.pvtoc.entities.User;
 import com.pvtoc.exceptions.ServiceException;
 import com.pvtoc.services.AbstractEntityService;
@@ -124,7 +123,7 @@ public class OrderServiceImpl extends AbstractEntityService<Order> implements Or
     public boolean createOrderIfRoomIsFree(Order order) throws ServiceException {
         boolean isFree;
         try {
-            orderDao.getSession().load(Room.class, order.getRoom().getRoomId(), LockOptions.UPGRADE);
+            orderDao.getSession().refresh(order.getRoom(), LockOptions.UPGRADE);
             isFree = orderDao.isRoomFreeForPeriodInOrder(order);
             if (isFree) {
                 orderDao.save(order);

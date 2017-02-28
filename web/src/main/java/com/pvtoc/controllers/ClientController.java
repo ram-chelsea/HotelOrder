@@ -37,25 +37,24 @@ public class ClientController {
     @Qualifier("messageManager")
     private Manager messageManager;
     @Autowired
-    private UserService userService;
+    private UserService<User> userService;
     @Autowired
-    private OrderService orderService;
+    private OrderService<Order> orderService;
     @Autowired
-    private RoomService roomService;
+    private RoomService<Room> roomService;
     @Autowired
-    private CreditCardService creditCardService;
+    private CreditCardService<CreditCard> creditCardService;
     @Autowired
-    private PayOrderService payOrderService;
+    private PayOrderService<CreditCard, Order> payOrderService;
 
     @RequestMapping(value = {"/{login}"}, method = RequestMethod.GET)
     public String goToClientStartPage(Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        model.addAttribute("title", "User Registration Form");
-        model.addAttribute("user", userService.getUserByLogin(login));
+        model.addAttribute(Parameters.USER, userService.getUserByLogin(login));
         return "client/startpage";
     }
 
     @RequestMapping(value = "/{login}/orders", method = RequestMethod.GET)
-    public String showOrders(@RequestParam(value = "orderStatus", required = false, defaultValue = DEFAULT_CLIENT_SHOW_LIST_OF_ORDER_STATUS) OrderStatus orderStatus,
+    public String showOrders(@RequestParam(value = Parameters.ORDER_STATUS, required = false, defaultValue = DEFAULT_CLIENT_SHOW_LIST_OF_ORDER_STATUS) OrderStatus orderStatus,
                              Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
         User user = userService.getUserByLogin(login);
         List<Order> ordersList = orderService.getClientOrdersListByStatus(orderStatus, user);
@@ -68,10 +67,10 @@ public class ClientController {
     }
 
     @RequestMapping(value = "/{login}/orders/changestatus", method = RequestMethod.POST)
-    public String changeOrderStatus(@RequestParam(value = "orderId") int orderId,
-                                    @RequestParam(value = "newStatus") String newStatus,
+    public String changeOrderStatus(@RequestParam(value = Parameters.ORDER_ID) int orderId,
+                                    @RequestParam(value = Parameters.NEW_ORDER_STATUS) String newStatus,
                                     Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        Order order = ( Order ) orderService.get(Order.class, orderId);
+        Order order = orderService.get(Order.class, orderId);
         model.addAttribute(Parameters.LOGIN, login);
         model.addAttribute(Parameters.ORDER_STATUS, order.getOrderStatus());
         OrderStatus newOrderStatus = getNewOrderStatus(order.getOrderStatus(), newStatus);
@@ -80,21 +79,25 @@ public class ClientController {
     }
 
     @RequestMapping(value = "/{login}/orders/gotopay", method = RequestMethod.POST)
-    public String goToPayOrder(@RequestParam(value = "orderId") int orderId,
+    public String goToPayOrder(@RequestParam(value = Parameters.ORDER_ID) int orderId,
                                Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        Order order = ( Order ) orderService.get(Order.class, orderId);
+        Order order = orderService.get(Order.class, orderId);
         model.addAttribute(Parameters.LOGIN, login);
         model.addAttribute(Parameters.ORDER, order);
-        model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
-        model.addAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
+        try {
+            model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
+            model.addAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
+        } catch (NumberFormatException e) {
+            model.addAttribute(Parameters.FORM_SETTINGS_ERROR, messageManager.getProperty(MessageConstants.FORM_SETTINGS_ERROR));
+        }
         return "/client/pay";
     }
 
     @RequestMapping(value = "/{login}/orders/pay", method = RequestMethod.POST)
-    public String payOrder(@RequestParam(value = "orderId") int orderId,
-                           @RequestParam(value = "cardNumber") String cardNumber,
+    public String payOrder(@RequestParam(value = Parameters.ORDER_ID) int orderId,
+                           @RequestParam(value = Parameters.CARD_NUMBER) String cardNumber,
                            Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        Order order = ( Order ) orderService.get(Order.class, orderId);
+        Order order = orderService.get(Order.class, orderId);
         CreditCard card = creditCardService.getByCardNumber(cardNumber);
         model.addAttribute(Parameters.LOGIN, login);
         if (!card.getCardNumber().isEmpty()) {
@@ -107,10 +110,15 @@ public class ClientController {
                 model.addAttribute(Parameters.ORDER, order);
                 model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
                 model.addAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
-                return "/client/pay";//TODO postTopost redirect?
+                return "/client/pay";//TODO refactoring with valid
             }
+        } else {
+            model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.EMPTY_FIELDS));
+            model.addAttribute(Parameters.ORDER, order);
+            model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
+            model.addAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
+            return "/client/pay";
         }
-        return "/";
     }
 
     @RequestMapping(value = "/{login}/orders/makeorder", method = RequestMethod.GET)
@@ -131,11 +139,24 @@ public class ClientController {
                                   HttpServletRequest request) throws ServletException, IOException, ServiceException {
         OrderRoomForm orderRoomForm = getOrderRoomForm(request);
         request.getSession().setAttribute(Parameters.ORDER_ROOM_FORM, orderRoomForm);
-        List<Room> suitedRoomsList = roomService.getSuitedRooms(orderRoomForm);
         model.addAttribute(Parameters.LOGIN, login);
-        model.addAttribute(Parameters.SUITED_ROOMS_LIST, suitedRoomsList);
-        model.addAttribute(Parameters.ORDER_ROOM_FORM, orderRoomForm);
-        return "client/requestroom";
+        if (areFieldsFullStocked(orderRoomForm)) {
+            if (isRoominessCorrect(orderRoomForm)) {
+                if (isCheckInOutDatesOrderCorrect(orderRoomForm)) {
+                    List<Room> suitedRoomsList = roomService.getSuitedRooms(orderRoomForm);
+                    model.addAttribute(Parameters.SUITED_ROOMS_LIST, suitedRoomsList);
+                    model.addAttribute(Parameters.ORDER_ROOM_FORM, orderRoomForm);
+                    return "client/requestroom";//todo replace request with dto?
+                } else {
+                    model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.INVALID_DATES_ORDER));
+                }
+            } else {
+                model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.INVALID_ROOM_NUMERIC_FIELD_VALUE));
+            }
+        } else {
+            model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.EMPTY_FIELDS));
+        }
+        return "redirect:/clients/{login}/orders/makeorder";
     }
 
     @RequestMapping(value = "/{login}/orders/requestroom", method = RequestMethod.POST)
@@ -144,7 +165,7 @@ public class ClientController {
                            HttpServletRequest request
     ) throws ServletException, IOException, ServiceException {
         OrderRoomForm orderRoomForm = getOrderRoomForm(request);
-        Room room = ( Room ) roomService.get(Room.class, roomId);
+        Room room = roomService.get(Room.class, roomId);
         User user = userService.getUserByLogin(login);
         Order order = EntityBuilder.buildOrder(user, room, orderRoomForm);
         model.addAttribute(Parameters.LOGIN, login);
@@ -154,14 +175,7 @@ public class ClientController {
             return "redirect:/clients/{login}/orders";
         } else {
             model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.ROOM_WAS_BOOKED));
-            List roominessesList = roomService.getRoominesses();
-            ArrayList roomsClassesList = RoomClass.enumToList();
-            model.addAttribute(Parameters.ROOMS_CLASSES_LIST, roomsClassesList);
-            model.addAttribute(Parameters.ROOMINESSES_LIST, roominessesList);
-            Date currentDate = new Date();
-            model.addAttribute(Parameters.MIN_CHECK_IN_DATE, new java.sql.Date(currentDate.getTime()));
-            model.addAttribute(Parameters.MIN_CHECK_OUT_DATE, new java.sql.Date(currentDate.getTime() + MILLIS_A_DAY));
-            return "client/makeorder";
+            return "redirect:/clients/{login}/orders/makeorder";
         }
 
     }
@@ -176,15 +190,13 @@ public class ClientController {
     }
 
     @RequestMapping(value = "/{login}/creditcards/checkcard", method = RequestMethod.POST)
-    public String checkCard(Model model, @RequestParam(value = "cardNumber") String cardNumber,
+    public String checkCard(Model model, @RequestParam(value = Parameters.CARD_NUMBER) String cardNumber,
                             @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
         model.addAttribute(Parameters.LOGIN, login);
         CreditCard card = creditCardService.getByCardNumber(cardNumber);
         if (card == null) {
             model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.CARD_NOT_EXISTS));
-            model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
-            model.addAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
-            return "redirect:client/{login}/creditcards/checkcard";
+            return "redirect:/clients/{login}/creditcards/checkcard";
         } else {
             model.addAttribute(Parameters.CARD, card);
             return "client/cardamount";
@@ -198,17 +210,20 @@ public class ClientController {
         model.addAttribute(Parameters.CARD_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.CARD_NUMBER_FORMAT_REGEXP));
         model.addAttribute(Parameters.CARD_NUMBER_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.CARD_NUMBER_INPUT_PLACEHOLDER));
         model.addAttribute(Parameters.AMOUNT_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.AMOUNT_INPUT_PLACEHOLDER));
-        model.addAttribute(Parameters.NEW_CARD_MIN_AMOUNT, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_CARD_MIN_AMOUNT)));
-        model.addAttribute(Parameters.NEW_CARD_AMOUNT_STEP, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_CARD_AMOUNT_STEP)));
+        try {
+            model.addAttribute(Parameters.NEW_CARD_MIN_AMOUNT, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_CARD_MIN_AMOUNT)));
+            model.addAttribute(Parameters.NEW_CARD_AMOUNT_STEP, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_CARD_AMOUNT_STEP)));
+        } catch (NumberFormatException e) {
+            model.addAttribute(Parameters.FORM_SETTINGS_ERROR, messageManager.getProperty(MessageConstants.FORM_SETTINGS_ERROR));
+        }
         return "client/addcreditcard";
     }
 
     @RequestMapping(value = "/{login}/creditcards/addcard", method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
-    public
     @ResponseBody
-    Model addCard(Model model, @PathVariable(value = "login") String login,
-                  @RequestBody CreditCardAddingForm cardDto) throws ServletException, IOException, ServiceException {
+    public Model addCard(Model model, @PathVariable(value = "login") String login,
+                         @RequestBody CreditCardAddingForm cardDto) throws ServletException, IOException, ServiceException {
         model.addAttribute(Parameters.LOGIN, login);
         CreditCard card = EntityBuilder.buildCreditCard(cardDto);
         if (areFieldsFullStocked(cardDto)) {
@@ -219,7 +234,6 @@ public class ClientController {
                 } else {
                     model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.CARD_EXISTS));
                 }
-
             } else {
                 model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.INVALID_CARD_VALUES));
             }
@@ -304,3 +318,4 @@ public class ClientController {
 
 
 }
+//TODO check all dto forms for nulls because NPE

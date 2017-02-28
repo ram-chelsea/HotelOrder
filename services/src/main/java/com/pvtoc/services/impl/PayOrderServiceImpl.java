@@ -23,9 +23,9 @@ public class PayOrderServiceImpl implements PayOrderService<CreditCard, Order> {
     private static Logger logger = Logger.getLogger(PayOrderServiceImpl.class);
     private static final String transactionFailedMessage = "Transaction failed: ";
     @Autowired
-    OrderDao orderDao;
+    OrderDao<Order> orderDao;
     @Autowired
-    CreditCardDao creditCardDao;
+    CreditCardDao<CreditCard> creditCardDao;
 
     /**
      * Calls PayOrderService payOrderWithCreditCard method

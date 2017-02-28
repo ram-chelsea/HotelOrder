@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
-         errorPage="/pages/error/error.jsp" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <html>
@@ -8,8 +7,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js">
     </script>
 </head>
-<body>
-${formSettingsError}<br/>
 <div class="wrapp">
     <div class="reg-form">
         <div id="addingRoomForm">
@@ -56,7 +53,9 @@ ${formSettingsError}<br/>
         <div class="clear"></div>
     </div>
 </div>
-${operationMessage} <br/>
+${formSettingsError}<br/>
+<div id="operationMessage">${operationMessage}</div>
+<br/>
 <a href="<c:url value="../rooms"/>">Back to RoomsList</a><br/>
 <a href="<c:url value="/admins/${login}"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
@@ -74,10 +73,13 @@ ${operationMessage} <br/>
             data: JSON.stringify(room),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
-            success: function () {
-                alert('The Room was Added');
+            success: function (result) {
+                $("#operationMessage").append(result);
+            },
+            error: function () {
+                $("#operationMessage").append("error");
             }
-        });
+        })
     }
 </script>
 </body>

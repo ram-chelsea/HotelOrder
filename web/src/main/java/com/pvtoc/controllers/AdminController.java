@@ -25,32 +25,37 @@ import java.util.List;
 @org.springframework.stereotype.Controller
 @RequestMapping(value = "/admins")
 public class AdminController {
-    private final String DEFAULT_NUMBER_PER_PAGE = "10";
-    private final String DEFAULT_CURRENT_PAGE_NUMBER = "1";
-    private final String DEFAULT_ADMIN_SHOW_LIST_OF_ORDER_STATUS = "REQUESTED";
+    private static final String DEFAULT_NUMBER_PER_PAGE = "10";
+    private static final String DEFAULT_CURRENT_PAGE_NUMBER = "1";
+    private static final String DEFAULT_ADMIN_SHOW_LIST_OF_ORDER_STATUS = "REQUESTED";
     @Autowired
-    private UserService userService;
+    private UserService<User> userService;
     @Autowired
-    private OrderService orderService;
+    private OrderService<Order> orderService;
     @Autowired
-    private RoomService roomService;
+    private RoomService<Room> roomService;
     @Autowired
     @Qualifier("validationManager")
     private Manager validationManager;
+    @Autowired
+    @Qualifier("messageManager")
+    private Manager messageManager;
 
+    //TODO delete {login} in every url, make common url with credentials getting in jsp
+//TODO make autoExpire
+    //TODO show messages
     @RequestMapping(value = {"/{login}"}, method = RequestMethod.GET)
-    public String goToAdminStartPage(Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        model.addAttribute("title", "User Registration Form");
-        model.addAttribute("user", userService.getUserByLogin(login));
+    public String goToAdminStartPage(Model model, @PathVariable(value = Parameters.LOGIN) String login) throws ServletException, IOException, ServiceException {
+        model.addAttribute(Parameters.USER, userService.getUserByLogin(login));
         return "admin/startpage";
     }
 
     @RequestMapping(value = "/{login}/clients", method = RequestMethod.GET)
-    public String showClients(@RequestParam(value = "currentPage", required = false, defaultValue = DEFAULT_CURRENT_PAGE_NUMBER) int currentPage,
-                              @RequestParam(value = "clientsPerPage", required = false, defaultValue = DEFAULT_NUMBER_PER_PAGE) int clientsPerPage,
+    public String showClients(@RequestParam(value = Parameters.CURRENT_PAGE, required = false, defaultValue = DEFAULT_CURRENT_PAGE_NUMBER) int currentPage,
+                              @RequestParam(value = Parameters.CLIENTS_PER_PAGE, required = false, defaultValue = DEFAULT_NUMBER_PER_PAGE) int clientsPerPage,
                               Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
         int numberOfPages = userService.getNumberOfPagesWithClients(clientsPerPage);
-        List<User> userList = ( List<User> ) userService.getPageOfClients(currentPage, clientsPerPage);
+        List<User> userList = userService.getPageOfClients(currentPage, clientsPerPage);
         List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
         model.addAttribute(Parameters.LOGIN, login);
         model.addAttribute(Parameters.CLIENTS_PER_PAGE, clientsPerPage);
@@ -60,10 +65,10 @@ public class AdminController {
         model.addAttribute(Parameters.NUMBER_OF_PAGES, numberOfPages);
 
         return "admin/clients";
-    }
+    }//TODO think about pagination to rest
 
     @RequestMapping(value = "/{login}/orders", method = RequestMethod.GET)
-    public String showOrders(@RequestParam(value = "orderStatus", required = false, defaultValue = DEFAULT_ADMIN_SHOW_LIST_OF_ORDER_STATUS) OrderStatus orderStatus,
+    public String showOrders(@RequestParam(value = Parameters.ORDER_STATUS, required = false, defaultValue = DEFAULT_ADMIN_SHOW_LIST_OF_ORDER_STATUS) OrderStatus orderStatus,
                              Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
         List<Order> ordersList = orderService.getOrdersListByStatus(orderStatus);
         ArrayList orderStatusesList = OrderStatus.enumToList();
@@ -75,8 +80,8 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/{login}/rooms", method = RequestMethod.GET)
-    public String showRooms(@RequestParam(value = "currentPage", required = false, defaultValue = DEFAULT_CURRENT_PAGE_NUMBER) int currentPage,
-                            @RequestParam(value = "roomsPerPage", required = false, defaultValue = DEFAULT_NUMBER_PER_PAGE) int roomsPerPage,
+    public String showRooms(@RequestParam(value = Parameters.CURRENT_PAGE, required = false, defaultValue = DEFAULT_CURRENT_PAGE_NUMBER) int currentPage,
+                            @RequestParam(value = Parameters.ROOMS_PER_PAGE, required = false, defaultValue = DEFAULT_NUMBER_PER_PAGE) int roomsPerPage,
                             Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
         List<Room> roomsList = roomService.getPageOfRooms(currentPage, roomsPerPage);
         List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
@@ -91,32 +96,38 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/{login}/rooms/changeroomprice", method = RequestMethod.GET)
-    public String goToChangeRoomPrice(@RequestParam(value = "roomId") int roomId,
+    public String goToChangeRoomPrice(@RequestParam(value = Parameters.ROOM_ID) int roomId,
                                       Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        Room room = ( Room ) roomService.get(Room.class, roomId);
+        Room room = roomService.get(Room.class, roomId);
         model.addAttribute(Parameters.LOGIN, login);
         model.addAttribute(Parameters.ROOM, room);
         model.addAttribute(Parameters.ROOM_NEW_PRICE_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.ROOM_NEW_PRICE_INPUT_PLACEHOLDER));
-        model.addAttribute(Parameters.ROOM_MIN_NEW_PRICE, Integer.valueOf(validationManager.getProperty(ValidationConstants.ROOM_MIN_NEW_PRICE)));
-        model.addAttribute(Parameters.ROOM_NEW_PRICE_STEP, Integer.valueOf(validationManager.getProperty(ValidationConstants.ROOM_NEW_PRICE_STEP)));
-
+        try {
+            model.addAttribute(Parameters.ROOM_MIN_NEW_PRICE, Integer.valueOf(validationManager.getProperty(ValidationConstants.ROOM_MIN_NEW_PRICE)));
+            model.addAttribute(Parameters.ROOM_NEW_PRICE_STEP, Integer.valueOf(validationManager.getProperty(ValidationConstants.ROOM_NEW_PRICE_STEP)));
+        } catch (NumberFormatException e) {
+            model.addAttribute(Parameters.FORM_SETTINGS_ERROR, messageManager.getProperty(MessageConstants.FORM_SETTINGS_ERROR));
+        }
         return "admin/changeroomprice";
     }
 
-    @RequestMapping(value = "/{login}/rooms/changeroomprice", method = RequestMethod.POST)//TODO default roomId
-    public String changeRoomPrice(@RequestParam(value = "roomId") int roomId,
-                                  @RequestParam(value = "newPrice") int newPrice,
+    @RequestMapping(value = "/{login}/rooms/changeroomprice", method = RequestMethod.POST)
+    public String changeRoomPrice(@RequestParam(value = Parameters.ROOM_ID) int roomId,
+                                  @RequestParam(value = Parameters.NEW_ROOM_PRICE) int newPrice,
                                   Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
         model.addAttribute(Parameters.LOGIN, login);
         if (!Integer.valueOf(newPrice).toString().isEmpty()) {
             if (isNewPriceCorrect(newPrice)) {
                 roomService.updateRoomPrice(roomId, newPrice);
+                model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.ROOM_PRICE_CHANGED));
                 return "redirect:/admins/{login}/rooms";
             } else {
-                return "/";//TODO
+                model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.INVALID_PRICE));
+                return "redirect:/admins/{login}/rooms/changeroomprice";
             }
         } else {
-            return "/";//TODO
+            model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.EMPTY_FIELDS));
+            return "redirect:/admins/{login}/rooms/changeroomprice";
         }
     }
 
@@ -129,37 +140,46 @@ public class AdminController {
         model.addAttribute(Parameters.NEW_ROOM_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.NEW_ROOM_NUMBER_FORMAT_REGEXP));
         model.addAttribute(Parameters.NEW_ROOM_NUMBER_FORMAT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.NEW_ROOM_NUMBER_FORMAT_PLACEHOLDER));
         model.addAttribute(Parameters.AMOUNT_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.AMOUNT_INPUT_PLACEHOLDER));
-        model.addAttribute(Parameters.NEW_ROOM_MIN_ROOMINESS, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_MIN_ROOMINESS)));
-        model.addAttribute(Parameters.NEW_ROOM_ROOMINESS_STEP, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_ROOMINESS_STEP)));
-        model.addAttribute(Parameters.NEW_ROOM_MIN_PRICE, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_MIN_PRICE)));
-        model.addAttribute(Parameters.NEW_ROOM_PRICE_STEP, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_PRICE_STEP)));
-
+        try {
+            model.addAttribute(Parameters.NEW_ROOM_MIN_ROOMINESS, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_MIN_ROOMINESS)));
+            model.addAttribute(Parameters.NEW_ROOM_ROOMINESS_STEP, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_ROOMINESS_STEP)));
+            model.addAttribute(Parameters.NEW_ROOM_MIN_PRICE, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_MIN_PRICE)));
+            model.addAttribute(Parameters.NEW_ROOM_PRICE_STEP, Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_PRICE_STEP)));
+        } catch (NumberFormatException e) {
+            model.addAttribute(Parameters.FORM_SETTINGS_ERROR, messageManager.getProperty(MessageConstants.FORM_SETTINGS_ERROR));
+        }
         return "admin/addnewroom";
     }
 
     @RequestMapping(value = "/{login}/rooms/addnewroom", method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
-    public
     @ResponseBody
-    Model addNewRoom(Model model, @PathVariable(value = "login") String login,
-                     @RequestBody RoomAddingForm roomDto) throws ServletException, IOException, ServiceException {
+    public Model addNewRoom(Model model, @PathVariable(value = "login") String login,
+                            @RequestBody RoomAddingForm roomDto) throws ServletException, IOException, ServiceException {
         model.addAttribute(Parameters.LOGIN, login);
-        Room room = EntityBuilder.buildRoom(roomDto);
-        if (areFieldsFullyStocked(room)) {
-            if (areNumericFieldsCorrect(room)) {
+        if (areFieldsFullyStocked(roomDto)) {
+            if (areNumericFieldsCorrect(roomDto)) {
+                Room room = EntityBuilder.buildRoom(roomDto);
                 if (roomService.isNewRoom(room)) {
                     roomService.add(room);
+                    model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.ROOM_ADDED));
+                } else {
+                    model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.ROOM_EXISTS));
                 }
+            } else {
+                model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.INVALID_ROOM_NUMERIC_FIELD_VALUE));
             }
+        } else {
+            model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.EMPTY_FIELDS));
         }
         return model;
     }
 
     @RequestMapping(value = "/{login}/orders/changestatus", method = RequestMethod.POST)
-    public String changeOrderStatus(@RequestParam(value = "orderId") int orderId,
-                                    @RequestParam(value = "newStatus") String newStatus,
+    public String changeOrderStatus(@RequestParam(value = Parameters.ORDER_ID) int orderId,
+                                    @RequestParam(value = Parameters.NEW_ORDER_STATUS) String newStatus,
                                     Model model, @PathVariable(value = "login") String login) throws ServletException, IOException, ServiceException {
-        Order order = ( Order ) orderService.get(Order.class, orderId);
+        Order order = orderService.get(Order.class, orderId);
         model.addAttribute(Parameters.LOGIN, login);
         model.addAttribute(Parameters.ORDER_STATUS, order.getOrderStatus());
         OrderStatus newOrderStatus = getNewOrderStatus(order.getOrderStatus(), newStatus);
@@ -190,23 +210,22 @@ public class AdminController {
         }
     }
 
-    private boolean areFieldsFullyStocked(Room room) {
-
+    private boolean areFieldsFullyStocked(RoomAddingForm form) {
         boolean isFullStocked = false;
-        if (StringUtils.isNotEmpty(room.getRoomNumber())
-                & !room.getRoomClass().toString().isEmpty()
-                & !Integer.valueOf(room.getRoominess()).toString().isEmpty()
-                & !Integer.valueOf(room.getPrice()).toString().isEmpty()) {
+        if (StringUtils.isNotEmpty(form.getRoomNumber())
+                & !form.getRoomClass().toString().isEmpty()
+                & !form.getRoominess().toString().isEmpty()
+                & !form.getRoomPrice().toString().isEmpty()) {
             isFullStocked = true;
         }
         return isFullStocked;
     }
 
-    private boolean areNumericFieldsCorrect(Room room) {
+    private boolean areNumericFieldsCorrect(RoomAddingForm form) {
         boolean areCorrect = false;
-        if (StringUtils.isNumeric(room.getRoomNumber())
-                & room.getRoominess() > 0
-                & room.getPrice() > 0) {
+        if (StringUtils.isNumeric(form.getRoomNumber())
+                & form.getRoominess() > 0
+                & form.getRoomPrice() > 0) {
             areCorrect = true;
         }
         return areCorrect;

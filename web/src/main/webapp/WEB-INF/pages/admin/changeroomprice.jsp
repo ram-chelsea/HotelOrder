@@ -6,7 +6,6 @@
     <title>Change RoomPrice</title>
 </head>
 <body>
-${formSettingsError}<br/>
 <table border="1">
     <tr bgcolor="#CCCCCC">
         <td align="center"><strong>RoomNumber</strong></td>
@@ -27,8 +26,8 @@ ${formSettingsError}<br/>
            placeholder="${roomNewPriceInputPlaceHolder}" required/><br>
     <input type="submit" value="Change RoomPrice"/>
 </form>
-${operationMessage}
-
+${operationMessage}<br/>
+${formSettingsError}<br/>
 <a href="<c:url value="../rooms"/>">Back to RoomsList</a><br/>
 <a href="<c:url value="/admins/${login}"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>

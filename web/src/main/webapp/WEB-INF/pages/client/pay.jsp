@@ -25,6 +25,7 @@
     <input type="submit" name="newStatus" value="pay"/>
 </form>
 ${operationMessage}<br/>
+${formSettingsError}<br/>
 <a href="<c:url value="/clients/${login}"/>">Back to StartPage</a><br/>
 <a href="<c:url value="../orders"/>">Back to Client Orders</a><br/>
 <a href="<c:url value="/clients/${login}/creditcards/checkcard"/>">Check Credit Card</a> <br/>
