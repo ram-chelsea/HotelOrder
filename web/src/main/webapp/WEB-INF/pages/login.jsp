@@ -418,7 +418,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 </head>
 <body>
-<%--<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>--%>
 <div class="wrap">
     <div class="login-form">
         <c:url value='/j_spring_security_check' var="loginUrl"/>
@@ -427,11 +426,11 @@
             <ul>
                 <li>
                     <input type="text" class="textbox1" id="username" name="j_username" placeholder="Username" required="required">
-                    <p><img src="/resources/images/contact.png" alt=""></p>
+                    <p><img src="../resources/images/contact.png" alt=""></p>
                 </li>
                 <li>
                     <input type="password" id="password" name="j_password" class="textbox2" placeholder="Password">
-                    <p><img src="/resources/images/lock.png" alt=""></p>
+                    <p><img src="../resources/images/lock.png" alt=""></p>
                 </li>
             </ul>
             <input type="submit" name="Sign In" value="Sign In">

@@ -20,7 +20,7 @@
         <td>${ room.price }</td>
     </tr>
 </table>
-<form action="<c:url value="../rooms/changeroomprice"/>" method="POST">
+<form action="<c:url value="../rooms/roomprice"/>" method="POST">
     <input type="hidden" name="roomId" value="${room.roomId}"/>
     <input type="number" name="newPrice" min="${roomMinNewPrice}" step="${roomNewPriceStep}"
            placeholder="${roomNewPriceInputPlaceHolder}" required/><br>

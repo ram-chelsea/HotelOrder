@@ -18,7 +18,7 @@
 
         <form-login authentication-success-handler-ref="authSuccessHandler"
                 login-processing-url="/j_spring_security_check"
-                login-page="/login"
+                login-page="/login.jsp"
                 authentication-failure-url="/login"
                 username-parameter="j_username"
                 password-parameter="j_password"

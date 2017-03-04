@@ -1,6 +1,5 @@
 <%@ page language="java"
-         contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" errorPage="/pages/error/error.jsp" %>
+         contentType="text/html; charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <html>
@@ -10,7 +9,6 @@
     </script>
 </head>
 <body>
-${formSettingsError}
 <div class="wrapp">
     <div class="reg-form">
         <form name="newCreditCardForm" id="newCreditCardForm">
@@ -38,7 +36,8 @@ ${formSettingsError}
         <div class="clear"></div>
     </div>
 </div>
-${operationMessage}<br/>
+${formSettingsError}
+<div id="operationMessage">${operationMessage}</div><br/>
 <a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="./checkcard"/>">Check Credit Card Amount</a> <br/>
 <a href="<c:url value="/login" />">Logout</a>
@@ -51,12 +50,15 @@ ${operationMessage}<br/>
         };
         $.ajax({
             type: "POST",
-            url: '../creditcards/addcard',
+            url: '../creditcards/newcard',
             data: JSON.stringify(card),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
-            success: function () {
-                alert('The Card was added');
+            success: function(data) {
+                document.getElementById("operationMessage").innerHTML=data.operationMessage;
+            },
+            error: function () {
+                document.getElementById("operationMessage").innerHTML="Wrong values";
             }
         });
     }

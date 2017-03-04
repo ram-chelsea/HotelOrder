@@ -6,7 +6,6 @@
     <title>Client Orders</title>
 </head>
 <body>
-<h4>${operationMessage}</h4>
 <form name="chooseOrderStatus" method="GET" action="<c:url value="./orders"/>">
     <table>
         <tr>
@@ -73,7 +72,7 @@
         <h3>There are not ${orderStatus.toString()} orders now</h3>
     </c:otherwise>
 </c:choose>
-<br/>
+<h4>${operationMessage}</h4><br/>
 <a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>

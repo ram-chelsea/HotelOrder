@@ -50,7 +50,7 @@
 </c:if>
 <c:choose>
     <c:when test="${!roomsList.isEmpty()}">
-        <form action="<c:url value="./rooms/changeroomprice"/>" method="GET">
+        <form action="<c:url value="./rooms/roomprice"/>" method="GET">
             <table border="1">
                 <tr bgcolor="#CCCCCC">
                     <td align="center"><strong>RoomNumber</strong></td>
@@ -84,7 +84,7 @@
     </c:otherwise>
 </c:choose>
 ${operationMessage}<br/>
-<a href="<c:url value="./rooms/addnewroom"/>">Add New Room</a><br/>
+<a href="<c:url value="./rooms/newroom"/>">Add New Room</a><br/>
 <a href="<c:url value="/admin"/>">Back to StartPage</a><br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>

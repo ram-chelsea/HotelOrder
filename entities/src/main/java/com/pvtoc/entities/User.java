@@ -42,4 +42,4 @@ public class User extends com.pvtoc.entities.Entity {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-}//todo valid rules
+}

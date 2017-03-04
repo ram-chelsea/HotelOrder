@@ -9,7 +9,7 @@
 <h2>User's login: ${user.login}</h2>
 <a href="<c:url value="/client/orders/makeorder"/>">Make Order</a> <br/>
 <a href="<c:url value="/client/creditcards/checkcard"/>">Check Credit Card Amount</a> <br/>
-<a href="<c:url value="/client/creditcards/addcard"/>">Add Credit Card</a> <br/>
+<a href="<c:url value="/client/creditcards/newcard"/>">Add Credit Card</a> <br/>
 <a href="<c:url value="/client/orders"/>">Show Orders List</a> <br/>
 <a href="<c:url value="/login" />">Logout</a>
 </body>

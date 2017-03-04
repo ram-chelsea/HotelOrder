@@ -64,17 +64,32 @@ ${formSettingsError}<br/>
             roomClass: $("#roomClass").val(),
             roomPrice: $("#roomPrice").val()
         };
+        //todo html5validation
+//        $(document).ready(function()
+//        {
+//            $('#addRoom').submit(function(event){
+//                if(!this.checkValidity())
+//                {
+//                    event.preventDefault();
+//                    if(!this.validity.valid)
+//                    {
+//                        $(this).focus();
+//                        return false;
+//                    }
+//                }
+//            });
+//        });
         $.ajax({
             type: "POST",
-            url: '../rooms/addnewroom',
+            url: '../rooms/newroom',
             data: JSON.stringify(room),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
-            success: function (result) {
-                $("#operationMessage").append(result);
+            success: function(data) {
+                document.getElementById("operationMessage").innerHTML=data.operationMessage;
             },
             error: function () {
-                $("#operationMessage").append("error");
+                document.getElementById("operationMessage").innerHTML="Wrong values";
             }
         })
     }

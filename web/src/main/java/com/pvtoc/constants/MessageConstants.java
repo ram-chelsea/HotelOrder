@@ -8,6 +8,8 @@ public final class MessageConstants {
     public static final String CARD_EXISTS = "message.cardexistserror";
     public static final String ROOM_PRICE_CHANGED = "message.roompriceupdated";
     public static final String SUCCESS_OPERATION = "message.successoperation";
+    public static final String SUCCESS_PAYMENT = "message.successpayment";
+    public static final String SUCCESS_CARD_ADDING = "message.successcardadding";
     public static final String INVALID_NONSTRING_FORMAT = "message.invalidnonstringformat";
     public static final String EMPTY_FIELDS = "message.emptyfields";
     public static final String ERROR_DATABASE = "message.databaseerror";
@@ -22,6 +24,7 @@ public final class MessageConstants {
     public static final String ROOM_WAS_BOOKED = "message.roomwasbooked" ;
     public static final String CARD_NOT_EXISTS = "message.cardnotexistserror";
     public static final String ROOM_ADDED = "message.roomadded";
+    public static final String SUCCESS_REQUEST_ROOM = "message.successrequestroom";
 
     private MessageConstants() {
     }

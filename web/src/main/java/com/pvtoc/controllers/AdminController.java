@@ -43,7 +43,6 @@ public class AdminController {
     @Qualifier("messageManager")
     private Manager messageManager;
 
-    //TODO make autoExpire
     //TODO show messages
     @RequestMapping(value = {""}, method = RequestMethod.GET)
     public String goToAdminStartPage(Model model) throws ServletException, IOException, ServiceException {
@@ -58,22 +57,19 @@ public class AdminController {
         int numberOfPages = userService.getNumberOfPagesWithClients(clientsPerPage);
         List<User> userList = userService.getPageOfClients(currentPage, clientsPerPage);
         List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
-        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.CLIENTS_PER_PAGE, clientsPerPage);
         model.addAttribute(Parameters.CURRENT_PAGE, currentPage);
         model.addAttribute(Parameters.USER_LIST, userList);
         model.addAttribute(Parameters.PER_PAGE_NUMBERS_LIST, perPageNumbersList);
         model.addAttribute(Parameters.NUMBER_OF_PAGES, numberOfPages);
-
         return "admin/clients";
-    }//TODO think about pagination to rest
+    }
 
     @RequestMapping(value = "/orders", method = RequestMethod.GET)
     public String showOrders(@RequestParam(value = Parameters.ORDER_STATUS, required = false, defaultValue = DEFAULT_ADMIN_SHOW_LIST_OF_ORDER_STATUS) OrderStatus orderStatus,
                              Model model) throws ServletException, IOException, ServiceException {
         List<Order> ordersList = orderService.getOrdersListByStatus(orderStatus);
         ArrayList orderStatusesList = OrderStatus.enumToList();
-        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ORDER_STATUSES_LIST, orderStatusesList);
         model.addAttribute(Parameters.ORDERS_LIST, ordersList);
         model.addAttribute(Parameters.ORDER_STATUS, orderStatus);
@@ -83,11 +79,12 @@ public class AdminController {
     @RequestMapping(value = "/rooms", method = RequestMethod.GET)
     public String showRooms(@RequestParam(value = Parameters.CURRENT_PAGE, required = false, defaultValue = DEFAULT_CURRENT_PAGE_NUMBER) int currentPage,
                             @RequestParam(value = Parameters.ROOMS_PER_PAGE, required = false, defaultValue = DEFAULT_NUMBER_PER_PAGE) int roomsPerPage,
+                            @RequestParam(value = Parameters.OPERATION_MESSAGE, required = false) String message,
                             Model model) throws ServletException, IOException, ServiceException {
         List<Room> roomsList = roomService.getPageOfRooms(currentPage, roomsPerPage);
         List<Integer> perPageNumbersList = PaginationConstants.NUMBER_PER_PAGE_LIST;
         int numberOfPages = roomService.getNumberOfPagesWithRooms(roomsPerPage);
-        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
+        model.addAttribute(Parameters.OPERATION_MESSAGE, message);
         model.addAttribute(Parameters.PER_PAGE_NUMBERS_LIST, perPageNumbersList);
         model.addAttribute(Parameters.NUMBER_OF_PAGES, numberOfPages);
         model.addAttribute(Parameters.ROOMS_PER_PAGE, roomsPerPage);
@@ -96,11 +93,12 @@ public class AdminController {
         return "admin/rooms";
     }
 
-    @RequestMapping(value = "/rooms/changeroomprice", method = RequestMethod.GET)
+    @RequestMapping(value = "/rooms/roomprice", method = RequestMethod.GET)
     public String goToChangeRoomPrice(@RequestParam(value = Parameters.ROOM_ID) int roomId,
+                                      @RequestParam(value = Parameters.OPERATION_MESSAGE, required = false) String message,
                                       Model model) throws ServletException, IOException, ServiceException {
         Room room = roomService.get(Room.class, roomId);
-        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
+        model.addAttribute(Parameters.OPERATION_MESSAGE, message);
         model.addAttribute(Parameters.ROOM, room);
         model.addAttribute(Parameters.ROOM_NEW_PRICE_INPUT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.ROOM_NEW_PRICE_INPUT_PLACEHOLDER));
         try {
@@ -109,14 +107,13 @@ public class AdminController {
         } catch (NumberFormatException e) {
             model.addAttribute(Parameters.FORM_SETTINGS_ERROR, messageManager.getProperty(MessageConstants.FORM_SETTINGS_ERROR));
         }
-        return "admin/changeroomprice";
+        return "admin/roomprice";
     }
 
-    @RequestMapping(value = "/rooms/changeroomprice", method = RequestMethod.POST)
+    @RequestMapping(value = "/rooms/roomprice", method = RequestMethod.POST)
     public String changeRoomPrice(@RequestParam(value = Parameters.ROOM_ID) int roomId,
                                   @RequestParam(value = Parameters.NEW_ROOM_PRICE) int newPrice,
                                   Model model) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         if (!Integer.valueOf(newPrice).toString().isEmpty()) {
             if (isNewPriceCorrect(newPrice)) {
                 roomService.updateRoomPrice(roomId, newPrice);
@@ -124,18 +121,17 @@ public class AdminController {
                 return "redirect:/admin/rooms";
             } else {
                 model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.INVALID_PRICE));
-                return "redirect:/admin/rooms/changeroomprice";
+                return "redirect:/admin/rooms/roomprice";
             }
         } else {
             model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.EMPTY_FIELDS));
-            return "redirect:/admin/rooms/changeroomprice";
+            return "redirect:/admin/rooms/roomprice";
         }
     }
 
-    @RequestMapping(value = "/rooms/addnewroom", method = RequestMethod.GET)
+    @RequestMapping(value = "/rooms/newroom", method = RequestMethod.GET)
     public String goToAddNewRoom(Model model) throws ServletException, IOException, ServiceException {
         ArrayList roomsClassesList = RoomClass.enumToList();
-        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ROOMS_CLASSES_LIST, roomsClassesList);
         model.addAttribute(Parameters.NEW_ROOM_NUMBER_FORMAT_REGEXP, validationManager.getProperty(ValidationConstants.NEW_ROOM_NUMBER_FORMAT_REGEXP));
         model.addAttribute(Parameters.NEW_ROOM_NUMBER_FORMAT_PLACEHOLDER, validationManager.getProperty(ValidationConstants.NEW_ROOM_NUMBER_FORMAT_PLACEHOLDER));
@@ -148,15 +144,14 @@ public class AdminController {
         } catch (NumberFormatException e) {
             model.addAttribute(Parameters.FORM_SETTINGS_ERROR, messageManager.getProperty(MessageConstants.FORM_SETTINGS_ERROR));
         }
-        return "admin/addnewroom";
+        return "admin/newroom";
     }
 
-    @RequestMapping(value = "/rooms/addnewroom", method = RequestMethod.POST,
+    @RequestMapping(value = "/rooms/newroom", method = RequestMethod.POST,
             consumes = "application/json", produces = "application/json")
     @ResponseBody
     public Model addNewRoom(Model model,
                             @RequestBody RoomAddingForm roomDto) throws ServletException, IOException, ServiceException {
-        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         if (areFieldsFullyStocked(roomDto)) {
             if (areNumericFieldsCorrect(roomDto)) {
                 Room room = EntityBuilder.buildRoom(roomDto);
@@ -180,7 +175,6 @@ public class AdminController {
                                     @RequestParam(value = Parameters.NEW_ORDER_STATUS) String newStatus,
                                     Model model) throws ServletException, IOException, ServiceException {
         Order order = orderService.get(Order.class, orderId);
-        model.addAttribute(Parameters.LOGIN, getPrincipalLogin());
         model.addAttribute(Parameters.ORDER_STATUS, order.getOrderStatus());
         OrderStatus newOrderStatus = getNewOrderStatus(order.getOrderStatus(), newStatus);
         orderService.updateOrderStatus(orderId, newOrderStatus);
@@ -213,9 +207,9 @@ public class AdminController {
     private boolean areFieldsFullyStocked(RoomAddingForm form) {
         boolean isFullStocked = false;
         if (StringUtils.isNotEmpty(form.getRoomNumber())
-                & !form.getRoomClass().toString().isEmpty()
-                & !form.getRoominess().toString().isEmpty()
-                & !form.getRoomPrice().toString().isEmpty()) {
+                & form.getRoomClass()!=null
+                & form.getRoominess()!=null
+                & form.getRoomPrice()!=null) {
             isFullStocked = true;
         }
         return isFullStocked;
