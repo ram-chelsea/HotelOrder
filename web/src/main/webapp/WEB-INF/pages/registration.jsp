@@ -91,17 +91,17 @@
             <table>
                 <tr>
                     <td>Name:</td>
-                    <td><input type="text" id="firstname" name="firstname" value="" size="20" placeholder="FirstName"/>
+                    <td><input type="text" id="firstname" name="firstname" value="" size="20" placeholder="FirstName" required/>
                     </td>
                 </tr>
                 <tr>
                     <td>Surname:</td>
-                    <td><input type="text" id="lastname" name="lastname" value="" size="20" placeholder="LastName"/>
+                    <td><input type="text" id="lastname" name="lastname" value="" size="20" placeholder="LastName" required/>
                     </td>
                 </tr>
                 <tr>
                     <td>Login:</td>
-                    <td><input type="text" id="login" name="login" value="" size="20" placeholder="Login"/></td>
+                    <td><input type="text" id="login" name="login" value="" size="20" placeholder="Login" required/></td>
                 </tr>
                 <tr>
                     <td>Password:</td>
@@ -138,7 +138,7 @@
             success: function(data) {
                 document.getElementById("operationMessage").innerHTML=data.operationMessage;
             },
-            error: function () {
+            error: function (data) {
                 document.getElementById("operationMessage").innerHTML=data.operationMessage;
             }
         });

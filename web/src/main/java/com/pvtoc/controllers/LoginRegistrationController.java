@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-//todo make locale
 @Controller
 public class LoginRegistrationController {
     @Autowired

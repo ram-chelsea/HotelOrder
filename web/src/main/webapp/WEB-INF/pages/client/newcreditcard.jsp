@@ -37,7 +37,8 @@
     </div>
 </div>
 ${formSettingsError}
-<div id="operationMessage">${operationMessage}</div><br/>
+<div id="operationMessage">${operationMessage}</div>
+<br/>
 <a href="<c:url value="/client"/>">Back to StartPage</a><br/>
 <a href="<c:url value="./checkcard"/>">Check Credit Card Amount</a> <br/>
 <a href="<c:url value="/login" />">Logout</a>
@@ -54,11 +55,11 @@ ${formSettingsError}
             data: JSON.stringify(card),
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
-            success: function(data) {
-                document.getElementById("operationMessage").innerHTML=data.operationMessage;
+            success: function (data) {
+                document.getElementById("operationMessage").innerHTML = data.operationMessage;
             },
-            error: function () {
-                document.getElementById("operationMessage").innerHTML="Wrong values";
+            error: function (data) {
+                document.getElementById("operationMessage").innerHTML = data.operationMessage;
             }
         });
     }

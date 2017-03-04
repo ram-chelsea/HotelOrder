@@ -227,7 +227,7 @@ public class ClientController {
             if (areValuesCorrect(cardDto)) {
                 if (creditCardService.isNewCreditCard(card)) {
                     creditCardService.add(card);
-                    model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.SUCCESS_PAYMENT));
+                    model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.SUCCESS_CARD_ADDING));
                 } else {
                     model.addAttribute(Parameters.OPERATION_MESSAGE, messageManager.getProperty(MessageConstants.CARD_EXISTS));
                 }
@@ -279,7 +279,8 @@ public class ClientController {
 
     private boolean isRoominessCorrect(OrderRoomForm form) {
         boolean isCorrect = false;
-        if (form.getRoominess() > 0) {
+        if (form.getRoominess() > 0
+                & form.getRoominess() == Math.floor(form.getRoominess())) {
             isCorrect = true;
         }
         return isCorrect;
@@ -306,7 +307,8 @@ public class ClientController {
 
     private boolean areValuesCorrect(CreditCardAddingForm card) {
         boolean areCorrect = false;
-        if (card.getAmount() > 0
+        if (card.getAmount() >= Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_CARD_MIN_AMOUNT))
+                & card.getAmount() == Math.floor(card.getAmount())
                 & StringUtils.isNumeric(card.getCardNumber())) {
             areCorrect = true;
         }

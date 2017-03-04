@@ -426,11 +426,9 @@
             <ul>
                 <li>
                     <input type="text" class="textbox1" id="username" name="j_username" placeholder="Username" required="required">
-                    <p><img src="../resources/images/contact.png" alt=""></p>
                 </li>
                 <li>
                     <input type="password" id="password" name="j_password" class="textbox2" placeholder="Password">
-                    <p><img src="../resources/images/lock.png" alt=""></p>
                 </li>
             </ul>
             <input type="submit" name="Sign In" value="Sign In">

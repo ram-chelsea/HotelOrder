@@ -64,21 +64,6 @@ ${formSettingsError}<br/>
             roomClass: $("#roomClass").val(),
             roomPrice: $("#roomPrice").val()
         };
-        //todo html5validation
-//        $(document).ready(function()
-//        {
-//            $('#addRoom').submit(function(event){
-//                if(!this.checkValidity())
-//                {
-//                    event.preventDefault();
-//                    if(!this.validity.valid)
-//                    {
-//                        $(this).focus();
-//                        return false;
-//                    }
-//                }
-//            });
-//        });
         $.ajax({
             type: "POST",
             url: '../rooms/newroom',
@@ -88,8 +73,8 @@ ${formSettingsError}<br/>
             success: function(data) {
                 document.getElementById("operationMessage").innerHTML=data.operationMessage;
             },
-            error: function () {
-                document.getElementById("operationMessage").innerHTML="Wrong values";
+            error: function (data) {
+                document.getElementById("operationMessage").innerHTML=data.operationMessage;;
             }
         })
     }

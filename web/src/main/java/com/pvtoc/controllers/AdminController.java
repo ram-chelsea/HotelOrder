@@ -43,7 +43,6 @@ public class AdminController {
     @Qualifier("messageManager")
     private Manager messageManager;
 
-    //TODO show messages
     @RequestMapping(value = {""}, method = RequestMethod.GET)
     public String goToAdminStartPage(Model model) throws ServletException, IOException, ServiceException {
         model.addAttribute(Parameters.USER, userService.getUserByLogin(getPrincipalLogin()));
@@ -184,7 +183,8 @@ public class AdminController {
     private boolean isNewPriceCorrect(int newPrice) {
 
         boolean isNewPriceCorrect = false;
-        if (newPrice > 0) {
+        if (newPrice > Integer.valueOf(validationManager.getProperty(ValidationConstants.ROOM_MIN_NEW_PRICE))
+                & newPrice == Math.floor(newPrice)) {
             isNewPriceCorrect = true;
         }
         return isNewPriceCorrect;
@@ -207,9 +207,9 @@ public class AdminController {
     private boolean areFieldsFullyStocked(RoomAddingForm form) {
         boolean isFullStocked = false;
         if (StringUtils.isNotEmpty(form.getRoomNumber())
-                & form.getRoomClass()!=null
-                & form.getRoominess()!=null
-                & form.getRoomPrice()!=null) {
+                & form.getRoomClass() != null
+                & form.getRoominess() != null
+                & form.getRoomPrice() != null) {
             isFullStocked = true;
         }
         return isFullStocked;
@@ -218,8 +218,10 @@ public class AdminController {
     private boolean areNumericFieldsCorrect(RoomAddingForm form) {
         boolean areCorrect = false;
         if (StringUtils.isNumeric(form.getRoomNumber())
-                & form.getRoominess() > 0
-                & form.getRoomPrice() > 0) {
+                & form.getRoominess() >= Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_MIN_ROOMINESS))
+                & form.getRoominess() == Math.floor(form.getRoominess())
+                & form.getRoomPrice() >= Integer.valueOf(validationManager.getProperty(ValidationConstants.NEW_ROOM_MIN_PRICE))
+                & form.getRoomPrice() == Math.floor(form.getRoomPrice())) {
             areCorrect = true;
         }
         return areCorrect;
